@@ -1,1 +1,89 @@
-<p>exams-result works!</p>
+<section class="exams-result-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Exams Result</h2>
+      <p class="page-subtitle">Compiled result of an exam group and class.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-ghost">
+        <fa-icon [icon]="faFileExport"></fa-icon>
+        Export
+      </button>
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faPrint"></fa-icon>
+        Print Result
+      </button>
+    </div>
+  </header>
+
+  <div class="page-card filter-card">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Exam</label>
+          <select class="select-primary" [(ngModel)]="selectedExam">
+            @for (e of examOptions; track e) {
+              <option [value]="e">{{ e }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Class</label>
+          <select class="select-primary" [(ngModel)]="selectedClass">
+            @for (c of classOptions; track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="data-table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-id">#</th>
+          <th>Position</th>
+          <th>Roll No</th>
+          <th>Student</th>
+          <th class="center">Total</th>
+          <th class="center">Obtained</th>
+          <th class="center">Percentage</th>
+          <th class="center">Grade</th>
+          <th class="center">Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of rows; track r.id; let i = $index) {
+          <tr>
+            <td class="col-id">{{ i + 1 }}</td>
+            <td>
+              <span class="pos-pill" [class.gold]="r.position === 1" [class.silver]="r.position === 2" [class.bronze]="r.position === 3">
+                #{{ r.position }}
+              </span>
+            </td>
+            <td>{{ r.rollNo }}</td>
+            <td>
+              <div class="avatar-name">
+                <span class="avatar">{{ r.initial }}</span>
+                <strong>{{ r.name }}</strong>
+              </div>
+            </td>
+            <td class="center">{{ r.total }}</td>
+            <td class="center"><strong>{{ r.obtained }}</strong></td>
+            <td class="center">{{ percentage(r) | number: '1.0-1' }}%</td>
+            <td class="center"><strong>{{ grade(percentage(r)) }}</strong></td>
+            <td class="center">
+              <span class="badge-status" [class.active]="r.result === 'Pass'" [class.inactive]="r.result === 'Fail'">
+                {{ r.result }}
+              </span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

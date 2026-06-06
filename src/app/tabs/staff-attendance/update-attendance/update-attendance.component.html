@@ -1,1 +1,95 @@
-<p>update-attendance works!</p>
+<section class="staff-attendance-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Update Staff Attendance</h2>
+      <p class="page-subtitle">Mark and update daily attendance for staff.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faSave"></fa-icon>
+        Save Attendance
+      </button>
+    </div>
+  </header>
+
+  <div class="page-card filter-card">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Date</label>
+          <input type="date" class="input-secondary" [(ngModel)]="selectedDate" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Department</label>
+          <select class="select-primary" [(ngModel)]="selectedDepartment">
+            <option value="">All Departments</option>
+            @for (d of departments; track d) {
+              <option [value]="d">{{ d }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="attendance-summary">
+    <div class="summary-pill present"><span>Present</span><strong>{{ count('present') }}</strong></div>
+    <div class="summary-pill absent"><span>Absent</span><strong>{{ count('absent') }}</strong></div>
+    <div class="summary-pill leave"><span>Leave</span><strong>{{ count('leave') }}</strong></div>
+    <div class="summary-pill late"><span>Late</span><strong>{{ count('late') }}</strong></div>
+    <div class="summary-pill total"><span>Total</span><strong>{{ rows().length }}</strong></div>
+    <div class="quick-actions">
+      <button type="button" class="btn-quick" (click)="markAll('present')">Mark All Present</button>
+      <button type="button" class="btn-quick danger" (click)="markAll('absent')">Mark All Absent</button>
+    </div>
+  </div>
+
+  <div class="data-table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-id">#</th>
+          <th>Staff ID</th>
+          <th>Staff</th>
+          <th>Designation</th>
+          <th>Department</th>
+          <th>Check In</th>
+          <th class="col-mark">Attendance</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of rows(); track r.id; let i = $index) {
+          <tr>
+            <td class="col-id">{{ i + 1 }}</td>
+            <td>{{ r.staffId }}</td>
+            <td>
+              <div class="avatar-name">
+                <span class="avatar">{{ r.initial }}</span>
+                <strong>{{ r.name }}</strong>
+              </div>
+            </td>
+            <td>{{ r.designation }}</td>
+            <td>{{ r.department }}</td>
+            <td>{{ r.checkIn }}</td>
+            <td class="col-mark">
+              <div class="mark-group">
+                <button type="button" class="mark-btn present" [class.active]="r.mark === 'present'" (click)="setMark(r.id, 'present')">
+                  <fa-icon [icon]="faCheck"></fa-icon> P
+                </button>
+                <button type="button" class="mark-btn absent" [class.active]="r.mark === 'absent'" (click)="setMark(r.id, 'absent')">
+                  <fa-icon [icon]="faXmark"></fa-icon> A
+                </button>
+                <button type="button" class="mark-btn leave" [class.active]="r.mark === 'leave'" (click)="setMark(r.id, 'leave')">L</button>
+                <button type="button" class="mark-btn late" [class.active]="r.mark === 'late'" (click)="setMark(r.id, 'late')">
+                  <fa-icon [icon]="faClock"></fa-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

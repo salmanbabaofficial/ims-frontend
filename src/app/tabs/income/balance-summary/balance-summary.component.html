@@ -1,1 +1,86 @@
-<p>balance-summary works!</p>
+<section class="balance-summary-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Balance Summary</h2>
+      <p class="page-subtitle">Financial overview of income and expenses.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faPrint"></fa-icon>
+        Print Statement
+      </button>
+    </div>
+  </header>
+
+  <div class="page-card filter-card">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Start Date</label>
+          <input type="date" class="input-secondary" [(ngModel)]="startDate" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>End Date</label>
+          <input type="date" class="input-secondary" [(ngModel)]="endDate" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stat-grid">
+    @for (s of stats; track s.label) {
+      <div class="stat-card" [class.income]="s.icon === 'income'" [class.expense]="s.icon === 'expense'" [class.profit]="s.icon === 'profit'" [class.cash]="s.icon === 'cash'">
+        <div class="stat-icon"><fa-icon [icon]="iconFor(s.icon)"></fa-icon></div>
+        <div class="stat-body">
+          <span class="stat-label">{{ s.label }}</span>
+          <strong class="stat-value">{{ s.value }}</strong>
+          <span class="stat-trend" [class.up]="s.trend >= 0" [class.down]="s.trend < 0">
+            <fa-icon [icon]="s.trend >= 0 ? faArrowUp : faArrowDown"></fa-icon>
+            {{ s.trend }}% vs last period
+          </span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="row g-3 mt">
+    <div class="col-12 col-lg-8">
+      <div class="page-card chart-card">
+        <h3 class="block-title">Income vs Expense (in thousands)</h3>
+        <div class="chart-grouped">
+          @for (m of monthly; track m.label) {
+            <div class="bar-col">
+              <div class="bar-pair">
+                <span class="bar income" [style.height.%]="m.income / 3"></span>
+                <span class="bar expense" [style.height.%]="m.expense / 3"></span>
+              </div>
+              <small>{{ m.label }}</small>
+            </div>
+          }
+        </div>
+        <div class="chart-legend">
+          <span><i class="dot income"></i> Income</span>
+          <span><i class="dot expense"></i> Expense</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4">
+      <div class="page-card">
+        <h3 class="block-title">Recent Transactions</h3>
+        <ul class="txn-list">
+          @for (t of transactions; track t.id) {
+            <li>
+              <span class="txn-date">{{ t.date }}</span>
+              <span class="txn-desc">{{ t.description }}</span>
+              <strong class="txn-amt" [class.income]="t.type === 'income'" [class.expense]="t.type === 'expense'">
+                {{ t.type === 'income' ? '+' : '-' }} Rs. {{ t.amount }}
+              </strong>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

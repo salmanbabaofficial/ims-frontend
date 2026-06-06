@@ -1,1 +1,182 @@
-<router-outlet></router-outlet>
+<section class="settings-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Settings</h2>
+      <p class="page-subtitle">Configure your institute, fees, SMS, security and more.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faSave"></fa-icon>
+        Save Changes
+      </button>
+    </div>
+  </header>
+
+  <div class="settings-shell">
+    <aside class="settings-side">
+      @for (t of tabs; track t.id) {
+        <button type="button" class="side-item" [class.active]="activeTab() === t.id" (click)="activeTab.set(t.id)">
+          <span class="side-icon"><fa-icon [icon]="t.icon"></fa-icon></span>
+          <span class="side-text">
+            <strong>{{ t.label }}</strong>
+            <small>{{ t.subtitle }}</small>
+          </span>
+        </button>
+      }
+    </aside>
+
+    <div class="settings-main">
+      @switch (activeTab()) {
+        @case ('general') {
+          <div class="page-card">
+            <div class="form-card-header">
+              <div><h3 class="form-card-title">General Settings</h3></div>
+            </div>
+            <div class="form-card-body">
+              <div class="row g-3">
+                <div class="col-12 col-md-6"><div class="form-field"><label>Site Name</label><input type="text" class="input-secondary" [(ngModel)]="general.siteName" /></div></div>
+                <div class="col-12 col-md-6"><div class="form-field"><label>Timezone</label><input type="text" class="input-secondary" [(ngModel)]="general.timezone" /></div></div>
+                <div class="col-12 col-md-6"><div class="form-field"><label>Language</label><select class="select-primary" [(ngModel)]="general.language"><option>English</option><option>Urdu</option></select></div></div>
+                <div class="col-12 col-md-6"><div class="form-field"><label>Date Format</label><input type="text" class="input-secondary" [(ngModel)]="general.dateFormat" /></div></div>
+                <div class="col-12 col-md-6"><div class="form-field"><label>Currency</label><select class="select-primary" [(ngModel)]="general.currency"><option>PKR</option><option>USD</option><option>EUR</option></select></div></div>
+                <div class="col-12 col-md-6"><div class="form-field"><label>Week Starts On</label><select class="select-primary" [(ngModel)]="general.weekStart"><option>Monday</option><option>Sunday</option></select></div></div>
+              </div>
+            </div>
+          </div>
+        }
+        @case ('school') {
+          <div class="page-card">
+            <div class="form-card-header"><div><h3 class="form-card-title">School Information</h3></div></div>
+            <div class="form-card-body">
+              <div class="row g-3">
+                <div class="col-12 col-md-6"><div class="form-field"><label>School Name</label><input type="text" class="input-secondary" [(ngModel)]="school.name" /></div></div>
+                <div class="col-12 col-md-6"><div class="form-field"><label>Motto</label><input type="text" class="input-secondary" [(ngModel)]="school.motto" /></div></div>
+                <div class="col-12"><div class="form-field"><label>Address</label><textarea rows="2" class="input-secondary" [(ngModel)]="school.address"></textarea></div></div>
+                <div class="col-12 col-md-6"><div class="form-field"><label>Phone</label><input type="text" class="input-secondary" [(ngModel)]="school.phone" /></div></div>
+                <div class="col-12 col-md-6"><div class="form-field"><label>Email</label><input type="email" class="input-secondary" [(ngModel)]="school.email" /></div></div>
+                <div class="col-12 col-md-6"><div class="form-field"><label>Website</label><input type="url" class="input-secondary" [(ngModel)]="school.website" /></div></div>
+                <div class="col-12 col-md-6"><div class="form-field"><label>Affiliation Board</label><input type="text" class="input-secondary" [(ngModel)]="school.affiliation" /></div></div>
+                <div class="col-12"><div class="form-field"><label>Logo</label><input type="file" class="input-secondary" accept="image/*" /></div></div>
+              </div>
+            </div>
+          </div>
+        }
+        @case ('fee') {
+          <div class="page-card">
+            <div class="form-card-header"><div><h3 class="form-card-title">Fee & Receipt Settings</h3></div></div>
+            <div class="form-card-body">
+              <div class="row g-3">
+                <div class="col-12 col-md-6"><div class="form-field"><label>Challan Prefix</label><input type="text" class="input-secondary" [(ngModel)]="fee.feePrefix" /></div></div>
+                <div class="col-12 col-md-6"><div class="form-field"><label>Late Fee After (days)</label><input type="number" class="input-secondary" [(ngModel)]="fee.lateFeeAfterDays" /></div></div>
+                <div class="col-12 col-md-6"><div class="form-field"><label>Late Fee (fixed)</label><input type="number" class="input-secondary" [(ngModel)]="fee.lateFeeFixed" /></div></div>
+                <div class="col-12"><div class="form-field"><label>Receipt Footer Text</label><textarea rows="3" class="input-secondary" [(ngModel)]="fee.receiptFooter"></textarea></div></div>
+                <div class="col-12">
+                  <label class="switch-line">
+                    <span><strong>Send fee reminder SMS</strong><small>Notify parents 3 days before due date.</small></span>
+                    <label class="switch"><input type="checkbox" [(ngModel)]="fee.sendReminderSms" /><span class="slider"></span></label>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+        @case ('sms') {
+          <div class="page-card">
+            <div class="form-card-header"><div><h3 class="form-card-title">SMS Gateway</h3></div></div>
+            <div class="form-card-body">
+              <div class="row g-3">
+                <div class="col-12 col-md-6"><div class="form-field"><label>Provider</label><select class="select-primary" [(ngModel)]="sms.provider"><option>Jazz</option><option>Zong</option><option>Twilio</option><option>SMSGlobal</option></select></div></div>
+                <div class="col-12 col-md-6"><div class="form-field"><label>Sender ID</label><input type="text" class="input-secondary" [(ngModel)]="sms.senderId" /></div></div>
+                <div class="col-12 col-md-6"><div class="form-field"><label>API Key</label><input type="password" class="input-secondary" [(ngModel)]="sms.apiKey" /></div></div>
+                <div class="col-12">
+                  <label class="switch-line">
+                    <span><strong>Send SMS for Fee</strong><small>Reminders, receipts, defaulters.</small></span>
+                    <label class="switch"><input type="checkbox" [(ngModel)]="sms.enableForFee" /><span class="slider"></span></label>
+                  </label>
+                  <label class="switch-line">
+                    <span><strong>Send SMS for Attendance</strong><small>Daily attendance alerts.</small></span>
+                    <label class="switch"><input type="checkbox" [(ngModel)]="sms.enableForAttendance" /><span class="slider"></span></label>
+                  </label>
+                  <label class="switch-line">
+                    <span><strong>Send SMS for Diary</strong><small>Daily diary delivery.</small></span>
+                    <label class="switch"><input type="checkbox" [(ngModel)]="sms.enableForDiary" /><span class="slider"></span></label>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+        @case ('notifications') {
+          <div class="page-card">
+            <div class="form-card-header"><div><h3 class="form-card-title">Notifications</h3></div></div>
+            <div class="form-card-body">
+              <label class="switch-line"><span><strong>Fee Reminders</strong><small>Notify parents about upcoming fee.</small></span><label class="switch"><input type="checkbox" [(ngModel)]="notifications.feeReminder" /><span class="slider"></span></label></label>
+              <label class="switch-line"><span><strong>Attendance Alerts</strong><small>Daily attendance summary.</small></span><label class="switch"><input type="checkbox" [(ngModel)]="notifications.attendanceAlerts" /><span class="slider"></span></label></label>
+              <label class="switch-line"><span><strong>Exam Results</strong><small>When results are published.</small></span><label class="switch"><input type="checkbox" [(ngModel)]="notifications.examResults" /><span class="slider"></span></label></label>
+              <label class="switch-line"><span><strong>Event Reminders</strong><small>Holidays, meetings, events.</small></span><label class="switch"><input type="checkbox" [(ngModel)]="notifications.eventReminders" /><span class="slider"></span></label></label>
+              <label class="switch-line"><span><strong>Push Notifications</strong><small>Mobile app push alerts.</small></span><label class="switch"><input type="checkbox" [(ngModel)]="notifications.pushNotifications" /><span class="slider"></span></label></label>
+            </div>
+          </div>
+        }
+        @case ('security') {
+          <div class="page-card">
+            <div class="form-card-header"><div><h3 class="form-card-title">Security</h3></div></div>
+            <div class="form-card-body">
+              <div class="row g-3">
+                <div class="col-12 col-md-6"><div class="form-field"><label>Password Policy</label><select class="select-primary" [(ngModel)]="security.passwordPolicy"><option value="basic">Basic (6+ chars)</option><option value="medium">Medium (8+ chars, mixed)</option><option value="strong">Strong (10+ chars, symbols)</option></select></div></div>
+                <div class="col-12 col-md-6"><div class="form-field"><label>Session Timeout (minutes)</label><input type="number" class="input-secondary" [(ngModel)]="security.sessionTimeout" /></div></div>
+                <div class="col-12 col-md-6"><div class="form-field"><label>Lockout After Failed Attempts</label><input type="number" class="input-secondary" [(ngModel)]="security.lockoutAttempts" /></div></div>
+                <div class="col-12">
+                  <label class="switch-line"><span><strong>Two-Factor Authentication</strong><small>Require OTP on login for admins.</small></span><label class="switch"><input type="checkbox" [(ngModel)]="security.twoFactor" /><span class="slider"></span></label></label>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+        @case ('integrations') {
+          <div class="page-card">
+            <div class="form-card-header"><div><h3 class="form-card-title">Integrations</h3></div></div>
+            <div class="form-card-body">
+              <div class="integ-grid">
+                <article class="integ-card"><span class="integ-logo">G</span><div class="integ-meta"><strong>Google Workspace</strong><small>Calendar & email sync</small></div><button class="btn-pill-ghost">Connect</button></article>
+                <article class="integ-card"><span class="integ-logo">Z</span><div class="integ-meta"><strong>Zoom</strong><small>Online classes</small></div><button class="btn-pill-ghost">Connect</button></article>
+                <article class="integ-card"><span class="integ-logo">J</span><div class="integ-meta"><strong>JazzCash</strong><small>Online fee collection</small></div><button class="btn-pill-primary">Connected</button></article>
+                <article class="integ-card"><span class="integ-logo">E</span><div class="integ-meta"><strong>Easypaisa</strong><small>Online fee collection</small></div><button class="btn-pill-ghost">Connect</button></article>
+                <article class="integ-card"><span class="integ-logo">W</span><div class="integ-meta"><strong>WhatsApp Business</strong><small>Auto messaging</small></div><button class="btn-pill-ghost">Connect</button></article>
+                <article class="integ-card"><span class="integ-logo">S</span><div class="integ-meta"><strong>Stripe</strong><small>Card payments</small></div><button class="btn-pill-ghost">Connect</button></article>
+              </div>
+            </div>
+          </div>
+        }
+        @case ('appearance') {
+          <div class="page-card">
+            <div class="form-card-header"><div><h3 class="form-card-title">Appearance</h3></div></div>
+            <div class="form-card-body">
+              <div class="row g-3">
+                <div class="col-12 col-md-6"><div class="form-field"><label>Primary Color</label><input type="color" class="input-secondary color-input" [(ngModel)]="appearance.primaryColor" /></div></div>
+                <div class="col-12 col-md-6"><div class="form-field"><label>Sidebar Style</label><select class="select-primary" [(ngModel)]="appearance.sidebarStyle"><option value="light">Light</option><option value="dark">Dark</option></select></div></div>
+                <div class="col-12 col-md-6"><div class="form-field"><label>Layout</label><select class="select-primary" [(ngModel)]="appearance.layout"><option value="fluid">Fluid</option><option value="boxed">Boxed</option></select></div></div>
+              </div>
+            </div>
+          </div>
+        }
+        @case ('backup') {
+          <div class="page-card">
+            <div class="form-card-header"><div><h3 class="form-card-title">Backup & Restore</h3></div></div>
+            <div class="form-card-body">
+              <label class="switch-line"><span><strong>Automatic Backup</strong><small>Schedule automated DB backups.</small></span><label class="switch"><input type="checkbox" [(ngModel)]="backup.autoBackup" /><span class="slider"></span></label></label>
+              <div class="row g-3 mt">
+                <div class="col-12 col-md-6"><div class="form-field"><label>Frequency</label><select class="select-primary" [(ngModel)]="backup.frequency"><option>Daily</option><option>Weekly</option><option>Monthly</option></select></div></div>
+                <div class="col-12 col-md-6"><div class="form-field"><label>Keep Last N Backups</label><input type="number" class="input-secondary" [(ngModel)]="backup.keepLast" /></div></div>
+              </div>
+              <div class="actions mt">
+                <button class="btn-pill-ghost">Restore Backup</button>
+                <button class="btn-pill-primary">Backup Now</button>
+              </div>
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</section>

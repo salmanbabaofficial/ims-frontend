@@ -1,0 +1,107 @@
+<div class="form-back-bar">
+  <button type="button" class="form-back-btn" (click)="onCancel()" title="Back to list">
+    <fa-icon [icon]="faArrowLeft"></fa-icon>
+  </button>
+  <div>
+    <h2 class="page-title">{{ isEdit ? 'Edit Fee Type' : 'Add New Fee Type' }}</h2>
+    <p class="page-subtitle">
+      {{ isEdit ? 'Update fee type details below.' : 'Define a new fee category for the institute.' }}
+    </p>
+  </div>
+</div>
+
+<form class="page-card" (ngSubmit)="onSave()" #feeTypeForm="ngForm" novalidate>
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Fee Type Information</h3>
+      <p class="form-card-subtitle">Configure how this fee is charged and accounted.</p>
+    </div>
+    <span class="form-card-meta">Fields marked with <sup style="color:#e74c3c">*</sup> are required.</span>
+  </div>
+
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Fee Name<sup>*</sup></label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.name" name="name" placeholder="e.g. Tuition Fee" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Short Code</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.code" name="code" placeholder="e.g. TUITION" />
+          <div class="field-hint">Used on challan and in reports.</div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Frequency<sup>*</sup></label>
+          <select class="select-primary" [(ngModel)]="model.frequency" name="frequency">
+            <option value="monthly">Monthly</option>
+            <option value="quarterly">Quarterly</option>
+            <option value="yearly">Yearly</option>
+            <option value="one-time">One Time</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Default Amount<sup>*</sup></label>
+          <input type="number" min="0" class="input-secondary" [(ngModel)]="model.defaultAmount" name="defaultAmount" placeholder="e.g. 5000" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Applicable To</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.applicableTo" name="applicableTo" placeholder="e.g. All Classes / Class 1-5" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Ledger / Account</label>
+          <select class="select-primary" [(ngModel)]="model.account" name="account">
+            <option value="">Select Account</option>
+            @for (a of accounts; track a) {
+              <option [value]="a">{{ a }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="check-line">
+          <input type="checkbox" [(ngModel)]="model.isMandatory" name="isMandatory" />
+          <span>Mandatory fee (applied to all matching students automatically)</span>
+        </label>
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="check-line">
+          <input type="checkbox" [(ngModel)]="model.isRefundable" name="isRefundable" />
+          <span>Refundable (returned on withdrawal)</span>
+        </label>
+      </div>
+      <div class="col-12">
+        <div class="form-field">
+          <label>Description</label>
+          <textarea rows="2" class="input-secondary" [(ngModel)]="model.description" name="description" placeholder="Optional notes..."></textarea>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Status</label>
+          <select class="select-primary" [(ngModel)]="model.status" name="status">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="btn-pill-ghost" (click)="onCancel()">Cancel</button>
+    <button type="submit" class="btn-pill-primary">
+      {{ isEdit ? 'Update Fee Type' : 'Save Fee Type' }}
+    </button>
+  </div>
+</form>

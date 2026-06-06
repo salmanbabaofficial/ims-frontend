@@ -1,1 +1,118 @@
-<p>sections works!</p>
+<section class="sections-page">
+  @if (mode() === 'list') {
+    <header class="page-header">
+      <div>
+        <h2 class="page-title">Sections</h2>
+        <p class="page-subtitle">Manage sections under each class (A, B, C ...).</p>
+      </div>
+      <div class="page-header-actions">
+        <div
+          class="searchbox"
+          [class.is-open]="searchOpen()"
+          (clickOutside)="searchOpen.set(false)"
+        >
+          <input
+            #searchInput
+            type="text"
+            class="searchbox-input"
+            [(ngModel)]="searchTerm"
+            placeholder="Search sections..."
+          />
+          <button
+            type="button"
+            class="searchbox-icon"
+            (click)="toggleSearch()"
+            aria-label="Toggle search"
+          >
+            <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+          </button>
+        </div>
+        <button type="button" class="btn-pill-primary" (click)="openAdd()">
+          <fa-icon [icon]="faPlus"></fa-icon>
+          Add New Section
+        </button>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <select class="select-primary class-filter" [(ngModel)]="selectedClass">
+          <option value="all">All Classes</option>
+          @for (c of classOptions; track c) {
+            <option [value]="c">{{ c }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="data-table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="col-id">#</th>
+            <th>Section</th>
+            <th>Class</th>
+            <th>Capacity</th>
+            <th>Enrolled</th>
+            <th>Class Teacher</th>
+            <th>Status</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (s of sections; track s.id; let i = $index) {
+            <tr>
+              <td class="col-id">{{ i + 1 }}</td>
+              <td><strong>{{ s.name }}</strong></td>
+              <td>{{ s.className }}</td>
+              <td>{{ s.capacity }}</td>
+              <td>{{ s.enrolled }}</td>
+              <td>{{ s.classTeacher }}</td>
+              <td>
+                <span
+                  class="badge-status"
+                  [class.active]="s.status === 'active'"
+                  [class.inactive]="s.status === 'inactive'"
+                >{{ s.status }}</span>
+              </td>
+              <td class="col-actions">
+                <div class="row-actions">
+                  <button type="button" class="icon-btn" title="View">
+                    <fa-icon [icon]="faEye"></fa-icon>
+                  </button>
+                  <button type="button" class="icon-btn" title="Edit" (click)="openEdit(s)">
+                    <fa-icon [icon]="faPenToSquare"></fa-icon>
+                  </button>
+                  <button type="button" class="icon-btn danger" title="Delete">
+                    <fa-icon [icon]="faTrash"></fa-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="8" class="empty-state">There are no sections.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer">
+      <span>Showing {{ sections.length }} of {{ sections.length }} entries</span>
+      <ul class="pagination">
+        <li class="page-item disabled"><button type="button" class="page-link">‹</button></li>
+        <li class="page-item active"><button type="button" class="page-link">1</button></li>
+        <li class="page-item disabled"><button type="button" class="page-link">›</button></li>
+      </ul>
+    </div>
+  } @else {
+    <app-add-edit-section
+      [editing]="editing()"
+      [classOptions]="classOptions"
+      [teacherOptions]="teacherOptions"
+      (cancelled)="backToList()"
+      (saved)="backToList()"
+    />
+  }
+</section>

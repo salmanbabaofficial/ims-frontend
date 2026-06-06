@@ -1,0 +1,281 @@
+:host {
+  display: block;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.role-page {
+  position: relative;
+  height: 100dvh;
+  padding: 22px clamp(16px, 4vw, 40px);
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(900px 500px at 100% 0%, rgba(237, 158, 66, 0.20), transparent 60%),
+    radial-gradient(700px 400px at 0% 100%, rgba(168, 85, 247, 0.10), transparent 60%),
+    linear-gradient(180deg, #fefaf4 0%, #ffffff 60%, #faf6f0 100%);
+  overflow: hidden;
+}
+
+/* ============ BACKGROUND DECORATION ============ */
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+.orb-1 {
+  width: 380px; height: 380px;
+  top: -120px; right: -80px;
+  background: radial-gradient(circle, #ed9e42, transparent 70%);
+  opacity: 0.45;
+}
+.orb-2 {
+  width: 320px; height: 320px;
+  bottom: -120px; left: -80px;
+  background: radial-gradient(circle, #2c7be5, transparent 70%);
+  opacity: 0.22;
+}
+.bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(0,0,0,0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============ HEADER ============ */
+.role-header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-mark {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #222 0%, #000 100%);
+  color: #ed9e42;
+  font-family: "Maven Pro", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  letter-spacing: 1px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+.brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+.brand-text strong {
+  font-family: "Maven Pro", sans-serif;
+  font-size: 15px;
+  color: #1a1a1a;
+}
+.brand-text span {
+  font-size: 11.5px;
+  color: #8a8a8a;
+}
+
+.header-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ed9e42;
+  background: #fff;
+  border: 1px solid #ededed;
+  padding: 9px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+  transition: all 0.2s ease;
+}
+.header-link:hover {
+  border-color: #ed9e42;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(237,158,66,0.18);
+}
+.header-link fa-icon { font-size: 11px; }
+
+/* ============ CENTER STAGE ============ */
+.role-center {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  min-height: 0;
+}
+
+.role-hero {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.eyebrow {
+  display: inline-block;
+  padding: 5px 14px;
+  background: #fff;
+  border: 1px solid #f1d6b0;
+  color: #ed9e42;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(237,158,66,0.10);
+}
+.role-hero h1 {
+  font-family: "Maven Pro", sans-serif;
+  font-weight: 700;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.1;
+  color: #111;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+/* ============ 2x2 GRID OF CARDS ============ */
+.role-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(260px, 320px));
+  gap: 16px;
+  width: 100%;
+  max-width: 680px;
+}
+
+.role-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 28px 22px;
+  min-height: 110px;
+  background: #ffffff;
+  border: 1px solid #f1eee9;
+  border-radius: 18px;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+}
+.role-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 4px;
+  background: var(--accent, #ed9e42);
+  border-radius: 4px 0 0 4px;
+  transform: scaleY(0.5);
+  transform-origin: center;
+  transition: transform 0.25s ease;
+}
+.role-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.10);
+  border-color: var(--accent, #ed9e42);
+}
+.role-card:hover::before { transform: scaleY(1); }
+
+.role-card[data-accent="admin"]   { --accent: #ed9e42; --accent-soft: #fff3e2; --accent-glow: rgba(237, 158, 66, 0.22); }
+.role-card[data-accent="teacher"] { --accent: #2c7be5; --accent-soft: #e9f1ff; --accent-glow: rgba(44, 123, 229, 0.20); }
+.role-card[data-accent="student"] { --accent: #14b8a6; --accent-soft: #e2f7f4; --accent-glow: rgba(20, 184, 166, 0.20); }
+.role-card[data-accent="parent"]  { --accent: #a855f7; --accent-soft: #f3e9fe; --accent-glow: rgba(168, 85, 247, 0.20); }
+
+.role-icon-wrap {
+  width: 60px; height: 60px;
+  border-radius: 15px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.role-card:hover .role-icon-wrap {
+  transform: scale(1.05) rotate(-3deg);
+  box-shadow: 0 8px 20px var(--accent-glow);
+}
+
+.role-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.role-info h3 {
+  font-family: "Maven Pro", sans-serif;
+  font-size: 17px;
+  color: #1a1a1a;
+  margin: 0;
+}
+.role-sub {
+  font-size: 12px;
+  color: #8a8a8a;
+  font-weight: 500;
+}
+
+.role-arrow {
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  background: #f9f7f3;
+  color: #b8b8b8;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+.role-card:hover .role-arrow {
+  background: var(--accent);
+  color: #fff;
+  transform: translateX(2px);
+}
+
+/* ============ FOOTER ============ */
+.role-footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  font-size: 11.5px;
+  color: #999;
+  flex-shrink: 0;
+}
+.role-footer a {
+  color: #6c757d;
+  text-decoration: none;
+}
+.role-footer a:hover { color: #ed9e42; }
+.role-footer .dot { color: #cfcfcf; }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  .role-grid { grid-template-columns: 1fr; max-width: 380px; }
+  .role-hero h1 { font-size: 26px; }
+  .role-center { gap: 20px; }
+}
+@media (max-height: 700px) {
+  .role-center { gap: 18px; }
+  .role-card { padding: 20px 18px; min-height: 92px; }
+  .role-icon-wrap { width: 50px; height: 50px; font-size: 20px; }
+  .role-info h3 { font-size: 16px; }
+  .role-hero h1 { font-size: 28px; }
+}

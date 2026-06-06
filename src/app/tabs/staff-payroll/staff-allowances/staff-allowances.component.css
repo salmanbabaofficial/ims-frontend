@@ -1,0 +1,12 @@
+:host { display: block; }
+.avatar-name { display: flex; align-items: center; gap: 10px; }
+.avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--light-primary); color: var(--theme-color);
+  font-weight: 700; display: inline-flex; align-items: center;
+  justify-content: center; font-size: 12.5px;
+}
+.right { text-align: right; }
+.num-input { max-width: 110px; text-align: right; margin-left: auto; }
+.income-text { color: #16a34a; }
+.class-filter { min-width: 200px; }

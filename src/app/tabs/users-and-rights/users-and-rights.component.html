@@ -1,1 +1,150 @@
-<router-outlet></router-outlet>
+<section class="users-rights-page">
+  @if (mode() === 'list') {
+    <header class="page-header">
+      <div>
+        <h2 class="page-title">Users & Rights</h2>
+        <p class="page-subtitle">Manage application users and configure access rights per role.</p>
+      </div>
+      <div class="page-header-actions">
+        @if (activeTab() === 'users') {
+          <div class="searchbox" [class.is-open]="searchOpen()" (clickOutside)="searchOpen.set(false)">
+            <input #searchInput type="text" class="searchbox-input" [(ngModel)]="searchTerm" placeholder="Search users..." />
+            <button type="button" class="searchbox-icon" (click)="toggleSearch()" aria-label="Toggle search">
+              <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+            </button>
+          </div>
+          <button type="button" class="btn-pill-primary" (click)="openAdd()">
+            <fa-icon [icon]="faPlus"></fa-icon>
+            Add User
+          </button>
+        }
+      </div>
+    </header>
+
+    <div class="tabbar">
+      <button type="button" class="tab" [class.active]="activeTab() === 'users'" (click)="activeTab.set('users')">
+        <fa-icon [icon]="faKey"></fa-icon>
+        Users
+      </button>
+      <button type="button" class="tab" [class.active]="activeTab() === 'rights'" (click)="activeTab.set('rights')">
+        <fa-icon [icon]="faShield"></fa-icon>
+        Rights
+      </button>
+    </div>
+
+    @if (activeTab() === 'users') {
+      <div class="data-table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="col-id">#</th>
+              <th>User</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Last Login</th>
+              <th>Status</th>
+              <th class="col-actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (u of users; track u.id; let i = $index) {
+              <tr>
+                <td class="col-id">{{ i + 1 }}</td>
+                <td>
+                  <div class="avatar-name">
+                    <span class="avatar">{{ u.initial }}</span>
+                    <strong>{{ u.name }}</strong>
+                  </div>
+                </td>
+                <td>{{ u.email }}</td>
+                <td><span class="role-pill" [attr.data-role]="u.role">{{ u.role }}</span></td>
+                <td>{{ u.lastLogin }}</td>
+                <td>
+                  <span class="badge-status" [class.active]="u.status === 'active'" [class.inactive]="u.status === 'inactive'">
+                    {{ u.status }}
+                  </span>
+                </td>
+                <td class="col-actions">
+                  <div class="row-actions">
+                    <button type="button" class="icon-btn" title="Reset Password"><fa-icon [icon]="faKey"></fa-icon></button>
+                    <button type="button" class="icon-btn" title="Edit" (click)="openEdit(u)"><fa-icon [icon]="faEdit"></fa-icon></button>
+                    <button type="button" class="icon-btn danger" title="Delete"><fa-icon [icon]="faTrash"></fa-icon></button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <div class="page-card filter-card">
+        <div class="form-field">
+          <label>Select Role</label>
+          <select class="select-primary" [ngModel]="selectedRole()" (ngModelChange)="selectedRole.set($event)">
+            <option value="Admin">Admin</option>
+            <option value="Teacher">Teacher</option>
+            <option value="Accountant">Accountant</option>
+            <option value="Parent">Parent</option>
+            <option value="Student">Student</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Module</th>
+              <th class="center">View</th>
+              <th class="center">Add</th>
+              <th class="center">Edit</th>
+              <th class="center">Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of permissions; track p.id) {
+              <tr>
+                <td><strong>{{ p.label }}</strong></td>
+                <td class="center">
+                  <label class="switch">
+                    <input type="checkbox" [(ngModel)]="p.view" name="v{{ p.id }}" />
+                    <span class="slider"></span>
+                  </label>
+                </td>
+                <td class="center">
+                  <label class="switch">
+                    <input type="checkbox" [(ngModel)]="p.add" name="a{{ p.id }}" />
+                    <span class="slider"></span>
+                  </label>
+                </td>
+                <td class="center">
+                  <label class="switch">
+                    <input type="checkbox" [(ngModel)]="p.edit" name="e{{ p.id }}" />
+                    <span class="slider"></span>
+                  </label>
+                </td>
+                <td class="center">
+                  <label class="switch">
+                    <input type="checkbox" [(ngModel)]="p.delete" name="d{{ p.id }}" />
+                    <span class="slider"></span>
+                  </label>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="form-actions mt">
+        <button type="button" class="btn-pill-ghost">Reset</button>
+        <button type="button" class="btn-pill-primary">Save Permissions</button>
+      </div>
+    }
+  } @else {
+    <app-add-edit-user
+      [editing]="editing()"
+      (cancelled)="backToList()"
+      (saved)="backToList()"
+    />
+  }
+</section>

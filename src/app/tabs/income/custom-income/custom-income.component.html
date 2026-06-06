@@ -1,1 +1,91 @@
-<p>custom-income works!</p>
+<section class="custom-income-page">
+  @if (mode() === 'list') {
+    <header class="page-header">
+      <div>
+        <h2 class="page-title">Custom Income</h2>
+        <p class="page-subtitle">Record additional income received by the institute.</p>
+      </div>
+      <div class="page-header-actions">
+        <div class="searchbox" [class.is-open]="searchOpen()" (clickOutside)="searchOpen.set(false)">
+          <input #searchInput type="text" class="searchbox-input" [(ngModel)]="searchTerm" placeholder="Search income..." />
+          <button type="button" class="searchbox-icon" (click)="toggleSearch()" aria-label="Toggle search">
+            <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+          </button>
+        </div>
+        <button type="button" class="btn-pill-ghost">
+          <fa-icon [icon]="faFileExport"></fa-icon>
+          Export
+        </button>
+        <button type="button" class="btn-pill-primary" (click)="openAdd()">
+          <fa-icon [icon]="faPlus"></fa-icon>
+          Add Income
+        </button>
+      </div>
+    </header>
+
+    <div class="stats-row">
+      <div class="stat-card success">
+        <span class="stat-label">Total Income</span>
+        <strong class="stat-value">Rs. {{ total }}</strong>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Entries</span>
+        <strong class="stat-value">{{ rows.length }}</strong>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <select class="select-primary class-filter" [(ngModel)]="selectedType">
+          <option value="all">All Types</option>
+          @for (t of typeOptions; track t) {
+            <option [value]="t">{{ t }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="data-table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="col-id">#</th>
+            <th>Date</th>
+            <th>Voucher #</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Received From</th>
+            <th>Method</th>
+            <th class="right">Amount</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of rows; track r.id; let i = $index) {
+            <tr>
+              <td class="col-id">{{ i + 1 }}</td>
+              <td>{{ r.date }}</td>
+              <td><strong>{{ r.voucherNo }}</strong></td>
+              <td><span class="freq-pill">{{ r.type }}</span></td>
+              <td>{{ r.description }}</td>
+              <td>{{ r.receivedFrom }}</td>
+              <td>{{ r.paymentMethod }}</td>
+              <td class="right"><strong class="income-text">+ Rs. {{ r.amount }}</strong></td>
+              <td class="col-actions">
+                <div class="row-actions">
+                  <button type="button" class="icon-btn" title="View"><fa-icon [icon]="faEye"></fa-icon></button>
+                  <button type="button" class="icon-btn" title="Edit" (click)="openEdit(r)"><fa-icon [icon]="faPenToSquare"></fa-icon></button>
+                  <button type="button" class="icon-btn danger" title="Delete"><fa-icon [icon]="faTrash"></fa-icon></button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="9" class="empty-state">No income entries.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <app-add-edit-income [editing]="editing()" (cancelled)="backToList()" (saved)="backToList()" />
+  }
+</section>

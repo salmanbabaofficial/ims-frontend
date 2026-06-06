@@ -1,1 +1,79 @@
-<router-outlet></router-outlet>
+<section class="messages-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Messages</h2>
+      <p class="page-subtitle">Two-way conversations with parents, staff and admin.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faPenToSquare"></fa-icon>
+        New Message
+      </button>
+    </div>
+  </header>
+
+  <div class="chat-shell">
+    <aside class="chat-sidebar">
+      <div class="sidebar-search">
+        <fa-icon [icon]="faSearch"></fa-icon>
+        <input type="text" placeholder="Search conversations..." [(ngModel)]="searchTerm" />
+      </div>
+      <ul class="thread-list">
+        @for (t of threads; track t.id) {
+          <li class="thread-item" [class.active]="selectedId() === t.id" (click)="select(t.id)">
+            <span class="avatar">{{ t.initial }}</span>
+            <div class="thread-meta">
+              <div class="thread-row">
+                <strong>{{ t.name }}</strong>
+                <small>{{ t.time }}</small>
+              </div>
+              <div class="thread-row-2">
+                <span class="preview">{{ t.preview }}</span>
+                @if (t.unread > 0) {
+                  <span class="unread">{{ t.unread }}</span>
+                }
+              </div>
+            </div>
+          </li>
+        }
+      </ul>
+    </aside>
+
+    <main class="chat-panel">
+      @if (current) {
+        <header class="chat-header">
+          <span class="avatar">{{ current.initial }}</span>
+          <div class="chat-header-meta">
+            <strong>{{ current.name }}</strong>
+            <small>{{ current.role }}</small>
+          </div>
+          <div class="chat-header-actions">
+            <button type="button" class="icon-btn" title="Star"><fa-icon [icon]="faStar"></fa-icon></button>
+            <button type="button" class="icon-btn danger" title="Delete"><fa-icon [icon]="faTrash"></fa-icon></button>
+          </div>
+        </header>
+
+        <div class="chat-body">
+          @for (m of messages; track m.id) {
+            <div class="bubble-row" [class.mine]="m.isMine">
+              <div class="bubble">
+                <p>{{ m.text }}</p>
+                <small>{{ m.time }}</small>
+              </div>
+            </div>
+          }
+        </div>
+
+        <footer class="chat-input">
+          <button type="button" class="icon-btn" title="Attach"><fa-icon [icon]="faPaperclip"></fa-icon></button>
+          <textarea rows="1" placeholder="Type a message..." [(ngModel)]="composeText"></textarea>
+          <button type="button" class="send-btn" (click)="send()">
+            <fa-icon [icon]="faSend"></fa-icon>
+          </button>
+        </footer>
+      } @else {
+        <div class="empty-state">Select a conversation to start chatting.</div>
+      }
+    </main>
+  </div>
+</section>

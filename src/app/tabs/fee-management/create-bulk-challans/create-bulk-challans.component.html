@@ -1,1 +1,122 @@
-<p>create-bulk-challans works!</p>
+<section class="bulk-challan-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Create Bulk Challans</h2>
+      <p class="page-subtitle">Generate challans for multiple students at once.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faPaperPlane"></fa-icon>
+        Generate Challans
+      </button>
+    </div>
+  </header>
+
+  <div class="page-card">
+    <div class="form-card-header">
+      <div>
+        <h3 class="form-card-title">Target Selection</h3>
+        <p class="form-card-subtitle">Pick the classes / sections to generate challans for.</p>
+      </div>
+    </div>
+    <div class="form-card-body">
+      <div class="row g-3">
+        <div class="col-12 col-md-4">
+          <div class="form-field">
+            <label>Class<sup>*</sup></label>
+            <select class="select-primary" [(ngModel)]="selectedClass">
+              <option value="">Select Class</option>
+              @for (c of classOptions; track c) {
+                <option [value]="c">{{ c }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="form-field">
+            <label>Section</label>
+            <select class="select-primary" [(ngModel)]="selectedSection">
+              <option value="">Select Section</option>
+              @for (s of sectionOptions; track s) {
+                <option [value]="s">{{ s }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        <div class="col-12 col-md-2">
+          <div class="form-field">
+            <label>Issue Date</label>
+            <input type="date" class="input-secondary" [(ngModel)]="issueDate" />
+          </div>
+        </div>
+        <div class="col-12 col-md-2">
+          <div class="form-field">
+            <label>Due Date</label>
+            <input type="date" class="input-secondary" [(ngModel)]="dueDate" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="card-divider" />
+
+    <div class="form-card-header">
+      <div>
+        <h3 class="form-card-title">Fee Components</h3>
+        <p class="form-card-subtitle">Items that will be included in every generated challan.</p>
+      </div>
+      <button type="button" class="btn-pill-primary sm" (click)="addItem()">
+        <fa-icon [icon]="faPlus"></fa-icon>
+        Add Item
+      </button>
+    </div>
+
+    <div class="form-card-body">
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th>Fee Type</th>
+            <th class="right">Amount</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (it of items(); track it.id) {
+            <tr>
+              <td>
+                <select class="select-primary" [(ngModel)]="it.feeType" name="ft{{ it.id }}">
+                  <option value="">Select Fee Type</option>
+                  @for (f of feeTypes; track f) {
+                    <option [value]="f">{{ f }}</option>
+                  }
+                </select>
+              </td>
+              <td class="right">
+                <input type="number" class="input-secondary number-input" [(ngModel)]="it.amount" name="amt{{ it.id }}" />
+              </td>
+              <td class="actions">
+                <button type="button" class="icon-btn danger" (click)="removeItem(it.id)" title="Remove">
+                  <fa-icon [icon]="faTrash"></fa-icon>
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="3" class="empty-state">No fee items added.</td></tr>
+          }
+        </tbody>
+        <tfoot>
+          <tr>
+            <td><strong>Per Student Total</strong></td>
+            <td class="right"><strong class="grand">Rs. {{ total }}</strong></td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <label class="check-line">
+        <input type="checkbox" [(ngModel)]="applyDiscount" />
+        <span>Apply scholarship / sibling discount where applicable</span>
+      </label>
+    </div>
+  </div>
+</section>

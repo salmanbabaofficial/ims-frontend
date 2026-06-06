@@ -1,0 +1,54 @@
+<div class="form-back-bar">
+  <button type="button" class="form-back-btn" (click)="onCancel()" title="Back to list">
+    <fa-icon [icon]="faArrowLeft"></fa-icon>
+  </button>
+  <div>
+    <h2 class="page-title">{{ isEdit ? 'Edit Fine Type' : 'Add Fine Type' }}</h2>
+    <p class="page-subtitle">Define a fine category and its default amount.</p>
+  </div>
+</div>
+
+<form class="page-card" (ngSubmit)="onSave()" #fineTypeForm="ngForm" novalidate>
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Fine Type Information</h3>
+      <p class="form-card-subtitle">Fill in the details below.</p>
+    </div>
+    <span class="form-card-meta">Fields marked with <sup style="color:#e74c3c">*</sup> are required.</span>
+  </div>
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Fine Name<sup>*</sup></label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.name" name="name" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Default Amount<sup>*</sup></label>
+          <input type="number" class="input-secondary" [(ngModel)]="model.defaultAmount" name="amount" />
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-field">
+          <label>Description</label>
+          <textarea rows="3" class="input-secondary" [(ngModel)]="model.description" name="description"></textarea>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Status</label>
+          <select class="select-primary" [(ngModel)]="model.status" name="status">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-actions">
+    <button type="button" class="btn-pill-ghost" (click)="onCancel()">Cancel</button>
+    <button type="submit" class="btn-pill-primary">{{ isEdit ? 'Update' : 'Save' }}</button>
+  </div>
+</form>

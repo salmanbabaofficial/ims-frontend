@@ -1,1 +1,102 @@
-<p>printsend-diary works!</p>
+<section class="printsend-diary-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Print / Send Diary</h2>
+      <p class="page-subtitle">Print today's diary or send it directly to parents.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-ghost">
+        <fa-icon [icon]="faPrint"></fa-icon>
+        Print
+      </button>
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faSend"></fa-icon>
+        Send to {{ selectedCount }} Parents
+      </button>
+    </div>
+  </header>
+
+  <div class="page-card filter-card">
+    <div class="row g-3">
+      <div class="col-12 col-md-3">
+        <div class="form-field">
+          <label>Date</label>
+          <input type="date" class="input-secondary" [(ngModel)]="diaryDate" />
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="form-field">
+          <label>Class</label>
+          <select class="select-primary" [(ngModel)]="selectedClass">
+            @for (c of classOptions; track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="form-field">
+          <label>Section</label>
+          <select class="select-primary" [(ngModel)]="selectedSection">
+            @for (s of sectionOptions; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="form-field">
+          <label>Channel</label>
+          <select class="select-primary" [(ngModel)]="channel">
+            <option value="sms">SMS</option>
+            <option value="whatsapp">WhatsApp</option>
+            <option value="email">Email</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="diary-grid">
+    <div class="page-card list-card">
+      <header class="block-head">
+        <div>
+          <strong>Recipients</strong>
+          <small>{{ selectedCount }} of {{ totalCount }} selected</small>
+        </div>
+        <label class="check-line">
+          <input type="checkbox" [checked]="selectedCount === totalCount" (change)="toggleAll(($any($event.target)).checked)" />
+          <span>Select all</span>
+        </label>
+      </header>
+      <ul class="recipient-list">
+        @for (r of recipients(); track r.id) {
+          <li>
+            <label class="row-line">
+              <input type="checkbox" [checked]="r.selected" (change)="toggleOne(r.id, ($any($event.target)).checked)" />
+              <span class="avatar">{{ r.initial }}</span>
+              <div class="meta">
+                <strong>{{ r.name }}</strong>
+                <small>{{ r.className }} · Parent: {{ r.parent }} · {{ r.phone }}</small>
+              </div>
+            </label>
+          </li>
+        }
+      </ul>
+    </div>
+
+    <div class="page-card">
+      <header class="block-head">
+        <div><strong>Message Template</strong></div>
+      </header>
+      <div class="form-field">
+        <label>Message</label>
+        <textarea rows="8" class="input-secondary" [(ngModel)]="message"></textarea>
+      </div>
+      <div class="sms-meta">
+        <span>Length: <code>{{ message.length }}</code></span>
+        <span>SMS Count: <code>{{ (message.length / 160) | number: '1.0-0' }}</code></span>
+      </div>
+    </div>
+  </div>
+</section>

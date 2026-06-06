@@ -1,0 +1,39 @@
+:host { display: block; }
+.filter-card { margin-bottom: 16px; }
+.diary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 14px;
+}
+.diary-card {
+  background: #fff;
+  border: 1px solid #eef1f6;
+  border-radius: 14px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+.diary-card:hover { border-color: var(--theme-color); }
+.diary-head {
+  background: var(--light-primary);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.diary-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--theme-color); color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.subject-pick { flex: 1; }
+.diary-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+textarea.input-secondary { resize: vertical; }
+.add-row-btn { display: flex; justify-content: center; margin-top: 16px; }

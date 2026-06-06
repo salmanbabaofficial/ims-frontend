@@ -1,1 +1,118 @@
-<p>videos works!</p>
+<section class="videos-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Lecture Videos</h2>
+      <p class="page-subtitle">Upload and share video lessons with students.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-primary" (click)="showForm.set(true)">
+        <fa-icon [icon]="faPlus"></fa-icon>
+        Upload Video
+      </button>
+    </div>
+  </header>
+
+  @if (showForm()) {
+    <div class="page-card">
+      <div class="form-card-header">
+        <div>
+          <h3 class="form-card-title">Upload Video</h3>
+          <p class="form-card-subtitle">Either upload a video file or paste a hosted video URL.</p>
+        </div>
+      </div>
+      <div class="form-card-body">
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <div class="form-field">
+              <label>Title<sup>*</sup></label>
+              <input type="text" class="input-secondary" [(ngModel)]="newVideo.title" placeholder="e.g. Photosynthesis Explained" />
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div class="form-field">
+              <label>Class</label>
+              <select class="select-primary" [(ngModel)]="newVideo.className">
+                <option value="">Select Class</option>
+                @for (c of classOptions; track c) {
+                  <option [value]="c">{{ c }}</option>
+                }
+              </select>
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div class="form-field">
+              <label>Subject</label>
+              <select class="select-primary" [(ngModel)]="newVideo.subject">
+                <option value="">Select Subject</option>
+                @for (s of subjectOptions; track s) {
+                  <option [value]="s">{{ s }}</option>
+                }
+              </select>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="form-field">
+              <label>Video File</label>
+              <input type="file" accept="video/*" class="input-secondary" />
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="form-field">
+              <label>or Video URL (YouTube / Vimeo)</label>
+              <input type="url" class="input-secondary" [(ngModel)]="newVideo.url" placeholder="https://..." />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-pill-ghost" (click)="showForm.set(false)">Cancel</button>
+        <button type="button" class="btn-pill-primary" (click)="showForm.set(false)">
+          <fa-icon [icon]="faUpload"></fa-icon>
+          Upload
+        </button>
+      </div>
+    </div>
+  }
+
+  <div class="toolbar mt">
+    <div class="toolbar-left">
+      <select class="select-primary class-filter" [(ngModel)]="selectedClass">
+        <option value="all">All Classes</option>
+        @for (c of classOptions; track c) {
+          <option [value]="c">{{ c }}</option>
+        }
+      </select>
+      <select class="select-primary class-filter" [(ngModel)]="selectedSubject">
+        <option value="all">All Subjects</option>
+        @for (s of subjectOptions; track s) {
+          <option [value]="s">{{ s }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <div class="videos-grid">
+    @for (v of videos; track v.id) {
+      <article class="video-card">
+        <div class="video-thumb" [style.background]="v.thumbColor">
+          <button type="button" class="play-btn"><fa-icon [icon]="faPlay"></fa-icon></button>
+          <span class="duration">{{ v.duration }}</span>
+        </div>
+        <div class="video-body">
+          <h3>{{ v.title }}</h3>
+          <p class="muted">{{ v.subject }} · {{ v.className }}</p>
+          <div class="video-meta">
+            <span><fa-icon [icon]="faEye"></fa-icon> {{ v.views }} views</span>
+            <span>{{ v.uploadedOn }}</span>
+          </div>
+        </div>
+        <footer class="video-actions">
+          <button type="button" class="icon-btn" title="Preview"><fa-icon [icon]="faPlay"></fa-icon></button>
+          <button type="button" class="icon-btn danger" title="Delete"><fa-icon [icon]="faTrash"></fa-icon></button>
+        </footer>
+      </article>
+    } @empty {
+      <div class="empty-state">No videos uploaded.</div>
+    }
+  </div>
+</section>

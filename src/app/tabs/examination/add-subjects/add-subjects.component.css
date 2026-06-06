@@ -1,0 +1,24 @@
+:host { display: block; }
+.mt { margin-top: 16px; }
+.freq-pill {
+  display: inline-block;
+  background: var(--light-primary);
+  color: var(--theme-color);
+  border-radius: 50px;
+  padding: 3px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+.class-filter { min-width: 200px; }
+.check-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.check-line input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--theme-color);
+}

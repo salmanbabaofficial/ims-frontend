@@ -1,1 +1,147 @@
-<p>mark-attendance works!</p>
+<section class="mark-attendance-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Mark Attendance</h2>
+      <p class="page-subtitle">Mark daily attendance for students of a class.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faSave"></fa-icon>
+        Save Attendance
+      </button>
+    </div>
+  </header>
+
+  <div class="page-card filter-card">
+    <div class="row g-3">
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Date</label>
+          <input type="date" class="input-secondary" [(ngModel)]="selectedDate" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Class</label>
+          <select class="select-primary" [(ngModel)]="selectedClass">
+            <option value="">Select Class</option>
+            @for (c of classOptions; track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Section</label>
+          <select class="select-primary" [(ngModel)]="selectedSection">
+            <option value="">Select Section</option>
+            @for (s of sectionOptions; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="attendance-summary">
+    <div class="summary-pill present">
+      <span>Present</span>
+      <strong>{{ count('present') }}</strong>
+    </div>
+    <div class="summary-pill absent">
+      <span>Absent</span>
+      <strong>{{ count('absent') }}</strong>
+    </div>
+    <div class="summary-pill leave">
+      <span>Leave</span>
+      <strong>{{ count('leave') }}</strong>
+    </div>
+    <div class="summary-pill late">
+      <span>Late</span>
+      <strong>{{ count('late') }}</strong>
+    </div>
+    <div class="summary-pill total">
+      <span>Total</span>
+      <strong>{{ students().length }}</strong>
+    </div>
+    <div class="quick-actions">
+      <button type="button" class="btn-quick" (click)="markAll('present')">Mark All Present</button>
+      <button type="button" class="btn-quick danger" (click)="markAll('absent')">Mark All Absent</button>
+    </div>
+  </div>
+
+  <div class="data-table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-id">#</th>
+          <th>Roll No</th>
+          <th>Student</th>
+          <th>Father Name</th>
+          <th class="col-mark">Attendance</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (s of students(); track s.id; let i = $index) {
+          <tr>
+            <td class="col-id">{{ i + 1 }}</td>
+            <td>{{ s.rollNo }}</td>
+            <td>
+              <div class="avatar-name">
+                <span class="avatar">{{ s.initial }}</span>
+                <strong>{{ s.name }}</strong>
+              </div>
+            </td>
+            <td>{{ s.fatherName }}</td>
+            <td class="col-mark">
+              <div class="mark-group">
+                <button
+                  type="button"
+                  class="mark-btn present"
+                  [class.active]="s.mark === 'present'"
+                  (click)="setMark(s.id, 'present')"
+                  title="Present"
+                >
+                  <fa-icon [icon]="faCheck"></fa-icon> P
+                </button>
+                <button
+                  type="button"
+                  class="mark-btn absent"
+                  [class.active]="s.mark === 'absent'"
+                  (click)="setMark(s.id, 'absent')"
+                  title="Absent"
+                >
+                  <fa-icon [icon]="faXmark"></fa-icon> A
+                </button>
+                <button
+                  type="button"
+                  class="mark-btn leave"
+                  [class.active]="s.mark === 'leave'"
+                  (click)="setMark(s.id, 'leave')"
+                  title="Leave"
+                >
+                  L
+                </button>
+                <button
+                  type="button"
+                  class="mark-btn late"
+                  [class.active]="s.mark === 'late'"
+                  (click)="setMark(s.id, 'late')"
+                  title="Late"
+                >
+                  <fa-icon [icon]="faClock"></fa-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="5" class="empty-state">Select a class and section to load students.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

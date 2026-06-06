@@ -1,0 +1,10 @@
+.sections-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.class-filter {
+  width: auto;
+  min-width: 160px;
+  display: inline-block;
+}

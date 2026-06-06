@@ -1,1 +1,85 @@
-<p>daily-diary works!</p>
+<section class="daily-diary-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Daily Diary</h2>
+      <p class="page-subtitle">Write today's classwork, homework and remarks for each subject.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faSave"></fa-icon>
+        Save Diary
+      </button>
+    </div>
+  </header>
+
+  <div class="page-card filter-card">
+    <div class="row g-3">
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Date</label>
+          <input type="date" class="input-secondary" [(ngModel)]="diaryDate" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Class</label>
+          <select class="select-primary" [(ngModel)]="selectedClass">
+            @for (c of classOptions; track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Section</label>
+          <select class="select-primary" [(ngModel)]="selectedSection">
+            @for (s of sectionOptions; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="diary-grid">
+    @for (e of entries(); track e.id) {
+      <article class="diary-card">
+        <header class="diary-head">
+          <span class="diary-icon"><fa-icon [icon]="faBookOpen"></fa-icon></span>
+          <select class="select-primary subject-pick" [(ngModel)]="e.subject" name="sub{{ e.id }}">
+            <option value="">Select Subject</option>
+            @for (s of subjectOptions; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+          <button type="button" class="icon-btn danger" title="Remove" (click)="removeRow(e.id)">
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </button>
+        </header>
+        <div class="diary-body">
+          <div class="form-field">
+            <label>Classwork</label>
+            <textarea rows="2" class="input-secondary" [(ngModel)]="e.classwork" name="cw{{ e.id }}" placeholder="What was done in class today..."></textarea>
+          </div>
+          <div class="form-field">
+            <label>Homework</label>
+            <textarea rows="2" class="input-secondary" [(ngModel)]="e.homework" name="hw{{ e.id }}" placeholder="What students should do at home..."></textarea>
+          </div>
+          <div class="form-field">
+            <label>Remarks</label>
+            <input type="text" class="input-secondary" [(ngModel)]="e.remarks" name="re{{ e.id }}" placeholder="Optional remarks..." />
+          </div>
+        </div>
+      </article>
+    }
+  </div>
+
+  <div class="add-row-btn">
+    <button type="button" class="btn-pill-ghost" (click)="addRow()">
+      <fa-icon [icon]="faPlus"></fa-icon>
+      Add Subject Entry
+    </button>
+  </div>
+</section>

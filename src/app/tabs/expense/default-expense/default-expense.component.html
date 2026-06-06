@@ -1,1 +1,51 @@
-<p>default-expense works!</p>
+<section class="default-expense-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Default Expense</h2>
+      <p class="page-subtitle">Recurring expenses booked automatically every period.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faSave"></fa-icon>
+        Save Settings
+      </button>
+    </div>
+  </header>
+
+  <div class="rules-grid">
+    @for (r of rules(); track r.id) {
+      <article class="rule-card page-card" [class.enabled]="r.enabled">
+        <div class="rule-head">
+          <div>
+            <strong>{{ r.name }}</strong>
+            <small>{{ r.description }}</small>
+          </div>
+          <label class="switch">
+            <input type="checkbox" [checked]="r.enabled" (change)="toggle(r.id, !r.enabled)" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="rule-body">
+          <div class="row g-2">
+            <div class="col-6">
+              <div class="form-field inline">
+                <label>Amount (Rs.)</label>
+                <input type="number" class="input-secondary" [(ngModel)]="r.amount" name="amt{{ r.id }}" />
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-field inline">
+                <label>Frequency</label>
+                <select class="select-primary" [(ngModel)]="r.frequency" name="freq{{ r.id }}">
+                  <option value="monthly">Monthly</option>
+                  <option value="quarterly">Quarterly</option>
+                  <option value="yearly">Yearly</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    }
+  </div>
+</section>

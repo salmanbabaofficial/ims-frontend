@@ -1,1 +1,92 @@
-<p>edit-attendance works!</p>
+<section class="edit-attendance-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Edit Attendance</h2>
+      <p class="page-subtitle">Modify previously marked attendance for any date.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faSave"></fa-icon>
+        Update
+      </button>
+    </div>
+  </header>
+
+  <div class="page-card filter-card">
+    <div class="row g-3">
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Date</label>
+          <input type="date" class="input-secondary" [(ngModel)]="selectedDate" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Class</label>
+          <select class="select-primary" [(ngModel)]="selectedClass">
+            @for (c of classOptions; track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Section</label>
+          <select class="select-primary" [(ngModel)]="selectedSection">
+            @for (s of sectionOptions; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="data-table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-id">#</th>
+          <th>Roll No</th>
+          <th>Student</th>
+          <th>Father Name</th>
+          <th class="col-mark">Attendance</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of rows(); track r.id; let i = $index) {
+          <tr>
+            <td class="col-id">{{ i + 1 }}</td>
+            <td>{{ r.rollNo }}</td>
+            <td>
+              <div class="avatar-name">
+                <span class="avatar">{{ r.initial }}</span>
+                <strong>{{ r.name }}</strong>
+              </div>
+            </td>
+            <td>{{ r.fatherName }}</td>
+            <td class="col-mark">
+              <div class="mark-group">
+                <button type="button" class="mark-btn present" [class.active]="r.mark === 'present'" (click)="setMark(r.id, 'present')">
+                  <fa-icon [icon]="faCheck"></fa-icon> P
+                </button>
+                <button type="button" class="mark-btn absent" [class.active]="r.mark === 'absent'" (click)="setMark(r.id, 'absent')">
+                  <fa-icon [icon]="faXmark"></fa-icon> A
+                </button>
+                <button type="button" class="mark-btn leave" [class.active]="r.mark === 'leave'" (click)="setMark(r.id, 'leave')">L</button>
+                <button type="button" class="mark-btn late" [class.active]="r.mark === 'late'" (click)="setMark(r.id, 'late')">
+                  <fa-icon [icon]="faClock"></fa-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="5" class="empty-state">No attendance records found.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

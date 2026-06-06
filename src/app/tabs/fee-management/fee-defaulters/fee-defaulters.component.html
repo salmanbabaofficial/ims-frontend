@@ -1,1 +1,87 @@
-<p>fee-defaulters works!</p>
+<section class="fee-defaulters-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Fee Defaulters</h2>
+      <p class="page-subtitle">Students whose dues have crossed the threshold for too long.</p>
+    </div>
+    <div class="page-header-actions">
+      <div class="searchbox" [class.is-open]="searchOpen()" (clickOutside)="searchOpen.set(false)">
+        <input #searchInput type="text" class="searchbox-input" [(ngModel)]="searchTerm" placeholder="Search defaulters..." />
+        <button type="button" class="searchbox-icon" (click)="toggleSearch()" aria-label="Toggle search">
+          <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+        </button>
+      </div>
+      <button type="button" class="btn-pill-ghost">
+        <fa-icon [icon]="faFileExport"></fa-icon>
+        Export
+      </button>
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faPaperPlane"></fa-icon>
+        Notify All
+      </button>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <select class="select-primary class-filter" [(ngModel)]="selectedClass">
+        <option value="all">All Classes</option>
+        @for (c of classOptions; track c) {
+          <option [value]="c">{{ c }}</option>
+        }
+      </select>
+      <select class="select-primary class-filter" [(ngModel)]="minDays">
+        <option value="30">Overdue 30+ days</option>
+        <option value="60">Overdue 60+ days</option>
+        <option value="90">Overdue 90+ days</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="data-table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-id">#</th>
+          <th>Admission No</th>
+          <th>Student</th>
+          <th>Class</th>
+          <th>Father Name</th>
+          <th>Phone</th>
+          <th>Last Paid</th>
+          <th>Days Overdue</th>
+          <th class="right">Total Due</th>
+          <th class="col-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of rows; track r.id; let i = $index) {
+          <tr>
+            <td class="col-id">{{ i + 1 }}</td>
+            <td><strong>{{ r.admissionNo }}</strong></td>
+            <td>
+              <div class="avatar-name">
+                <span class="avatar">{{ r.initial }}</span>
+                <strong>{{ r.name }}</strong>
+              </div>
+            </td>
+            <td>{{ r.className }}</td>
+            <td>{{ r.fatherName }}</td>
+            <td>{{ r.phone }}</td>
+            <td>{{ r.lastPaid }}</td>
+            <td><span class="badge-status inactive">{{ r.daysOverdue }} days</span></td>
+            <td class="right"><strong class="danger-text">Rs. {{ r.totalDue }}</strong></td>
+            <td class="col-actions">
+              <div class="row-actions">
+                <button type="button" class="icon-btn" title="View"><fa-icon [icon]="faEye"></fa-icon></button>
+                <button type="button" class="icon-btn" title="Send Notice"><fa-icon [icon]="faPaperPlane"></fa-icon></button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="10" class="empty-state">There are no defaulters.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

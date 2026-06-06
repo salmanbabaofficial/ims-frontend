@@ -1,1 +1,114 @@
-<p>admission-inquiry works!</p>
+<section class="admission-inquiry-page">
+  @if (mode() === 'list') {
+    <header class="page-header">
+      <div>
+        <h2 class="page-title">Admission Inquiry</h2>
+        <p class="page-subtitle">Track prospective admissions from parents and walk-ins.</p>
+      </div>
+      <div class="page-header-actions">
+        <div
+          class="searchbox"
+          [class.is-open]="searchOpen()"
+          (clickOutside)="searchOpen.set(false)"
+        >
+          <input
+            #searchInput
+            type="text"
+            class="searchbox-input"
+            [(ngModel)]="searchTerm"
+            placeholder="Search inquiries..."
+          />
+          <button
+            type="button"
+            class="searchbox-icon"
+            (click)="toggleSearch()"
+            aria-label="Toggle search"
+          >
+            <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+          </button>
+        </div>
+        <button type="button" class="btn-pill-primary" (click)="openAdd()">
+          <fa-icon [icon]="faPlus"></fa-icon>
+          Add New Inquiry
+        </button>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <select class="select-primary class-filter" [(ngModel)]="selectedStatus">
+          <option value="all">All Status</option>
+          <option value="new">New</option>
+          <option value="contacted">Contacted</option>
+          <option value="admitted">Admitted</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="data-table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="col-id">#</th>
+            <th>Student Name</th>
+            <th>Parent Name</th>
+            <th>Phone</th>
+            <th>Class For</th>
+            <th>Source</th>
+            <th>Inquiry Date</th>
+            <th>Status</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (q of inquiries; track q.id; let i = $index) {
+            <tr>
+              <td class="col-id">{{ i + 1 }}</td>
+              <td><strong>{{ q.studentName }}</strong></td>
+              <td>{{ q.parentName }}</td>
+              <td>{{ q.phone }}</td>
+              <td>{{ q.classFor }}</td>
+              <td>{{ q.source }}</td>
+              <td>{{ q.inquiryDate }}</td>
+              <td>
+                <span
+                  class="badge-status"
+                  [class.active]="statusBadge(q.status) === 'active'"
+                  [class.inactive]="statusBadge(q.status) === 'inactive'"
+                  [class.pending]="statusBadge(q.status) === 'pending'"
+                >{{ q.status }}</span>
+              </td>
+              <td class="col-actions">
+                <div class="row-actions">
+                  <button type="button" class="icon-btn" title="View"><fa-icon [icon]="faEye"></fa-icon></button>
+                  <button type="button" class="icon-btn" title="Edit" (click)="openEdit(q)"><fa-icon [icon]="faPenToSquare"></fa-icon></button>
+                  <button type="button" class="icon-btn danger" title="Delete"><fa-icon [icon]="faTrash"></fa-icon></button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="9" class="empty-state">There are no inquiries.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer">
+      <span>Showing {{ inquiries.length }} of {{ inquiries.length }} entries</span>
+      <ul class="pagination">
+        <li class="page-item disabled"><button type="button" class="page-link">‹</button></li>
+        <li class="page-item active"><button type="button" class="page-link">1</button></li>
+        <li class="page-item disabled"><button type="button" class="page-link">›</button></li>
+      </ul>
+    </div>
+  } @else {
+    <app-add-edit-inquiry
+      [editing]="editing()"
+      (cancelled)="backToList()"
+      (saved)="backToList()"
+    />
+  }
+</section>

@@ -1,1 +1,70 @@
-<p>student-certificates works!</p>
+<section class="student-certificates-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Student Certificates</h2>
+      <p class="page-subtitle">Choose a template and generate certificates for students.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faPrint"></fa-icon>
+        Generate Selected
+      </button>
+    </div>
+  </header>
+
+  <div class="cert-grid">
+    <aside class="cert-templates page-card">
+      <h3 class="block-title">Templates</h3>
+      <ul class="template-list">
+        @for (t of templates; track t.id) {
+          <li
+            class="template-item"
+            [class.active]="selectedTemplate === t.id"
+            (click)="selectedTemplate = t.id"
+          >
+            <span class="template-thumb" [style.background]="t.color">
+              <fa-icon [icon]="faAward"></fa-icon>
+            </span>
+            <div>
+              <strong>{{ t.title }}</strong>
+              <small>{{ t.description }}</small>
+            </div>
+          </li>
+        }
+      </ul>
+    </aside>
+
+    <section class="cert-staff page-card">
+      <div class="block-head">
+        <h3 class="block-title">Select Students</h3>
+        <select class="select-primary filter-select" [(ngModel)]="selectedClass">
+          <option value="all">All Classes</option>
+          @for (c of classOptions; track c) {
+            <option [value]="c">{{ c }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="staff-pick-grid">
+        @for (s of students; track s.id) {
+          <label class="staff-pick">
+            <input type="checkbox" />
+            <div class="staff-pick-card">
+              <span class="avatar">{{ s.initial }}</span>
+              <div class="staff-pick-info">
+                <strong>{{ s.name }}</strong>
+                <small>{{ s.className }} - {{ s.section }} · {{ s.admissionNo }}</small>
+              </div>
+              <div class="staff-pick-actions">
+                <button type="button" class="icon-btn" title="Preview"><fa-icon [icon]="faEye"></fa-icon></button>
+                <button type="button" class="icon-btn" title="Download"><fa-icon [icon]="faDownload"></fa-icon></button>
+              </div>
+            </div>
+          </label>
+        } @empty {
+          <div class="empty-state">There are no students.</div>
+        }
+      </div>
+    </section>
+  </div>
+</section>

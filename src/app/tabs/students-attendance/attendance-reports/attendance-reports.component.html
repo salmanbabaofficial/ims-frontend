@@ -1,1 +1,123 @@
-<p>attendance-reports works!</p>
+<section class="attendance-reports-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Attendance Reports</h2>
+      <p class="page-subtitle">Detailed attendance summary for students.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-ghost">
+        <fa-icon [icon]="faFileExport"></fa-icon>
+        Export
+      </button>
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faPrint"></fa-icon>
+        Print Report
+      </button>
+    </div>
+  </header>
+
+  <div class="page-card filter-card">
+    <div class="row g-3 align-items-end">
+      <div class="col-12 col-md-3">
+        <div class="form-field">
+          <label>Start Date</label>
+          <input type="date" class="input-secondary" [(ngModel)]="startDate" />
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="form-field">
+          <label>End Date</label>
+          <input type="date" class="input-secondary" [(ngModel)]="endDate" />
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="form-field">
+          <label>Class</label>
+          <select class="select-primary" [(ngModel)]="selectedClass">
+            <option value="">All Classes</option>
+            @for (c of classOptions; track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="form-field">
+          <label>Section</label>
+          <select class="select-primary" [(ngModel)]="selectedSection">
+            <option value="">All Sections</option>
+            @for (s of sectionOptions; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-label">Total Days</span>
+      <strong class="stat-value">26</strong>
+    </div>
+    <div class="stat-card success">
+      <span class="stat-label">Avg Present</span>
+      <strong class="stat-value">21.6</strong>
+    </div>
+    <div class="stat-card danger">
+      <span class="stat-label">Avg Absent</span>
+      <strong class="stat-value">1.8</strong>
+    </div>
+    <div class="stat-card primary">
+      <span class="stat-label">Avg Attendance</span>
+      <strong class="stat-value">88%</strong>
+    </div>
+  </div>
+
+  <div class="data-table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-id">#</th>
+          <th>Roll No</th>
+          <th>Student</th>
+          <th>Class / Section</th>
+          <th>Present</th>
+          <th>Absent</th>
+          <th>Leave</th>
+          <th>Late</th>
+          <th>Percentage</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of rows; track r.id; let i = $index) {
+          <tr>
+            <td class="col-id">{{ i + 1 }}</td>
+            <td>{{ r.rollNo }}</td>
+            <td>
+              <div class="avatar-name">
+                <span class="avatar">{{ r.initial }}</span>
+                <strong>{{ r.name }}</strong>
+              </div>
+            </td>
+            <td>{{ r.className }} - {{ r.section }}</td>
+            <td class="num">{{ r.present }}</td>
+            <td class="num">{{ r.absent }}</td>
+            <td class="num">{{ r.leave }}</td>
+            <td class="num">{{ r.late }}</td>
+            <td>
+              <div class="pct-cell">
+                <div class="pct-bar"><span [style.width.%]="percent(r)"></span></div>
+                <strong>{{ percent(r) }}%</strong>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="9" class="empty-state">No data available for selected range.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

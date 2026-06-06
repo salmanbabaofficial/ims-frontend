@@ -1,0 +1,126 @@
+<div class="form-back-bar">
+  <button type="button" class="form-back-btn" (click)="onCancel()" title="Back to list">
+    <fa-icon [icon]="faArrowLeft"></fa-icon>
+  </button>
+  <div>
+    <h2 class="page-title">{{ isEdit ? 'Edit Expense' : 'Add Expense' }}</h2>
+    <p class="page-subtitle">Record a new expense entry.</p>
+  </div>
+</div>
+
+<form class="page-card" (ngSubmit)="onSave()" #expenseForm="ngForm" novalidate>
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Expense Information</h3>
+      <p class="form-card-subtitle">Provide the expense details.</p>
+    </div>
+    <span class="form-card-meta">Fields marked with <sup style="color:#e74c3c">*</sup> are required.</span>
+  </div>
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Date<sup>*</sup></label>
+          <input type="date" class="input-secondary" [(ngModel)]="model.date" name="date" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Voucher #</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.voucherNo" name="voucherNo" placeholder="e.g. EXP-0001" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Reference / Cheque #</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.referenceNo" name="referenceNo" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Type<sup>*</sup></label>
+          <select class="select-primary" [(ngModel)]="model.type" name="type">
+            <option value="">Select Type</option>
+            @for (t of types; track t) {
+              <option [value]="t">{{ t }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Paid To<sup>*</sup></label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.paidTo" name="paidTo" placeholder="Vendor / Person" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Amount<sup>*</sup></label>
+          <input type="number" min="0" class="input-secondary" [(ngModel)]="model.amount" name="amount" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Tax (%)</label>
+          <input type="number" min="0" max="100" class="input-secondary" [(ngModel)]="model.taxPercent" name="taxPercent" placeholder="0" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Status</label>
+          <select class="select-primary" [(ngModel)]="model.status" name="status">
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="paid">Paid</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Payment Method</label>
+          <select class="select-primary" [(ngModel)]="model.paymentMethod" name="paymentMethod">
+            @for (m of methods; track m) {
+              <option [value]="m">{{ m }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Bank / Cash Account</label>
+          <select class="select-primary" [(ngModel)]="model.bankAccount" name="bankAccount">
+            <option value="">Select Account</option>
+            @for (a of bankAccounts; track a) {
+              <option [value]="a">{{ a }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-field">
+          <label>Description</label>
+          <textarea rows="2" class="input-secondary" [(ngModel)]="model.description" name="description"></textarea>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-field">
+          <label>Receipt / Attachment</label>
+          <input type="file" class="input-secondary" (change)="onFile($event)" />
+          @if (model.attachmentName) {
+            <div class="field-hint">Selected: {{ model.attachmentName }}</div>
+          }
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-field">
+          <label>Internal Notes</label>
+          <textarea rows="2" class="input-secondary" [(ngModel)]="model.notes" name="notes" placeholder="Optional..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-actions">
+    <button type="button" class="btn-pill-ghost" (click)="onCancel()">Cancel</button>
+    <button type="submit" class="btn-pill-primary">{{ isEdit ? 'Update' : 'Save Expense' }}</button>
+  </div>
+</form>

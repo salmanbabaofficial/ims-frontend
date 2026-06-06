@@ -1,1 +1,118 @@
-<p>advance-salary works!</p>
+<section class="advance-salary-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Advance Salary</h2>
+      <p class="page-subtitle">Manage advance salary requests from staff.</p>
+    </div>
+    <div class="page-header-actions">
+      <div class="searchbox" [class.is-open]="searchOpen()" (clickOutside)="searchOpen.set(false)">
+        <input #searchInput type="text" class="searchbox-input" [(ngModel)]="searchTerm" placeholder="Search advances..." />
+        <button type="button" class="searchbox-icon" (click)="toggleSearch()" aria-label="Toggle search">
+          <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+        </button>
+      </div>
+      <button type="button" class="btn-pill-primary" (click)="showForm.set(true)">
+        <fa-icon [icon]="faPlus"></fa-icon>
+        Add Advance
+      </button>
+    </div>
+  </header>
+
+  @if (showForm()) {
+    <div class="page-card">
+      <div class="form-card-header">
+        <div>
+          <h3 class="form-card-title">New Advance Salary Request</h3>
+          <p class="form-card-subtitle">Add a quick advance for a staff member.</p>
+        </div>
+      </div>
+      <div class="form-card-body">
+        <div class="row g-3">
+          <div class="col-12 col-md-4">
+            <div class="form-field">
+              <label>Staff</label>
+              <select class="select-primary" [(ngModel)]="newAdvance.staffId">
+                <option value="">Select Staff</option>
+                @for (s of staffList; track s.id) {
+                  <option [value]="s.id">{{ s.id }} · {{ s.name }}</option>
+                }
+              </select>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="form-field">
+              <label>Amount</label>
+              <input type="number" class="input-secondary" [(ngModel)]="newAdvance.amount" />
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="form-field">
+              <label>Installments</label>
+              <input type="number" class="input-secondary" [(ngModel)]="newAdvance.installments" min="1" />
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-field">
+              <label>Reason</label>
+              <textarea rows="2" class="input-secondary" [(ngModel)]="newAdvance.reason"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-pill-ghost" (click)="showForm.set(false)">Cancel</button>
+        <button type="button" class="btn-pill-primary" (click)="showForm.set(false)">Save Advance</button>
+      </div>
+    </div>
+  }
+
+  <div class="data-table-wrap mt">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-id">#</th>
+          <th>Date</th>
+          <th>Staff</th>
+          <th>Designation</th>
+          <th class="right">Amount</th>
+          <th>Installments</th>
+          <th>Status</th>
+          <th class="col-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of rows; track r.id; let i = $index) {
+          <tr>
+            <td class="col-id">{{ i + 1 }}</td>
+            <td>{{ r.date }}</td>
+            <td>
+              <div class="avatar-name">
+                <span class="avatar">{{ r.initial }}</span>
+                <strong>{{ r.staffName }}</strong>
+              </div>
+            </td>
+            <td>{{ r.designation }}</td>
+            <td class="right"><strong>Rs. {{ r.amount }}</strong></td>
+            <td>{{ r.installments }}</td>
+            <td>
+              <span class="badge-status"
+                [class.active]="statusBadge(r.status) === 'active'"
+                [class.inactive]="statusBadge(r.status) === 'inactive'"
+                [class.pending]="statusBadge(r.status) === 'pending'"
+              >{{ r.status }}</span>
+            </td>
+            <td class="col-actions">
+              <div class="row-actions">
+                <button type="button" class="icon-btn" title="View"><fa-icon [icon]="faEye"></fa-icon></button>
+                <button type="button" class="icon-btn" title="Edit"><fa-icon [icon]="faPenToSquare"></fa-icon></button>
+                <button type="button" class="icon-btn danger" title="Delete"><fa-icon [icon]="faTrash"></fa-icon></button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="8" class="empty-state">No advance requests yet.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

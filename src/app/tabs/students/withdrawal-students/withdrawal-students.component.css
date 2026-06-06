@@ -1,0 +1,33 @@
+:host {
+  display: block;
+}
+.avatar-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--light-primary);
+  color: var(--theme-color);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+.avatar-name-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+.avatar-name-text small {
+  color: var(--secondary);
+  font-size: 11.5px;
+  margin-top: 2px;
+}
+.class-filter {
+  min-width: 200px;
+}

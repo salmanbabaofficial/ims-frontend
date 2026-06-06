@@ -1,1 +1,119 @@
-<p>assignments works!</p>
+<section class="assignments-page">
+  @if (mode() === 'list') {
+    <header class="page-header">
+      <div>
+        <h2 class="page-title">Assignments</h2>
+        <p class="page-subtitle">Create and manage assignments for each class & subject.</p>
+      </div>
+      <div class="page-header-actions">
+        <div class="searchbox" [class.is-open]="searchOpen()" (clickOutside)="searchOpen.set(false)">
+          <input
+            #searchInput
+            type="text"
+            class="searchbox-input"
+            [(ngModel)]="searchTerm"
+            placeholder="Search assignments..."
+          />
+          <button type="button" class="searchbox-icon" (click)="toggleSearch()" aria-label="Toggle search">
+            <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+          </button>
+        </div>
+        <button type="button" class="btn-pill-ghost">
+          <fa-icon [icon]="faExport"></fa-icon>
+          Export
+        </button>
+        <button type="button" class="btn-pill-primary" (click)="openAdd()">
+          <fa-icon [icon]="faPlus"></fa-icon>
+          Add Assignment
+        </button>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <select class="select-primary class-filter" [(ngModel)]="selectedClass">
+          <option value="all">All Classes</option>
+          @for (c of classOptions; track c) {
+            <option [value]="c">{{ c }}</option>
+          }
+        </select>
+        <select class="select-primary class-filter" [(ngModel)]="selectedSubject">
+          <option value="all">All Subjects</option>
+          @for (s of subjectOptions; track s) {
+            <option [value]="s">{{ s }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="data-table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="col-id">#</th>
+            <th>Title</th>
+            <th>Subject</th>
+            <th>Class</th>
+            <th>Assigned</th>
+            <th>Due</th>
+            <th class="center">Marks</th>
+            <th class="center">Files</th>
+            <th>Status</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (a of assignments; track a.id; let i = $index) {
+            <tr>
+              <td class="col-id">{{ i + 1 }}</td>
+              <td><strong>{{ a.title }}</strong></td>
+              <td>{{ a.subject }}</td>
+              <td>{{ a.className }} - {{ a.section }}</td>
+              <td>{{ a.assignedOn }}</td>
+              <td>{{ a.dueOn }}</td>
+              <td class="center">{{ a.totalMarks }}</td>
+              <td class="center">
+                @if (a.attachments > 0) {
+                  <span class="att-pill"><fa-icon [icon]="faPaperclip"></fa-icon> {{ a.attachments }}</span>
+                } @else {
+                  <span class="muted-text">—</span>
+                }
+              </td>
+              <td>
+                <span class="badge-status" [class.active]="a.status === 'active'" [class.inactive]="a.status === 'expired'">
+                  {{ a.status === 'active' ? 'Active' : 'Expired' }}
+                </span>
+              </td>
+              <td class="col-actions">
+                <div class="row-actions">
+                  <button type="button" class="icon-btn" title="Send" ><fa-icon [icon]="faSend"></fa-icon></button>
+                  <button type="button" class="icon-btn" title="Edit" (click)="openEdit(a)"><fa-icon [icon]="faEdit"></fa-icon></button>
+                  <button type="button" class="icon-btn danger" title="Delete"><fa-icon [icon]="faTrash"></fa-icon></button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="10" class="empty-state">No assignments yet.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer">
+      <span>Showing {{ assignments.length }} of {{ assignments.length }} entries</span>
+      <ul class="pagination">
+        <li class="page-item disabled"><button type="button" class="page-link">‹</button></li>
+        <li class="page-item active"><button type="button" class="page-link">1</button></li>
+        <li class="page-item disabled"><button type="button" class="page-link">›</button></li>
+      </ul>
+    </div>
+  } @else {
+    <app-add-edit-assignment
+      [editing]="editing()"
+      (cancelled)="backToList()"
+      (saved)="backToList()"
+    />
+  }
+</section>

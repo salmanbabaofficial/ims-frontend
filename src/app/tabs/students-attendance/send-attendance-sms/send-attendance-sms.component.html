@@ -1,1 +1,134 @@
-<p>send-attendance-sms works!</p>
+<section class="send-sms-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Send Attendance SMS</h2>
+      <p class="page-subtitle">Notify parents about their child's attendance status.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faPaperPlane"></fa-icon>
+        Send to {{ selectedCount() }} Selected
+      </button>
+    </div>
+  </header>
+
+  <div class="page-card filter-card">
+    <div class="row g-3">
+      <div class="col-12 col-md-3">
+        <div class="form-field">
+          <label>Date</label>
+          <input type="date" class="input-secondary" [(ngModel)]="selectedDate" />
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="form-field">
+          <label>Class</label>
+          <select class="select-primary" [(ngModel)]="selectedClass">
+            <option value="">All Classes</option>
+            @for (c of classOptions; track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="form-field">
+          <label>Section</label>
+          <select class="select-primary" [(ngModel)]="selectedSection">
+            <option value="">All Sections</option>
+            @for (s of sectionOptions; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="form-field">
+          <label>Status</label>
+          <select class="select-primary" [(ngModel)]="filterStatus">
+            <option value="absent">Absent</option>
+            <option value="late">Late</option>
+            <option value="leave">Leave</option>
+            <option value="all">All</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sms-grid">
+    <div class="page-card">
+      <div class="block-head">
+        <h3 class="block-title">Recipients ({{ selectedCount() }} / {{ recipients().length }})</h3>
+        <div class="quick-actions">
+          <button type="button" class="btn-link-primary" (click)="toggleAll(true)">Select All</button>
+          <button type="button" class="btn-link-primary muted" (click)="toggleAll(false)">Deselect All</button>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+        <table class="table compact">
+          <thead>
+            <tr>
+              <th style="width:40px"></th>
+              <th>Student</th>
+              <th>Parent</th>
+              <th>Phone</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of recipients(); track r.id) {
+              <tr>
+                <td>
+                  <input
+                    type="checkbox"
+                    [checked]="r.selected"
+                    (change)="toggleOne(r.id, !r.selected)"
+                  />
+                </td>
+                <td>
+                  <div class="avatar-name">
+                    <span class="avatar">{{ r.initial }}</span>
+                    <span class="avatar-name-text">
+                      <strong>{{ r.name }}</strong>
+                      <small>Roll #{{ r.rollNo }}</small>
+                    </span>
+                  </div>
+                </td>
+                <td>{{ r.parentName }}</td>
+                <td>{{ r.phone }}</td>
+                <td>
+                  <span
+                    class="badge-status"
+                    [class.inactive]="r.status === 'absent'"
+                    [class.pending]="r.status === 'late' || r.status === 'leave'"
+                  >{{ r.status }}</span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="page-card">
+      <h3 class="block-title">Message Template</h3>
+      <p class="form-card-subtitle">
+        Use placeholders: <code>{{ '{{name}}' }}</code>, <code>{{ '{{status}}' }}</code>, <code>{{ '{{date}}' }}</code>
+      </p>
+      <div class="form-field">
+        <label>SMS Body</label>
+        <textarea
+          rows="6"
+          class="input-secondary"
+          [(ngModel)]="messageTemplate"
+        ></textarea>
+      </div>
+      <div class="sms-meta">
+        <span>Characters: <strong>{{ messageTemplate.length }}</strong></span>
+        <span>Estimated SMS: <strong>{{ messageTemplate.length > 0 ? 1 : 0 }}</strong></span>
+      </div>
+    </div>
+  </div>
+</section>

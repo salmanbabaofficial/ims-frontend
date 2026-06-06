@@ -1,0 +1,40 @@
+:host { display: block; }
+.mt { margin-top: 16px; }
+.class-filter { min-width: 200px; }
+textarea.input-secondary { resize: vertical; }
+.syllabus-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
+}
+.syl-card {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #eef1f6;
+  border-radius: 12px;
+  padding: 14px;
+  transition: all 0.2s ease;
+}
+.syl-card:hover {
+  border-color: var(--theme-color);
+}
+.syl-icon {
+  width: 46px; height: 46px;
+  border-radius: 10px;
+  background: var(--light-primary);
+  color: var(--theme-color);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.syl-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.syl-body strong { font-size: 14px; color: var(--text-primary); }
+.syl-body small { font-size: 12px; color: var(--secondary); }
+.syl-body p { font-size: 11px; color: var(--secondary); margin: 4px 0 0; }

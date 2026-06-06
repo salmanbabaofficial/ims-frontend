@@ -1,1 +1,63 @@
-<p>print-exam-slips works!</p>
+<section class="print-slips-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Print Exam Slips</h2>
+      <p class="page-subtitle">Generate admit cards / roll number slips for students.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faPrint"></fa-icon>
+        Print All
+      </button>
+    </div>
+  </header>
+
+  <div class="page-card filter-card">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Exam</label>
+          <select class="select-primary" [(ngModel)]="selectedExam">
+            @for (e of examOptions; track e) {
+              <option [value]="e">{{ e }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Class</label>
+          <select class="select-primary" [(ngModel)]="selectedClass">
+            @for (c of classOptions; track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slips-grid">
+    @for (s of slips; track s.id) {
+      <article class="slip-card">
+        <header class="slip-head">
+          <strong>Roll Number Slip</strong>
+          <small>{{ selectedExam }}</small>
+        </header>
+        <div class="slip-body">
+          <div class="slip-avatar">{{ s.initial }}</div>
+          <h3>{{ s.name }}</h3>
+          <ul class="slip-meta">
+            <li><span>Adm. No</span><strong>{{ s.admissionNo }}</strong></li>
+            <li><span>Roll No</span><strong>{{ s.rollNo }}</strong></li>
+            <li><span>Class</span><strong>{{ s.className }} - {{ s.section }}</strong></li>
+          </ul>
+        </div>
+        <footer class="slip-actions">
+          <button type="button" class="icon-btn" title="Download"><fa-icon [icon]="faDownload"></fa-icon></button>
+          <button type="button" class="icon-btn" title="Print"><fa-icon [icon]="faPrint"></fa-icon></button>
+        </footer>
+      </article>
+    }
+  </div>
+</section>

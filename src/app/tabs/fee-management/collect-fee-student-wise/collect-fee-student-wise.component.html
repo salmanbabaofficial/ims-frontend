@@ -1,1 +1,147 @@
-<p>collect-fee-student-wise works!</p>
+<section class="collect-student-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Collect Fee (Student Wise)</h2>
+      <p class="page-subtitle">Receive fee payment from individual students.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-ghost">
+        <fa-icon [icon]="faPrint"></fa-icon>
+        Print Receipt
+      </button>
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faReceipt"></fa-icon>
+        Receive Payment
+      </button>
+    </div>
+  </header>
+
+  <div class="page-card">
+    <div class="form-card-header">
+      <div>
+        <h3 class="form-card-title">Search Student</h3>
+        <p class="form-card-subtitle">Find by admission number, name or phone.</p>
+      </div>
+    </div>
+    <div class="form-card-body">
+      <div class="search-row">
+        <fa-icon [icon]="faMagnifyingGlass" class="search-icon"></fa-icon>
+        <input type="text" class="input-secondary search-input" [(ngModel)]="studentSearch" placeholder="Type to search students..." />
+      </div>
+
+      @if (selectedStudent) {
+        <div class="student-card">
+          <div class="avatar lg">{{ selectedStudent.name.charAt(0) }}</div>
+          <div class="student-meta">
+            <strong>{{ selectedStudent.name }}</strong>
+            <small>{{ selectedStudent.id }} · {{ selectedStudent.className }}</small>
+            <small>Father: {{ selectedStudent.fatherName }} · {{ selectedStudent.phone }}</small>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  @if (selectedStudent) {
+    <div class="page-card mt">
+      <div class="form-card-header">
+        <div>
+          <h3 class="form-card-title">Outstanding Challans</h3>
+          <p class="form-card-subtitle">Select the challans being paid right now.</p>
+        </div>
+      </div>
+      <div class="form-card-body">
+        <div class="data-table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width:40px"></th>
+                <th>Challan #</th>
+                <th>Month</th>
+                <th>Due Date</th>
+                <th class="right">Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (c of challans(); track c.id) {
+                <tr>
+                  <td>
+                    <input type="checkbox" [checked]="c.selected" (change)="toggleOne(c.id, !c.selected)" />
+                  </td>
+                  <td><strong>{{ c.challanNo }}</strong></td>
+                  <td>{{ c.month }}</td>
+                  <td>{{ c.dueDate }}</td>
+                  <td class="right"><strong>Rs. {{ c.amount }}</strong></td>
+                  <td>
+                    <span
+                      class="badge-status"
+                      [class.inactive]="c.status === 'unpaid'"
+                      [class.pending]="c.status === 'partial'"
+                      [class.active]="c.status === 'paid'"
+                    >{{ c.status }}</span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-card mt">
+      <div class="form-card-header">
+        <div>
+          <h3 class="form-card-title">Payment Details</h3>
+          <p class="form-card-subtitle">Enter the payment information.</p>
+        </div>
+      </div>
+      <div class="form-card-body">
+        <div class="row g-3">
+          <div class="col-12 col-md-3">
+            <div class="form-field">
+              <label>Payment Method</label>
+              <select class="select-primary" [(ngModel)]="paymentMethod">
+                <option value="cash">Cash</option>
+                <option value="bank">Bank Transfer</option>
+                <option value="cheque">Cheque</option>
+                <option value="online">Online</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div class="form-field">
+              <label>Payment Date</label>
+              <input type="date" class="input-secondary" [(ngModel)]="paymentDate" />
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div class="form-field">
+              <label>Amount Paid</label>
+              <input type="number" class="input-secondary" [(ngModel)]="paidAmount" placeholder="0" />
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div class="form-field">
+              <label>Received By</label>
+              <input type="text" class="input-secondary" [(ngModel)]="receivedBy" />
+            </div>
+          </div>
+          <div class="col-12 col-md-8">
+            <div class="form-field">
+              <label>Remarks</label>
+              <textarea rows="2" class="input-secondary" [(ngModel)]="remarks"></textarea>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="totals-box">
+              <div class="totals-row"><span>Total Due</span><strong>Rs. {{ totalDue }}</strong></div>
+              <div class="totals-row"><span>Paid</span><strong>Rs. {{ paidAmount || 0 }}</strong></div>
+              <div class="totals-row grand"><span>Remaining</span><strong>Rs. {{ remaining }}</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</section>

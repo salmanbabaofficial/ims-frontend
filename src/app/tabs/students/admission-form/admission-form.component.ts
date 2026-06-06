@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
+import { AddEditStudentComponent } from '../active-students/add-edit-student/add-edit-student.component';
 
 @Component({
   selector: 'app-admission-form',
-  imports: [],
+  imports: [AddEditStudentComponent],
   templateUrl: './admission-form.component.html',
-  styleUrl: './admission-form.component.css'
+  styleUrl: './admission-form.component.css',
 })
 export class AdmissionFormComponent {
-
+  onSaved(): void {}
+  onCancelled(): void {}
 }

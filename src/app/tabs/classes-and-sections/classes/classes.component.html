@@ -1,1 +1,107 @@
-<p>classes works!</p>
+<section class="classes-page">
+  @if (mode() === 'list') {
+    <header class="page-header">
+      <div>
+        <h2 class="page-title">Classes</h2>
+        <p class="page-subtitle">
+          Define classes (e.g. Nursery, KG, Class 1 to 10) for the institute.
+        </p>
+      </div>
+      <div class="page-header-actions">
+        <div
+          class="searchbox"
+          [class.is-open]="searchOpen()"
+          (clickOutside)="searchOpen.set(false)"
+        >
+          <input
+            #searchInput
+            type="text"
+            class="searchbox-input"
+            [(ngModel)]="searchTerm"
+            placeholder="Search classes..."
+          />
+          <button
+            type="button"
+            class="searchbox-icon"
+            (click)="toggleSearch()"
+            aria-label="Toggle search"
+          >
+            <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+          </button>
+        </div>
+        <button type="button" class="btn-pill-primary" (click)="openAdd()">
+          <fa-icon [icon]="faPlus"></fa-icon>
+          Add New Class
+        </button>
+      </div>
+    </header>
+
+    <div class="data-table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="col-id">#</th>
+            <th>Class Name</th>
+            <th>Level</th>
+            <th>Order</th>
+            <th>Sections</th>
+            <th>Students</th>
+            <th>Status</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (c of classes; track c.id; let i = $index) {
+            <tr>
+              <td class="col-id">{{ i + 1 }}</td>
+              <td><strong>{{ c.name }}</strong></td>
+              <td>{{ c.level }}</td>
+              <td>{{ c.displayOrder }}</td>
+              <td>{{ c.sectionsCount }}</td>
+              <td>{{ c.studentsCount }}</td>
+              <td>
+                <span
+                  class="badge-status"
+                  [class.active]="c.status === 'active'"
+                  [class.inactive]="c.status === 'inactive'"
+                >{{ c.status }}</span>
+              </td>
+              <td class="col-actions">
+                <div class="row-actions">
+                  <button type="button" class="icon-btn" title="View">
+                    <fa-icon [icon]="faEye"></fa-icon>
+                  </button>
+                  <button type="button" class="icon-btn" title="Edit" (click)="openEdit(c)">
+                    <fa-icon [icon]="faPenToSquare"></fa-icon>
+                  </button>
+                  <button type="button" class="icon-btn danger" title="Delete">
+                    <fa-icon [icon]="faTrash"></fa-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="8" class="empty-state">There are no classes.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer">
+      <span>Showing {{ classes.length }} of {{ classes.length }} entries</span>
+      <ul class="pagination">
+        <li class="page-item disabled"><button type="button" class="page-link">‹</button></li>
+        <li class="page-item active"><button type="button" class="page-link">1</button></li>
+        <li class="page-item disabled"><button type="button" class="page-link">›</button></li>
+      </ul>
+    </div>
+  } @else {
+    <app-add-edit-class
+      [editing]="editing()"
+      (cancelled)="backToList()"
+      (saved)="backToList()"
+    />
+  }
+</section>

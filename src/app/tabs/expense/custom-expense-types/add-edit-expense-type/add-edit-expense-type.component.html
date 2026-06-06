@@ -1,0 +1,59 @@
+<div class="form-back-bar">
+  <button type="button" class="form-back-btn" (click)="onCancel()" title="Back to list">
+    <fa-icon [icon]="faArrowLeft"></fa-icon>
+  </button>
+  <div>
+    <h2 class="page-title">{{ isEdit ? 'Edit Expense Type' : 'Add Expense Type' }}</h2>
+    <p class="page-subtitle">Define a new category for expenses.</p>
+  </div>
+</div>
+
+<form class="page-card" (ngSubmit)="onSave()" #typeForm="ngForm" novalidate>
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Type Information</h3>
+      <p class="form-card-subtitle">Fill in the details.</p>
+    </div>
+    <span class="form-card-meta">Fields marked with <sup style="color:#e74c3c">*</sup> are required.</span>
+  </div>
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Expense Type Name<sup>*</sup></label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.name" name="name" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Category<sup>*</sup></label>
+          <select class="select-primary" [(ngModel)]="model.category" name="category">
+            <option value="">Select Category</option>
+            @for (c of categories; track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-field">
+          <label>Description</label>
+          <textarea rows="3" class="input-secondary" [(ngModel)]="model.description" name="description"></textarea>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Status</label>
+          <select class="select-primary" [(ngModel)]="model.status" name="status">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-actions">
+    <button type="button" class="btn-pill-ghost" (click)="onCancel()">Cancel</button>
+    <button type="submit" class="btn-pill-primary">{{ isEdit ? 'Update' : 'Save' }}</button>
+  </div>
+</form>

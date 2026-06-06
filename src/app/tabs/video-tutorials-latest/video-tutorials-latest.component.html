@@ -1,1 +1,45 @@
-<router-outlet></router-outlet>
+<section class="tutorials-page">
+  <header class="hero-card">
+    <div class="hero-text">
+      <span class="hero-tag"><fa-icon [icon]="faGrad"></fa-icon> Learn IMS</span>
+      <h1>Video Tutorials</h1>
+      <p>Quick, on-demand lessons to master every part of the Institute Management System.</p>
+    </div>
+    <div class="hero-search">
+      <fa-icon [icon]="faSearch"></fa-icon>
+      <input type="text" placeholder="Search tutorials..." [(ngModel)]="searchTerm" />
+    </div>
+  </header>
+
+  <div class="cat-strip">
+    @for (c of categories; track c) {
+      <button type="button" class="cat-chip" [class.active]="activeCategory() === c" (click)="activeCategory.set(c)">
+        {{ c === 'all' ? 'All' : c }}
+      </button>
+    }
+  </div>
+
+  <div class="tutorial-grid">
+    @for (t of filtered; track t.id) {
+      <article class="tut-card">
+        <div class="tut-thumb" [style.background]="t.thumbColor">
+          <button class="play-btn"><fa-icon [icon]="faPlay"></fa-icon></button>
+          <span class="duration"><fa-icon [icon]="faClock"></fa-icon> {{ t.duration }}</span>
+          @if (t.isNew) {
+            <span class="badge-new">NEW</span>
+          }
+        </div>
+        <div class="tut-body">
+          <span class="tut-cat">{{ t.category }}</span>
+          <h3>{{ t.title }}</h3>
+          <div class="tut-meta">
+            <span><fa-icon [icon]="faStar"></fa-icon> {{ t.rating }}</span>
+            <span>{{ t.views }} views</span>
+          </div>
+        </div>
+      </article>
+    } @empty {
+      <div class="empty-state">No tutorials match your search.</div>
+    }
+  </div>
+</section>

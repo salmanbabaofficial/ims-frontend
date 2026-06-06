@@ -1,1 +1,136 @@
-<p>collect-fee-family-wise works!</p>
+<section class="collect-family-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Collect Fee (Family Wise)</h2>
+      <p class="page-subtitle">Receive a single payment that covers multiple siblings.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-ghost">
+        <fa-icon [icon]="faPrint"></fa-icon>
+        Print Receipt
+      </button>
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faReceipt"></fa-icon>
+        Receive Payment
+      </button>
+    </div>
+  </header>
+
+  <div class="page-card">
+    <div class="form-card-header">
+      <div>
+        <h3 class="form-card-title">Search Family</h3>
+        <p class="form-card-subtitle">Find by family ID, father's name or phone.</p>
+      </div>
+    </div>
+    <div class="form-card-body">
+      <div class="search-row">
+        <fa-icon [icon]="faMagnifyingGlass" class="search-icon"></fa-icon>
+        <input type="text" class="input-secondary search-input" [(ngModel)]="familySearch" placeholder="Search family..." />
+      </div>
+
+      <div class="family-card">
+        <div class="family-icon">
+          <fa-icon [icon]="faUsers"></fa-icon>
+        </div>
+        <div class="family-meta">
+          <strong>{{ familyName }}</strong>
+          <small>Family ID: {{ familyId }} · Phone: {{ familyPhone }}</small>
+          <small>{{ challans().length }} children enrolled</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-card mt">
+    <div class="form-card-header">
+      <div>
+        <h3 class="form-card-title">Family Challans</h3>
+        <p class="form-card-subtitle">Select which challans to pay in this transaction.</p>
+      </div>
+    </div>
+    <div class="form-card-body">
+      <div class="data-table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width:40px"></th>
+              <th>Student</th>
+              <th>Class</th>
+              <th>Challan #</th>
+              <th>Due Date</th>
+              <th class="right">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (c of challans(); track c.id) {
+              <tr>
+                <td>
+                  <input type="checkbox" [checked]="c.selected" (change)="toggleOne(c.id, !c.selected)" />
+                </td>
+                <td>
+                  <div class="avatar-name">
+                    <span class="avatar">{{ c.initial }}</span>
+                    <strong>{{ c.studentName }}</strong>
+                  </div>
+                </td>
+                <td>{{ c.className }}</td>
+                <td>{{ c.challanNo }}</td>
+                <td>{{ c.dueDate }}</td>
+                <td class="right"><strong>Rs. {{ c.amount }}</strong></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-card mt">
+    <div class="form-card-header">
+      <div>
+        <h3 class="form-card-title">Payment Details</h3>
+      </div>
+    </div>
+    <div class="form-card-body">
+      <div class="row g-3">
+        <div class="col-12 col-md-3">
+          <div class="form-field">
+            <label>Payment Method</label>
+            <select class="select-primary" [(ngModel)]="paymentMethod">
+              <option value="cash">Cash</option>
+              <option value="bank">Bank Transfer</option>
+              <option value="cheque">Cheque</option>
+              <option value="online">Online</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-12 col-md-3">
+          <div class="form-field">
+            <label>Payment Date</label>
+            <input type="date" class="input-secondary" [(ngModel)]="paymentDate" />
+          </div>
+        </div>
+        <div class="col-12 col-md-3">
+          <div class="form-field">
+            <label>Amount Paid</label>
+            <input type="number" class="input-secondary" [(ngModel)]="paidAmount" />
+          </div>
+        </div>
+        <div class="col-12 col-md-3">
+          <div class="form-field">
+            <label>Remarks</label>
+            <input type="text" class="input-secondary" [(ngModel)]="remarks" />
+          </div>
+        </div>
+        <div class="col-12 col-md-12">
+          <div class="totals-box">
+            <div class="totals-row"><span>Total Due</span><strong>Rs. {{ totalDue }}</strong></div>
+            <div class="totals-row"><span>Paid</span><strong>Rs. {{ paidAmount || 0 }}</strong></div>
+            <div class="totals-row grand"><span>Remaining</span><strong>Rs. {{ remaining }}</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

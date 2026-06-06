@@ -1,0 +1,58 @@
+<section class="role-page">
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-grid"></div>
+
+  <header class="role-header">
+    <div class="brand">
+      <div class="brand-mark">IMS</div>
+      <div class="brand-text">
+        <strong>Institute Management System</strong>
+        <span>Smart. Secure. Streamlined.</span>
+      </div>
+    </div>
+    <a routerLink="/login" class="header-link">
+      <span>Sign in</span>
+      <fa-icon [icon]="faArrowRight"></fa-icon>
+    </a>
+  </header>
+
+  <div class="role-center">
+    <div class="role-hero">
+      <span class="eyebrow">Welcome to IMS</span>
+      <h1>Continue as</h1>
+    </div>
+
+    <div class="role-grid">
+      @for (r of roles; track r.id) {
+        <button
+          type="button"
+          class="role-card"
+          [attr.data-accent]="r.accent"
+          (click)="selectRole(r.id)"
+        >
+          <div class="role-icon-wrap">
+            <fa-icon [icon]="r.icon"></fa-icon>
+          </div>
+          <div class="role-info">
+            <h3>{{ r.title }}</h3>
+            <span class="role-sub">{{ r.subtitle }}</span>
+          </div>
+          <div class="role-arrow">
+            <fa-icon [icon]="faArrowRight"></fa-icon>
+          </div>
+        </button>
+      }
+    </div>
+
+    <footer class="role-footer">
+      <span>© 2026 IMS</span>
+      <span class="dot">•</span>
+      <a href="#">Privacy</a>
+      <span class="dot">•</span>
+      <a href="#">Terms</a>
+      <span class="dot">•</span>
+      <a href="#">Support</a>
+    </footer>
+  </div>
+</section>

@@ -1,0 +1,6 @@
+:host {
+  display: block;
+}
+.muted-text {
+  color: var(--secondary);
+}

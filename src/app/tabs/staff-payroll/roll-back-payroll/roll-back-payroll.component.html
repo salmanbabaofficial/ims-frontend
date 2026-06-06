@@ -1,1 +1,56 @@
-<p>roll-back-payroll works!</p>
+<section class="rollback-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Roll Back Payroll</h2>
+      <p class="page-subtitle">Cancel a generated payroll batch and restore data.</p>
+    </div>
+  </header>
+
+  <div class="warn-card">
+    <fa-icon [icon]="faTriangleExclamation"></fa-icon>
+    <div>
+      <strong>Heads up</strong>
+      <p>Rolling back a payroll batch will reverse all related salary entries. This action cannot be undone after the batch is paid.</p>
+    </div>
+  </div>
+
+  <div class="page-card mt">
+    <div class="form-card-header">
+      <div>
+        <h3 class="form-card-title">Select Payroll Batch</h3>
+        <p class="form-card-subtitle">Choose the batch you want to revert.</p>
+      </div>
+    </div>
+    <div class="form-card-body">
+      <ul class="batch-list">
+        @for (b of batches; track b.id) {
+          <li class="batch-item" [class.active]="selectedBatch === b.id" (click)="selectedBatch = b.id">
+            <div>
+              <strong>{{ b.month }}</strong>
+              <small>Generated: {{ b.generatedOn }} · {{ b.staffCount }} staff</small>
+            </div>
+            <div class="batch-meta">
+              <span class="badge-status" [class.active]="b.status === 'paid'" [class.pending]="b.status === 'generated'">
+                {{ b.status }}
+              </span>
+              <strong>Rs. {{ b.totalAmount }}</strong>
+            </div>
+          </li>
+        }
+      </ul>
+
+      <div class="form-field mt">
+        <label>Reason for Rollback<sup>*</sup></label>
+        <textarea rows="3" class="input-secondary" [(ngModel)]="reason" placeholder="Explain why this payroll is being reverted..."></textarea>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn-pill-ghost">Cancel</button>
+        <button type="button" class="btn-pill-danger">
+          <fa-icon [icon]="faRotateLeft"></fa-icon>
+          Rollback Batch
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

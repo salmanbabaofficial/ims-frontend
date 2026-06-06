@@ -1,1 +1,92 @@
-<router-outlet></router-outlet>
+<section class="send-general-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Send General Message</h2>
+      <p class="page-subtitle">Broadcast notices to parents, students or staff via SMS, WhatsApp, Email or Push.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faSend"></fa-icon>
+        Send to {{ totalRecipients }} Recipients
+      </button>
+    </div>
+  </header>
+
+  <div class="send-grid">
+    <div class="page-card">
+      <header class="block-head">
+        <strong>Channel</strong>
+      </header>
+      <div class="channel-grid">
+        <button type="button" class="channel-btn" [class.active]="channel === 'sms'" (click)="channel = 'sms'">
+          <fa-icon [icon]="faSms"></fa-icon>
+          <span>SMS</span>
+        </button>
+        <button type="button" class="channel-btn whatsapp" [class.active]="channel === 'whatsapp'" (click)="channel = 'whatsapp'">
+          <fa-icon [icon]="faWhatsapp"></fa-icon>
+          <span>WhatsApp</span>
+        </button>
+        <button type="button" class="channel-btn email" [class.active]="channel === 'email'" (click)="channel = 'email'">
+          <fa-icon [icon]="faEmail"></fa-icon>
+          <span>Email</span>
+        </button>
+        <button type="button" class="channel-btn push" [class.active]="channel === 'push'" (click)="channel = 'push'">
+          <fa-icon [icon]="faBell"></fa-icon>
+          <span>Push</span>
+        </button>
+      </div>
+
+      <header class="block-head mt">
+        <strong>Audience</strong>
+        <small>{{ totalRecipients }} recipients</small>
+      </header>
+      <ul class="aud-list">
+        @for (a of audiences; track a.id) {
+          <li>
+            <label class="row-line">
+              <input type="checkbox" [checked]="a.selected" (change)="toggle(a)" />
+              <span class="aud-label">{{ a.label }}</span>
+              <span class="aud-count">{{ a.count }}</span>
+            </label>
+          </li>
+        }
+      </ul>
+    </div>
+
+    <div class="page-card">
+      <header class="block-head">
+        <strong>Message</strong>
+      </header>
+      @if (channel === 'email') {
+        <div class="form-field">
+          <label>Subject</label>
+          <input type="text" class="input-secondary" [(ngModel)]="title" placeholder="Email subject..." />
+        </div>
+      }
+      <div class="form-field">
+        <label>Message Body</label>
+        <textarea rows="10" class="input-secondary" [(ngModel)]="message" placeholder="Type your message..."></textarea>
+      </div>
+      <div class="sms-meta">
+        <span>Length: <code>{{ message.length }}</code></span>
+        @if (channel === 'sms') {
+          <span>SMS Count: <code>{{ (message.length / 160) | number: '1.0-0' }}</code></span>
+        }
+      </div>
+
+      <header class="block-head mt">
+        <strong>Schedule</strong>
+      </header>
+      <label class="check-line">
+        <input type="checkbox" [(ngModel)]="scheduleEnabled" />
+        <span>Schedule this message for later</span>
+      </label>
+      @if (scheduleEnabled) {
+        <div class="form-field mt-sm">
+          <label>Send At</label>
+          <input type="datetime-local" class="input-secondary" [(ngModel)]="scheduleAt" />
+        </div>
+      }
+    </div>
+  </div>
+</section>

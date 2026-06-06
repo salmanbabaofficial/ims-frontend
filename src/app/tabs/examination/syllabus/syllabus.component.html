@@ -1,1 +1,94 @@
-<p>syllabus works!</p>
+<section class="syllabus-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Syllabus</h2>
+      <p class="page-subtitle">Upload and share syllabi per class and subject.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-primary" (click)="showForm.set(true)">
+        <fa-icon [icon]="faPlus"></fa-icon>
+        Upload Syllabus
+      </button>
+    </div>
+  </header>
+
+  @if (showForm()) {
+    <div class="page-card">
+      <div class="form-card-header">
+        <div><h3 class="form-card-title">Upload New Syllabus</h3></div>
+      </div>
+      <div class="form-card-body">
+        <div class="row g-3">
+          <div class="col-12 col-md-4">
+            <div class="form-field">
+              <label>Class</label>
+              <select class="select-primary" [(ngModel)]="newSyllabus.className">
+                <option value="">Select Class</option>
+                @for (c of classOptions; track c) {
+                  <option [value]="c">{{ c }}</option>
+                }
+              </select>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="form-field">
+              <label>Subject</label>
+              <select class="select-primary" [(ngModel)]="newSyllabus.subject">
+                <option value="">Select Subject</option>
+                @for (s of subjectOptions; track s) {
+                  <option [value]="s">{{ s }}</option>
+                }
+              </select>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="form-field">
+              <label>File</label>
+              <input type="file" class="input-secondary" />
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-field">
+              <label>Description</label>
+              <textarea rows="2" class="input-secondary" [(ngModel)]="newSyllabus.description"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-pill-ghost" (click)="showForm.set(false)">Cancel</button>
+        <button type="button" class="btn-pill-primary" (click)="showForm.set(false)">
+          <fa-icon [icon]="faUpload"></fa-icon>
+          Upload
+        </button>
+      </div>
+    </div>
+  }
+
+  <div class="toolbar mt">
+    <div class="toolbar-left">
+      <select class="select-primary class-filter" [(ngModel)]="selectedClass">
+        <option value="all">All Classes</option>
+        @for (c of classOptions; track c) {
+          <option [value]="c">{{ c }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <div class="syllabus-grid">
+    @for (it of items; track it.id) {
+      <article class="syl-card">
+        <div class="syl-icon"><fa-icon [icon]="faBook"></fa-icon></div>
+        <div class="syl-body">
+          <strong>{{ it.subject }} — {{ it.className }}</strong>
+          <small>{{ it.description }}</small>
+          <p>{{ it.fileName }} · Uploaded on {{ it.uploadedOn }}</p>
+        </div>
+        <button type="button" class="icon-btn" title="Download"><fa-icon [icon]="faDownload"></fa-icon></button>
+      </article>
+    } @empty {
+      <div class="empty-state">No syllabus uploaded.</div>
+    }
+  </div>
+</section>

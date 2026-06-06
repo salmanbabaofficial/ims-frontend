@@ -1,1 +1,48 @@
-<p>staff-cards works!</p>
+<section class="staff-cards-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Staff Cards</h2>
+      <p class="page-subtitle">Generate and print ID cards for staff members.</p>
+    </div>
+    <div class="page-header-actions">
+      <select class="select-primary filter-select" [(ngModel)]="selectedDepartment">
+        <option value="all">All Departments</option>
+        @for (d of departments; track d) {
+          <option [value]="d">{{ d }}</option>
+        }
+      </select>
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faPrint"></fa-icon>
+        Print Selected
+      </button>
+    </div>
+  </header>
+
+  <div class="id-cards-grid">
+    @for (c of cards; track c.id) {
+      <article class="id-card">
+        <div class="id-card-top">
+          <span class="id-card-brand">Institute</span>
+          <span class="id-card-pill">Staff ID</span>
+        </div>
+        <div class="id-card-body">
+          <div class="id-avatar">{{ c.initial }}</div>
+          <h3 class="id-name">{{ c.name }}</h3>
+          <p class="id-role">{{ c.designation }}</p>
+          <ul class="id-meta">
+            <li><span>ID</span><strong>{{ c.staffId }}</strong></li>
+            <li><span>Dept.</span><strong>{{ c.department }}</strong></li>
+            <li><span>Phone</span><strong>{{ c.phone }}</strong></li>
+            <li><span>Joined</span><strong>{{ c.joiningDate }}</strong></li>
+          </ul>
+        </div>
+        <div class="id-card-actions">
+          <button type="button" class="icon-btn" title="Download"><fa-icon [icon]="faDownload"></fa-icon></button>
+          <button type="button" class="icon-btn" title="Print"><fa-icon [icon]="faPrint"></fa-icon></button>
+        </div>
+      </article>
+    } @empty {
+      <div class="empty-state">There are no staff cards.</div>
+    }
+  </div>
+</section>

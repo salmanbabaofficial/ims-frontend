@@ -1,1 +1,15 @@
-<p>admission-form works!</p>
+<section class="admission-form-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Admission Form</h2>
+      <p class="page-subtitle">Fill out the admission form to enroll a new student.</p>
+    </div>
+  </header>
+
+  <app-add-edit-student
+    [editing]="null"
+    [showBackBar]="false"
+    (saved)="onSaved()"
+    (cancelled)="onCancelled()"
+  />
+</section>

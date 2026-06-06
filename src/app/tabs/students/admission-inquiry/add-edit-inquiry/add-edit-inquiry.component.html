@@ -1,0 +1,223 @@
+<div class="form-back-bar">
+  <button type="button" class="form-back-btn" (click)="onCancel()" title="Back to list">
+    <fa-icon [icon]="faArrowLeft"></fa-icon>
+  </button>
+  <div>
+    <h2 class="page-title">{{ isEdit ? 'Edit Inquiry' : 'Add New Inquiry' }}</h2>
+    <p class="page-subtitle">
+      {{ isEdit ? 'Update inquiry details below.' : 'Record a new admission inquiry from a prospective parent.' }}
+    </p>
+  </div>
+</div>
+
+<form class="page-card" (ngSubmit)="onSave()" #inquiryForm="ngForm" novalidate>
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Inquiry Details</h3>
+      <p class="form-card-subtitle">When and where the inquiry came from.</p>
+    </div>
+    <span class="form-card-meta">Fields marked with <sup style="color:#e74c3c">*</sup> are required.</span>
+  </div>
+
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Inquiry No</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.inquiryNo" name="inquiryNo" placeholder="e.g. INQ-0001" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Inquiry Date<sup>*</sup></label>
+          <input type="date" class="input-secondary" [(ngModel)]="model.inquiryDate" name="inquiryDate" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Status</label>
+          <select class="select-primary" [(ngModel)]="model.status" name="status">
+            <option value="new">New</option>
+            <option value="contacted">Contacted</option>
+            <option value="visited">Visited</option>
+            <option value="admitted">Admitted</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Source</label>
+          <select class="select-primary" [(ngModel)]="model.source" name="source">
+            <option value="">Select Source</option>
+            @for (s of sources; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Source Details</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.sourceDetails" name="sourceDetails" placeholder="e.g. Referred by Ali Hassan (parent)" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Assigned To</label>
+          <select class="select-primary" [(ngModel)]="model.assignedTo" name="assignedTo">
+            <option value="">Unassigned</option>
+            @for (a of assignees; track a) {
+              <option [value]="a">{{ a }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Next Follow-up Date</label>
+          <input type="date" class="input-secondary" [(ngModel)]="model.followUpDate" name="followUpDate" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="card-divider" />
+
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Student Information</h3>
+      <p class="form-card-subtitle">Details of the prospective student.</p>
+    </div>
+  </div>
+
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Student Name<sup>*</sup></label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.studentName" name="studentName" />
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="form-field">
+          <label>Date of Birth</label>
+          <input type="date" class="input-secondary" [(ngModel)]="model.studentDob" name="studentDob" />
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="form-field">
+          <label>Gender</label>
+          <select class="select-primary" [(ngModel)]="model.gender" name="gender">
+            <option value="">Select</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Class Applying For<sup>*</sup></label>
+          <select class="select-primary" [(ngModel)]="model.classFor" name="classFor">
+            <option value="">Select Class</option>
+            @for (c of classes; track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Currently Studying In</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.currentlyStudying" name="currentlyStudying" placeholder="e.g. Class 4" />
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-field">
+          <label>Previous School Name</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.previousSchool" name="previousSchool" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="card-divider" />
+
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Parent / Contact</h3>
+      <p class="form-card-subtitle">Details of the parent or guardian making the inquiry.</p>
+    </div>
+  </div>
+
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Parent / Guardian Name<sup>*</sup></label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.parentName" name="parentName" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Relation</label>
+          <select class="select-primary" [(ngModel)]="model.relation" name="relation">
+            <option value="">Select Relation</option>
+            @for (r of relations; track r) {
+              <option [value]="r">{{ r }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Phone<sup>*</sup></label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.phone" name="phone" placeholder="03XX-XXXXXXX" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Alternate Phone</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.alternatePhone" name="alternatePhone" placeholder="03XX-XXXXXXX" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Email</label>
+          <input type="email" class="input-secondary" [(ngModel)]="model.email" name="email" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Occupation</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.occupation" name="occupation" placeholder="e.g. Engineer" />
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-field">
+          <label>Address</label>
+          <textarea rows="2" class="input-secondary" [(ngModel)]="model.address" name="address"></textarea>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>City</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.city" name="city" placeholder="e.g. Lahore" />
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-field">
+          <label>Notes</label>
+          <textarea rows="3" class="input-secondary" [(ngModel)]="model.notes" name="notes" placeholder="Additional notes from the call/visit..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="btn-pill-ghost" (click)="onCancel()">Cancel</button>
+    <button type="submit" class="btn-pill-primary">
+      {{ isEdit ? 'Update Inquiry' : 'Save Inquiry' }}
+    </button>
+  </div>
+</form>

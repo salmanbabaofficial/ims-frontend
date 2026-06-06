@@ -1,1 +1,88 @@
-<p>exams-marks works!</p>
+<section class="exams-marks-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Exams Marks Entry</h2>
+      <p class="page-subtitle">Enter or update student marks for a specific subject.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faSave"></fa-icon>
+        Save Marks
+      </button>
+    </div>
+  </header>
+
+  <div class="page-card filter-card">
+    <div class="row g-3">
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Exam</label>
+          <select class="select-primary" [(ngModel)]="selectedExam">
+            <option value="">Select Exam</option>
+            @for (e of examOptions; track e) {
+              <option [value]="e">{{ e }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Class</label>
+          <select class="select-primary" [(ngModel)]="selectedClass">
+            <option value="">Select Class</option>
+            @for (c of classOptions; track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Subject</label>
+          <select class="select-primary" [(ngModel)]="selectedSubject">
+            <option value="">Select Subject</option>
+            @for (s of subjectOptions; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="data-table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-id">#</th>
+          <th>Roll No</th>
+          <th>Student</th>
+          <th class="center">Marks Obtained</th>
+          <th class="center">Total Marks</th>
+          <th class="center">Percentage</th>
+          <th class="center">Grade</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (s of students(); track s.id; let i = $index) {
+          <tr>
+            <td class="col-id">{{ i + 1 }}</td>
+            <td>{{ s.rollNo }}</td>
+            <td>
+              <div class="avatar-name">
+                <span class="avatar">{{ s.initial }}</span>
+                <strong>{{ s.name }}</strong>
+              </div>
+            </td>
+            <td class="center">
+              <input type="number" class="input-secondary num-input" [(ngModel)]="s.marks" name="m{{ s.id }}" [max]="s.totalMarks" min="0" />
+            </td>
+            <td class="center">{{ s.totalMarks }}</td>
+            <td class="center">{{ s.marks !== null ? ((s.marks / s.totalMarks) * 100 | number: '1.0-1') + '%' : '—' }}</td>
+            <td class="center"><span class="grade-pill" [attr.data-grade]="grade(s.marks)">{{ grade(s.marks) }}</span></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

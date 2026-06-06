@@ -1,1 +1,54 @@
-<p>student-cards works!</p>
+<section class="student-cards-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Student Cards</h2>
+      <p class="page-subtitle">Generate and print student ID cards.</p>
+    </div>
+    <div class="page-header-actions">
+      <select class="select-primary filter-select" [(ngModel)]="selectedClass">
+        <option value="all">All Classes</option>
+        @for (c of classOptions; track c) {
+          <option [value]="c">{{ c }}</option>
+        }
+      </select>
+      <select class="select-primary filter-select" [(ngModel)]="selectedSection">
+        <option value="all">All Sections</option>
+        @for (s of sectionOptions; track s) {
+          <option [value]="s">{{ s }}</option>
+        }
+      </select>
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faPrint"></fa-icon>
+        Print Selected
+      </button>
+    </div>
+  </header>
+
+  <div class="id-cards-grid">
+    @for (c of cards; track c.id) {
+      <article class="id-card">
+        <div class="id-card-top">
+          <span class="id-card-brand">Institute</span>
+          <span class="id-card-pill">Student ID</span>
+        </div>
+        <div class="id-card-body">
+          <div class="id-avatar">{{ c.initial }}</div>
+          <h3 class="id-name">{{ c.name }}</h3>
+          <p class="id-role">{{ c.className }} · Section {{ c.section }}</p>
+          <ul class="id-meta">
+            <li><span>Adm. No</span><strong>{{ c.admissionNo }}</strong></li>
+            <li><span>Father</span><strong>{{ c.fatherName }}</strong></li>
+            <li><span>Phone</span><strong>{{ c.phone }}</strong></li>
+            <li><span>Valid Till</span><strong>{{ c.validTill }}</strong></li>
+          </ul>
+        </div>
+        <div class="id-card-actions">
+          <button type="button" class="icon-btn" title="Download"><fa-icon [icon]="faDownload"></fa-icon></button>
+          <button type="button" class="icon-btn" title="Print"><fa-icon [icon]="faPrint"></fa-icon></button>
+        </div>
+      </article>
+    } @empty {
+      <div class="empty-state">There are no student cards.</div>
+    }
+  </div>
+</section>

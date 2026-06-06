@@ -1,1 +1,87 @@
-<p>revert-bulk-challans works!</p>
+<section class="revert-bulk-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Revert Bulk Challans</h2>
+      <p class="page-subtitle">Cancel multiple challans generated in a batch.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-danger">
+        <fa-icon [icon]="faRotateLeft"></fa-icon>
+        Revert {{ selectedCount() }} Selected
+      </button>
+    </div>
+  </header>
+
+  <div class="page-card filter-card">
+    <div class="row g-3">
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Generated On</label>
+          <input type="date" class="input-secondary" [(ngModel)]="generatedDate" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Class</label>
+          <select class="select-primary" [(ngModel)]="selectedClass">
+            <option value="all">All Classes</option>
+            @for (c of classOptions; track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Revert Reason</label>
+          <input type="text" class="input-secondary" [(ngModel)]="revertReason" placeholder="Reason for cancellation..." />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <button type="button" class="btn-link-primary" (click)="toggleAll(true)">Select All</button>
+      <button type="button" class="btn-link-primary muted" (click)="toggleAll(false)">Deselect All</button>
+    </div>
+  </div>
+
+  <div class="data-table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th style="width:40px"></th>
+          <th class="col-id">#</th>
+          <th>Challan #</th>
+          <th>Student</th>
+          <th>Class</th>
+          <th>Generated</th>
+          <th class="right">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of rows(); track r.id; let i = $index) {
+          <tr>
+            <td>
+              <input type="checkbox" [checked]="r.selected" (change)="toggleOne(r.id, !r.selected)" />
+            </td>
+            <td class="col-id">{{ i + 1 }}</td>
+            <td><strong>{{ r.challanNo }}</strong></td>
+            <td>
+              <div class="avatar-name">
+                <span class="avatar">{{ r.initial }}</span>
+                <strong>{{ r.studentName }}</strong>
+              </div>
+            </td>
+            <td>{{ r.className }}</td>
+            <td>{{ r.generatedOn }}</td>
+            <td class="right"><strong>Rs. {{ r.amount }}</strong></td>
+          </tr>
+        } @empty {
+          <tr><td colspan="7" class="empty-state">No challans found.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

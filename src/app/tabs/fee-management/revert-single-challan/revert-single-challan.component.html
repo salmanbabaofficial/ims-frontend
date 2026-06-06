@@ -1,1 +1,53 @@
-<p>revert-single-challan works!</p>
+<section class="revert-single-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Revert Single Challan</h2>
+      <p class="page-subtitle">Cancel a paid challan and restore its original status.</p>
+    </div>
+  </header>
+
+  <div class="page-card">
+    <div class="form-card-header">
+      <div>
+        <h3 class="form-card-title">Find Challan</h3>
+        <p class="form-card-subtitle">Enter the challan number you want to revert.</p>
+      </div>
+    </div>
+    <div class="form-card-body">
+      <div class="search-row">
+        <fa-icon [icon]="faMagnifyingGlass" class="search-icon"></fa-icon>
+        <input type="text" class="input-secondary search-input" [(ngModel)]="challanSearch" placeholder="Type challan number..." />
+      </div>
+
+      @if (matched) {
+        <div class="match-card">
+          <div class="match-head">
+            <strong>{{ matched.challanNo }}</strong>
+            <span class="badge-status active">{{ matched.status }}</span>
+          </div>
+          <ul class="match-meta">
+            <li><span>Student</span><strong>{{ matched.studentName }}</strong></li>
+            <li><span>Class</span><strong>{{ matched.className }}</strong></li>
+            <li><span>Amount</span><strong>Rs. {{ matched.amount }}</strong></li>
+            <li><span>Paid Date</span><strong>{{ matched.paidDate }}</strong></li>
+          </ul>
+        </div>
+
+        <div class="form-field mt">
+          <label>Revert Reason<sup>*</sup></label>
+          <textarea rows="3" class="input-secondary" [(ngModel)]="revertReason" placeholder="Explain why this payment is being reverted..."></textarea>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn-pill-ghost">Cancel</button>
+          <button type="button" class="btn-pill-danger">
+            <fa-icon [icon]="faRotateLeft"></fa-icon>
+            Revert Challan
+          </button>
+        </div>
+      } @else {
+        <p class="empty-state">No challan found.</p>
+      }
+    </div>
+  </div>
+</section>

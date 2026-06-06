@@ -1,0 +1,112 @@
+<div class="form-back-bar">
+  <button type="button" class="form-back-btn" (click)="onCancel()" title="Back to list">
+    <fa-icon [icon]="faArrowLeft"></fa-icon>
+  </button>
+  <div>
+    <h2 class="page-title">{{ isEdit ? 'Edit Fine' : 'Impose New Fine' }}</h2>
+    <p class="page-subtitle">Assign a fine to a specific student.</p>
+  </div>
+</div>
+
+<form class="page-card" (ngSubmit)="onSave()" #fineForm="ngForm" novalidate>
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Fine Details</h3>
+      <p class="form-card-subtitle">Enter the fine information.</p>
+    </div>
+    <span class="form-card-meta">Fields marked with <sup style="color:#e74c3c">*</sup> are required.</span>
+  </div>
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Reference No</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.referenceNo" name="referenceNo" placeholder="e.g. FINE-0001" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Imposed On<sup>*</sup></label>
+          <input type="date" class="input-secondary" [(ngModel)]="model.imposedOn" name="imposedOn" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Issued By</label>
+          <select class="select-primary" [(ngModel)]="model.issuedBy" name="issuedBy">
+            <option value="">Select</option>
+            @for (i of issuers; track i) {
+              <option [value]="i">{{ i }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Student<sup>*</sup></label>
+          <select class="select-primary" [(ngModel)]="model.studentId" name="studentId">
+            <option value="">Select Student</option>
+            @for (s of students; track s.id) {
+              <option [value]="s.id">{{ s.id }} · {{ s.name }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="form-field">
+          <label>Fine Type<sup>*</sup></label>
+          <select class="select-primary" [(ngModel)]="model.fineType" name="fineType">
+            <option value="">Select Type</option>
+            @for (t of fineTypes; track t) {
+              <option [value]="t">{{ t }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="form-field">
+          <label>Amount<sup>*</sup></label>
+          <input type="number" min="0" class="input-secondary" [(ngModel)]="model.amount" name="amount" />
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-field">
+          <label>Reason</label>
+          <textarea rows="3" class="input-secondary" [(ngModel)]="model.reason" name="reason" placeholder="Why is this fine being imposed?"></textarea>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Status</label>
+          <select class="select-primary" [(ngModel)]="model.status" name="status">
+            <option value="unpaid">Unpaid</option>
+            <option value="paid">Paid</option>
+          </select>
+        </div>
+      </div>
+      @if (model.status === 'paid') {
+        <div class="col-12 col-md-4">
+          <div class="form-field">
+            <label>Paid Date</label>
+            <input type="date" class="input-secondary" [(ngModel)]="model.paidDate" name="paidDate" />
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="form-field">
+            <label>Payment Method</label>
+            <select class="select-primary" [(ngModel)]="model.paymentMethod" name="paymentMethod">
+              <option value="">Select</option>
+              @for (m of paymentMethods; track m) {
+                <option [value]="m">{{ m }}</option>
+              }
+            </select>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+  <div class="form-actions">
+    <button type="button" class="btn-pill-ghost" (click)="onCancel()">Cancel</button>
+    <button type="submit" class="btn-pill-primary">{{ isEdit ? 'Update Fine' : 'Save Fine' }}</button>
+  </div>
+</form>

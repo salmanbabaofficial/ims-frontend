@@ -1,1 +1,131 @@
-<p>create-single-challan works!</p>
+<section class="single-challan-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Create Single Challan</h2>
+      <p class="page-subtitle">Generate a fee challan for a single student.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-ghost">
+        <fa-icon [icon]="faPrint"></fa-icon>
+        Preview
+      </button>
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faSave"></fa-icon>
+        Save Challan
+      </button>
+    </div>
+  </header>
+
+  <div class="page-card">
+    <div class="form-card-header">
+      <div>
+        <h3 class="form-card-title">Challan Details</h3>
+        <p class="form-card-subtitle">Choose student and challan information.</p>
+      </div>
+      <span class="form-card-meta">Challan # <strong>{{ challanNo }}</strong></span>
+    </div>
+
+    <div class="form-card-body">
+      <div class="row g-3">
+        <div class="col-12 col-md-6">
+          <div class="form-field">
+            <label>Student<sup>*</sup></label>
+            <select class="select-primary" [(ngModel)]="selectedStudentId">
+              <option value="">Select Student</option>
+              @for (s of students; track s.id) {
+                <option [value]="s.id">{{ s.id }} · {{ s.name }} ({{ s.className }})</option>
+              }
+            </select>
+          </div>
+        </div>
+        <div class="col-12 col-md-3">
+          <div class="form-field">
+            <label>Issue Date</label>
+            <input type="date" class="input-secondary" [(ngModel)]="issueDate" />
+          </div>
+        </div>
+        <div class="col-12 col-md-3">
+          <div class="form-field">
+            <label>Due Date</label>
+            <input type="date" class="input-secondary" [(ngModel)]="dueDate" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="card-divider" />
+
+    <div class="form-card-header">
+      <div>
+        <h3 class="form-card-title">Fee Items</h3>
+        <p class="form-card-subtitle">Add or remove fee items for this challan.</p>
+      </div>
+      <button type="button" class="btn-pill-primary sm" (click)="addItem()">
+        <fa-icon [icon]="faPlus"></fa-icon>
+        Add Item
+      </button>
+    </div>
+
+    <div class="form-card-body">
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th>Fee Type</th>
+            <th class="right">Amount</th>
+            <th class="right">Discount</th>
+            <th class="right">Net</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (it of items(); track it.id) {
+            <tr>
+              <td>
+                <select class="select-primary" [(ngModel)]="it.feeType" name="ft{{ it.id }}">
+                  <option value="">Select Fee Type</option>
+                  @for (f of feeTypes; track f) {
+                    <option [value]="f">{{ f }}</option>
+                  }
+                </select>
+              </td>
+              <td class="right">
+                <input type="number" class="input-secondary number-input" [(ngModel)]="it.amount" name="amt{{ it.id }}" />
+              </td>
+              <td class="right">
+                <input type="number" class="input-secondary number-input" [(ngModel)]="it.discount" name="disc{{ it.id }}" />
+              </td>
+              <td class="right"><strong>Rs. {{ (it.amount || 0) - (it.discount || 0) }}</strong></td>
+              <td class="actions">
+                <button type="button" class="icon-btn danger" (click)="removeItem(it.id)" title="Remove">
+                  <fa-icon [icon]="faTrash"></fa-icon>
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="5" class="empty-state">No fee items added.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <hr class="card-divider" />
+
+    <div class="form-card-body">
+      <div class="row g-3">
+        <div class="col-12 col-md-8">
+          <div class="form-field">
+            <label>Remarks</label>
+            <textarea rows="3" class="input-secondary" [(ngModel)]="remarks" placeholder="Optional remarks..."></textarea>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="totals-box">
+            <div class="totals-row"><span>Sub Total</span><strong>Rs. {{ subtotal }}</strong></div>
+            <div class="totals-row"><span>Discount</span><strong>- Rs. {{ discountTotal }}</strong></div>
+            <div class="totals-row grand"><span>Net Payable</span><strong>Rs. {{ netAmount }}</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

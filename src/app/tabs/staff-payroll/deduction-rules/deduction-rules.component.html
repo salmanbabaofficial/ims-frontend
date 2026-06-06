@@ -1,1 +1,50 @@
-<p>deduction-rules works!</p>
+<section class="deduction-rules-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Deduction Rules</h2>
+      <p class="page-subtitle">Standard deductions applied while computing payroll.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faSave"></fa-icon>
+        Save Rules
+      </button>
+    </div>
+  </header>
+
+  <div class="rules-grid">
+    @for (r of rules(); track r.id) {
+      <article class="rule-card page-card" [class.enabled]="r.enabled">
+        <div class="rule-head">
+          <div>
+            <strong>{{ r.name }}</strong>
+            <small>{{ r.description }}</small>
+          </div>
+          <label class="switch">
+            <input type="checkbox" [checked]="r.enabled" (change)="toggle(r.id, !r.enabled)" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="rule-body">
+          <div class="row g-2">
+            <div class="col-6">
+              <div class="form-field inline">
+                <label>Type</label>
+                <select class="select-primary" [(ngModel)]="r.kind" name="k{{ r.id }}">
+                  <option value="fixed">Fixed Amount</option>
+                  <option value="percent">% of Basic</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-field inline">
+                <label>{{ r.kind === 'percent' ? 'Percent (%)' : 'Amount (Rs.)' }}</label>
+                <input type="number" class="input-secondary" [(ngModel)]="r.value" name="v{{ r.id }}" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    }
+  </div>
+</section>

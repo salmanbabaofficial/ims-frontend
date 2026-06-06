@@ -1,0 +1,4 @@
+:host { display: block; }
+textarea.input-secondary { resize: vertical; }
+.upload-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.upload-row .hint { font-size: 12px; color: var(--secondary); display: inline-flex; gap: 6px; align-items: center; }

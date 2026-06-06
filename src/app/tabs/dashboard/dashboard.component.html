@@ -1,1 +1,313 @@
-<router-outlet></router-outlet>
+<section class="dashboard-page">
+  <!-- ========== WELCOME STRIP ========== -->
+  <header class="welcome-strip">
+    <div class="welcome-text">
+      <span class="welcome-eyebrow">Welcome back</span>
+      <h2 class="welcome-title">Hello, Administrator <span class="wave">👋</span></h2>
+      <p class="welcome-meta">{{ todayLabel }} · Academic Session <strong>{{ currentSession }}</strong></p>
+    </div>
+    <div class="welcome-actions">
+      <a routerLink="/students/admission-form" class="welcome-btn primary">
+        <fa-icon [icon]="quickActions[0].icon"></fa-icon>
+        <span>New Admission</span>
+      </a>
+      <a routerLink="/fee-management/collect-fee-student-wise" class="welcome-btn ghost">
+        <fa-icon [icon]="quickActions[1].icon"></fa-icon>
+        <span>Collect Fee</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- ========== KPI CARDS ========== -->
+  <div class="row g-3 stat-cards-row">
+    @for (card of statCards; track card.id) {
+      <div class="col-12 col-sm-6 col-xl-4">
+        <article class="stat-card" [style.--accent]="card.accent">
+          <div class="stat-card-top">
+            <div class="stat-card-icon">
+              <fa-icon [icon]="card.icon"></fa-icon>
+            </div>
+            <button type="button" class="stat-card-menu" aria-label="More">
+              <fa-icon [icon]="faEllipsis"></fa-icon>
+            </button>
+          </div>
+          <span class="stat-card-label">{{ card.label }}</span>
+          <strong class="stat-card-value">{{ card.value }}</strong>
+          <div class="stat-card-trend-row">
+            <span class="stat-card-trend" [class.is-up]="card.trend === 'up'" [class.is-down]="card.trend === 'down'">
+              <fa-icon [icon]="card.trend === 'up' ? faArrowUp : faArrowDown"></fa-icon>
+              {{ card.change }}
+            </span>
+            <em>{{ card.hint }}</em>
+          </div>
+        </article>
+      </div>
+    }
+  </div>
+
+  <!-- ========== QUICK ACTIONS ========== -->
+  <div class="quick-actions">
+    <div class="quick-actions-head">
+      <h3>Quick Actions</h3>
+      <span>One-click shortcuts to common tasks</span>
+    </div>
+    <div class="quick-actions-grid">
+      @for (q of quickActions; track q.id) {
+        <a [routerLink]="q.route" class="qa-tile" [style.--accent]="q.accent">
+          <div class="qa-icon">
+            <fa-icon [icon]="q.icon"></fa-icon>
+          </div>
+          <span class="qa-label">{{ q.label }}</span>
+        </a>
+      }
+    </div>
+  </div>
+
+  <!-- ========== CHARTS ROW ========== -->
+  <div class="row g-3 charts-row">
+    <div class="col-12 col-xl-8">
+      <article class="chart-card">
+        <header class="chart-card-header">
+          <div>
+            <h3 class="chart-card-title">Fee Collection vs Expense</h3>
+            <span class="chart-card-subtitle">Last 6 months · {{ currentSession }}</span>
+          </div>
+          <span class="chart-period-pill">6M</span>
+        </header>
+        <div class="chart-card-body bar-chart">
+          @for (m of feeChartMonths; track m.name) {
+            <div class="bar-chart-col">
+              <div class="bar-chart-bars">
+                <span class="bar collected" [style.height.%]="m.collected" [title]="'Collected: ' + m.collected + '%'"></span>
+                <span class="bar expense" [style.height.%]="m.expense" [title]="'Expense: ' + m.expense + '%'"></span>
+              </div>
+              <span class="bar-chart-label">{{ m.name }}</span>
+            </div>
+          }
+        </div>
+        <footer class="chart-card-footer">
+          <span><i class="legend-dot collected"></i>Fee Collected</span>
+          <span><i class="legend-dot expense"></i>Total Expense</span>
+        </footer>
+      </article>
+    </div>
+
+    <div class="col-12 col-xl-4">
+      <article class="chart-card donut-card">
+        <header class="chart-card-header">
+          <div>
+            <h3 class="chart-card-title">Students by Gender</h3>
+            <span class="chart-card-subtitle">Total {{ totalStudents | number }} students</span>
+          </div>
+        </header>
+
+        <div class="donut-wrap">
+          <svg viewBox="0 0 130 130" class="donut-svg" aria-hidden="true">
+            <circle cx="65" cy="65" r="56" fill="none" stroke="#fce7f3" stroke-width="14" />
+            <circle
+              cx="65" cy="65" r="56"
+              fill="none"
+              stroke="#3aa0ff"
+              stroke-width="14"
+              stroke-linecap="round"
+              [attr.stroke-dasharray]="donutMaleStroke"
+              stroke-dashoffset="0"
+              transform="rotate(-90 65 65)"
+            />
+          </svg>
+          <div class="donut-center">
+            <strong>{{ totalStudents | number }}</strong>
+            <span>Students</span>
+          </div>
+        </div>
+
+        <div class="donut-legend">
+          @for (s of genderSegments; track s.label) {
+            <div class="donut-legend-row">
+              <span class="dot" [style.background]="s.color"></span>
+              <span class="lbl">{{ s.label }}</span>
+              <span class="val">{{ s.value | number }}</span>
+            </div>
+          }
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- ========== ATTENDANCE + BIRTHDAYS ROW ========== -->
+  <div class="row g-3">
+    <div class="col-12 col-xl-8">
+      <article class="chart-card">
+        <header class="chart-card-header">
+          <div>
+            <h3 class="chart-card-title">Attendance Trend</h3>
+            <span class="chart-card-subtitle">This week · daily attendance %</span>
+          </div>
+          <span class="chart-period-pill green">7D</span>
+        </header>
+        <div class="chart-card-body line-chart">
+          @for (d of attendanceWeek; track d.day) {
+            <div class="line-chart-col">
+              <span class="line-bar" [style.height.%]="d.percent" [title]="d.percent + '%'"></span>
+              <span class="line-chart-value">{{ d.percent }}%</span>
+              <span class="line-chart-label">{{ d.day }}</span>
+            </div>
+          }
+        </div>
+      </article>
+    </div>
+
+    <div class="col-12 col-xl-4">
+      <article class="side-card birthdays-card">
+        <header class="side-card-header">
+          <div class="side-card-title-wrap">
+            <span class="side-card-emoji">
+              <fa-icon [icon]="faCakeCandles"></fa-icon>
+            </span>
+            <h3 class="side-card-title">Today's Birthdays</h3>
+          </div>
+          <span class="side-card-count">{{ birthdaysToday.length }}</span>
+        </header>
+
+        @if (birthdaysToday.length === 0) {
+          <p class="empty-line">No birthdays today.</p>
+        } @else {
+          <ul class="birthday-list">
+            @for (b of birthdaysToday; track b.id) {
+              <li class="birthday-item">
+                <div class="bd-avatar" [attr.data-type]="b.type">{{ b.initial }}</div>
+                <div class="bd-info">
+                  <strong>{{ b.name }}</strong>
+                  <span>{{ b.className }} · turns {{ b.age }}</span>
+                </div>
+                <button type="button" class="bd-wish" title="Send wish">
+                  <fa-icon [icon]="faGift"></fa-icon>
+                </button>
+              </li>
+            }
+          </ul>
+        }
+
+        <a routerLink="/messages" class="side-card-link">
+          View all <fa-icon [icon]="faArrowRight"></fa-icon>
+        </a>
+      </article>
+    </div>
+  </div>
+
+  <!-- ========== RECENT ACTIVITY + TOP DEFAULTERS ========== -->
+  <div class="row g-3">
+    <div class="col-12 col-xl-7">
+      <article class="side-card activity-card">
+        <header class="side-card-header">
+          <h3 class="side-card-title">Recent Activity</h3>
+          <span class="side-card-sub">Last few moments at your institute</span>
+        </header>
+        <ul class="activity-list">
+          @for (a of recentActivity; track a.id) {
+            <li class="activity-item" [attr.data-type]="a.type">
+              <span class="activity-icon">
+                <fa-icon [icon]="a.icon"></fa-icon>
+              </span>
+              <div class="activity-text">
+                <strong>{{ a.title }}</strong>
+                <span>{{ a.meta }}</span>
+              </div>
+              <span class="activity-time">{{ a.time }}</span>
+            </li>
+          }
+        </ul>
+      </article>
+    </div>
+
+    <div class="col-12 col-xl-5">
+      <article class="side-card defaulters-card">
+        <header class="side-card-header">
+          <div class="side-card-title-wrap">
+            <span class="side-card-emoji warn">
+              <fa-icon [icon]="faTriangleExclamation"></fa-icon>
+            </span>
+            <h3 class="side-card-title">Top Fee Defaulters</h3>
+          </div>
+          <a routerLink="/fee-management/fee-defaulters" class="side-card-link inline">View all</a>
+        </header>
+
+        <ul class="defaulter-list">
+          @for (d of topDefaulters; track d.id; let i = $index) {
+            <li class="defaulter-item">
+              <span class="def-rank">#{{ i + 1 }}</span>
+              <div class="def-avatar">{{ d.initial }}</div>
+              <div class="def-info">
+                <strong>{{ d.name }}</strong>
+                <span>{{ d.className }} · {{ d.fatherName }}</span>
+              </div>
+              <div class="def-amount">
+                <strong>{{ d.amount | currency:'PKR':'symbol':'1.0-0' }}</strong>
+                <span>{{ d.months }} mo pending</span>
+              </div>
+            </li>
+          }
+        </ul>
+      </article>
+    </div>
+  </div>
+
+  <!-- ========== NOTICES + UPCOMING EVENTS ========== -->
+  <div class="row g-3">
+    <div class="col-12 col-xl-7">
+      <article class="side-card notice-card">
+        <header class="side-card-header">
+          <div class="side-card-title-wrap">
+            <span class="side-card-emoji info">
+              <fa-icon [icon]="faBullhorn"></fa-icon>
+            </span>
+            <h3 class="side-card-title">Notice Board</h3>
+          </div>
+          <a routerLink="/send-general-message" class="side-card-link inline">Post new</a>
+        </header>
+
+        <ul class="notice-list">
+          @for (n of notices; track n.id) {
+            <li class="notice-item" [attr.data-type]="n.type">
+              <span class="notice-tag">{{ n.type }}</span>
+              <div class="notice-body">
+                <strong>{{ n.title }}</strong>
+                <p>{{ n.description }}</p>
+              </div>
+              <span class="notice-date">{{ n.date }}</span>
+            </li>
+          }
+        </ul>
+      </article>
+    </div>
+
+    <div class="col-12 col-xl-5">
+      <article class="side-card events-card">
+        <header class="side-card-header">
+          <div class="side-card-title-wrap">
+            <span class="side-card-emoji event">
+              <fa-icon [icon]="faCalendarDays"></fa-icon>
+            </span>
+            <h3 class="side-card-title">Upcoming Events</h3>
+          </div>
+          <a routerLink="/dashboard" class="side-card-link inline">Calendar</a>
+        </header>
+
+        <ul class="event-list">
+          @for (e of upcomingEvents; track e.id) {
+            <li class="event-item">
+              <div class="event-date" [style.--accent]="e.accent">
+                <strong>{{ e.day }}</strong>
+                <span>{{ e.month }}</span>
+              </div>
+              <div class="event-info">
+                <strong>{{ e.title }}</strong>
+                <span>{{ e.time }} · {{ e.location }}</span>
+              </div>
+            </li>
+          }
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>

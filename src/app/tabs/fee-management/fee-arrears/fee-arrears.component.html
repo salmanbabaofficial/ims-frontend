@@ -1,1 +1,91 @@
-<p>fee-arrears works!</p>
+<section class="fee-arrears-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Fee Arrears</h2>
+      <p class="page-subtitle">Outstanding fee balances of all students.</p>
+    </div>
+    <div class="page-header-actions">
+      <div class="searchbox" [class.is-open]="searchOpen()" (clickOutside)="searchOpen.set(false)">
+        <input #searchInput type="text" class="searchbox-input" [(ngModel)]="searchTerm" placeholder="Search arrears..." />
+        <button type="button" class="searchbox-icon" (click)="toggleSearch()" aria-label="Toggle search">
+          <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+        </button>
+      </div>
+      <button type="button" class="btn-pill-ghost">
+        <fa-icon [icon]="faFileExport"></fa-icon>
+        Export
+      </button>
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faPaperPlane"></fa-icon>
+        Send Reminders
+      </button>
+    </div>
+  </header>
+
+  <div class="stats-row">
+    <div class="stat-card danger">
+      <span class="stat-label">Total Arrears</span>
+      <strong class="stat-value">Rs. {{ totalArrears }}</strong>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Students Pending</span>
+      <strong class="stat-value">{{ rows.length }}</strong>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <select class="select-primary class-filter" [(ngModel)]="selectedClass">
+        <option value="all">All Classes</option>
+        @for (c of classOptions; track c) {
+          <option [value]="c">{{ c }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <div class="data-table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-id">#</th>
+          <th>Admission No</th>
+          <th>Student</th>
+          <th>Class</th>
+          <th>Father Name</th>
+          <th>Phone</th>
+          <th>Months Overdue</th>
+          <th class="right">Total Due</th>
+          <th class="col-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of rows; track r.id; let i = $index) {
+          <tr>
+            <td class="col-id">{{ i + 1 }}</td>
+            <td><strong>{{ r.admissionNo }}</strong></td>
+            <td>
+              <div class="avatar-name">
+                <span class="avatar">{{ r.initial }}</span>
+                <strong>{{ r.name }}</strong>
+              </div>
+            </td>
+            <td>{{ r.className }}</td>
+            <td>{{ r.fatherName }}</td>
+            <td>{{ r.phone }}</td>
+            <td><span class="badge-status inactive">{{ r.monthsOverdue }} months</span></td>
+            <td class="right"><strong class="danger-text">Rs. {{ r.amount }}</strong></td>
+            <td class="col-actions">
+              <div class="row-actions">
+                <button type="button" class="icon-btn" title="View"><fa-icon [icon]="faEye"></fa-icon></button>
+                <button type="button" class="icon-btn" title="Send Reminder"><fa-icon [icon]="faPaperPlane"></fa-icon></button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="9" class="empty-state">No arrears found.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

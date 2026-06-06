@@ -1,1 +1,60 @@
-<p>date-sheet works!</p>
+<section class="date-sheet-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Date Sheet</h2>
+      <p class="page-subtitle">Examination schedule and timing details.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-ghost">
+        <fa-icon [icon]="faShare"></fa-icon>
+        Share
+      </button>
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faPrint"></fa-icon>
+        Print Date Sheet
+      </button>
+    </div>
+  </header>
+
+  <div class="page-card filter-card">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Select Exam</label>
+          <select class="select-primary" [(ngModel)]="selectedExam">
+            @for (e of examOptions; track e) {
+              <option [value]="e">{{ e }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ds-paper page-card">
+    <header class="ds-paper-head">
+      <h3>{{ selectedExam }}</h3>
+      <p>Date Sheet</p>
+    </header>
+
+    <div class="ds-grid">
+      @for (r of rows; track r.id) {
+        <article class="ds-card">
+          <div class="ds-date">
+            <span class="ds-day">{{ r.day.slice(0, 3) }}</span>
+            <strong class="ds-num">{{ r.date.split(' ')[0] }}</strong>
+            <small>{{ r.date.split(' ')[1] }} {{ r.date.split(' ')[2] }}</small>
+          </div>
+          <div class="ds-info">
+            <h4>{{ r.subject }}</h4>
+            <ul>
+              <li><span>Time:</span> {{ r.time }}</li>
+              <li><span>Duration:</span> {{ r.duration }}</li>
+              <li><span>Room:</span> {{ r.room }}</li>
+            </ul>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>

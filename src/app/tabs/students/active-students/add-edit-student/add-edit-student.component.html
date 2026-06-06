@@ -1,0 +1,453 @@
+@if (showBackBar()) {
+  <div class="form-back-bar">
+    <button type="button" class="form-back-btn" (click)="onCancel()" title="Back to list">
+      <fa-icon [icon]="faArrowLeft"></fa-icon>
+    </button>
+    <div>
+      <h2 class="page-title">{{ isEdit ? 'Edit Student' : 'Add New Student' }}</h2>
+      <p class="page-subtitle">
+        {{ isEdit ? 'Update student details below.' : 'Fill in the details to enroll a new student.' }}
+      </p>
+    </div>
+  </div>
+}
+
+<form class="page-card" (ngSubmit)="onSave()" #studentForm="ngForm" novalidate>
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Student Information</h3>
+      <p class="form-card-subtitle">Personal details of the student.</p>
+    </div>
+    <span class="form-card-meta">Fields marked with <sup style="color:#e74c3c">*</sup> are required.</span>
+  </div>
+
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-3">
+        <div class="photo-upload">
+          <div class="photo-box">
+            <fa-icon [icon]="faCamera"></fa-icon>
+            <span>Upload Photo</span>
+          </div>
+          <button type="button" class="btn-link-primary">Choose File</button>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-9">
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <div class="form-field">
+              <label>Full Name<sup>*</sup></label>
+              <input type="text" class="input-secondary" [(ngModel)]="model.fullName" name="fullName" placeholder="e.g. Ali Hassan" />
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="form-field">
+              <label>Admission No<sup>*</sup></label>
+              <input type="text" class="input-secondary" [(ngModel)]="model.admissionNo" name="admissionNo" placeholder="e.g. ADM-0001" />
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="form-field">
+              <label>Gender<sup>*</sup></label>
+              <select class="select-primary" [(ngModel)]="model.gender" name="gender">
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="form-field">
+              <label>Date of Birth<sup>*</sup></label>
+              <input type="date" class="input-secondary" [(ngModel)]="model.dob" name="dob" />
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="form-field">
+              <label>Blood Group</label>
+              <select class="select-primary" [(ngModel)]="model.bloodGroup" name="bloodGroup">
+                <option value="">Select</option>
+                @for (b of bloodGroups; track b) {
+                  <option [value]="b">{{ b }}</option>
+                }
+              </select>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="form-field">
+              <label>Religion</label>
+              <select class="select-primary" [(ngModel)]="model.religion" name="religion">
+                <option value="">Select</option>
+                @for (r of religions; track r) {
+                  <option [value]="r">{{ r }}</option>
+                }
+              </select>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="form-field">
+              <label>Nationality</label>
+              <select class="select-primary" [(ngModel)]="model.nationality" name="nationality">
+                @for (n of nationalities; track n) {
+                  <option [value]="n">{{ n }}</option>
+                }
+              </select>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="form-field">
+              <label>Category</label>
+              <select class="select-primary" [(ngModel)]="model.category" name="category">
+                @for (c of categories; track c) {
+                  <option [value]="c">{{ c }}</option>
+                }
+              </select>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="form-field">
+              <label>B-Form Number</label>
+              <input type="text" class="input-secondary" [(ngModel)]="model.bForm" name="bForm" placeholder="e.g. 12345-1234567-1" />
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="form-field">
+              <label>CNIC (if 18+)</label>
+              <input type="text" class="input-secondary" [(ngModel)]="model.cnic" name="cnic" placeholder="e.g. 12345-1234567-1" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="card-divider" />
+
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Academic Details</h3>
+      <p class="form-card-subtitle">Class, section and admission information.</p>
+    </div>
+  </div>
+
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Class<sup>*</sup></label>
+          <select class="select-primary" [(ngModel)]="model.className" name="className">
+            <option value="">Select Class</option>
+            @for (c of classes; track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Section<sup>*</sup></label>
+          <select class="select-primary" [(ngModel)]="model.section" name="section">
+            <option value="">Select Section</option>
+            @for (s of sections; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Roll No</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.rollNo" name="rollNo" placeholder="e.g. 12" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Admission Date<sup>*</sup></label>
+          <input type="date" class="input-secondary" [(ngModel)]="model.admissionDate" name="admissionDate" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>House</label>
+          <select class="select-primary" [(ngModel)]="model.house" name="house">
+            <option value="">Select House</option>
+            @for (h of houses; track h) {
+              <option [value]="h">{{ h }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Fee Concession (%)</label>
+          <input type="number" min="0" max="100" class="input-secondary" [(ngModel)]="model.feeConcession" name="feeConcession" placeholder="0" />
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-field">
+          <label>Previous School</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.previousSchool" name="previousSchool" placeholder="Optional" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="card-divider" />
+
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Father's Information</h3>
+      <p class="form-card-subtitle">Contact details of the father.</p>
+    </div>
+  </div>
+
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Father's Name<sup>*</sup></label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.fatherName" name="fatherName" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Father's CNIC</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.fatherCnic" name="fatherCnic" placeholder="12345-1234567-1" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Father's Occupation</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.fatherOccupation" name="fatherOccupation" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Father's Phone<sup>*</sup></label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.fatherPhone" name="fatherPhone" placeholder="03XX-XXXXXXX" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Father's Email</label>
+          <input type="email" class="input-secondary" [(ngModel)]="model.fatherEmail" name="fatherEmail" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="card-divider" />
+
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Mother's Information</h3>
+      <p class="form-card-subtitle">Contact details of the mother.</p>
+    </div>
+  </div>
+
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Mother's Name</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.motherName" name="motherName" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Mother's CNIC</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.motherCnic" name="motherCnic" placeholder="12345-1234567-1" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Mother's Occupation</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.motherOccupation" name="motherOccupation" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Mother's Phone</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.motherPhone" name="motherPhone" placeholder="03XX-XXXXXXX" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="card-divider" />
+
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Guardian (if different from parents)</h3>
+      <p class="form-card-subtitle">Optional — fill only if a separate guardian is responsible.</p>
+    </div>
+  </div>
+
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Guardian Name</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.guardianName" name="guardianName" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Relation</label>
+          <select class="select-primary" [(ngModel)]="model.guardianRelation" name="guardianRelation">
+            <option value="">Select Relation</option>
+            @for (r of relations; track r) {
+              <option [value]="r">{{ r }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Guardian Phone</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.guardianPhone" name="guardianPhone" placeholder="03XX-XXXXXXX" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="card-divider" />
+
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Contact & Address</h3>
+      <p class="form-card-subtitle">Student's own contact and residence details.</p>
+    </div>
+  </div>
+
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Student Phone</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.phone" name="phone" placeholder="03XX-XXXXXXX" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Student Email</label>
+          <input type="email" class="input-secondary" [(ngModel)]="model.email" name="email" placeholder="name@example.com" />
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-field">
+          <label>Current Address<sup>*</sup></label>
+          <textarea rows="2" class="input-secondary" [(ngModel)]="model.address" name="address" placeholder="House #, Street, Area"></textarea>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-field">
+          <label>Permanent Address</label>
+          <textarea rows="2" class="input-secondary" [(ngModel)]="model.permanentAddress" name="permanentAddress" placeholder="If same as current, leave blank"></textarea>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>City</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.city" name="city" placeholder="e.g. Lahore" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Country</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.country" name="country" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Postal Code</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.postalCode" name="postalCode" placeholder="54000" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Emergency Contact Name</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.emergencyContactName" name="emergencyContactName" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Emergency Contact Phone</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.emergencyContactPhone" name="emergencyContactPhone" placeholder="03XX-XXXXXXX" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="card-divider" />
+
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Medical & Other Information</h3>
+      <p class="form-card-subtitle">Health conditions, transport and additional info.</p>
+    </div>
+  </div>
+
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Medical Conditions</label>
+          <textarea rows="2" class="input-secondary" [(ngModel)]="model.medicalConditions" name="medicalConditions" placeholder="e.g. Asthma, Diabetes, etc."></textarea>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Allergies</label>
+          <textarea rows="2" class="input-secondary" [(ngModel)]="model.allergies" name="allergies" placeholder="e.g. Peanut, Dust"></textarea>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Transport Route</label>
+          <select class="select-primary" [(ngModel)]="model.transportRoute" name="transportRoute">
+            <option value="">No Transport</option>
+            @for (t of transportRoutes; track t) {
+              <option [value]="t">{{ t }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Hostel Room</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.hostelRoom" name="hostelRoom" placeholder="If applicable" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Sibling Info</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.siblingInfo" name="siblingInfo" placeholder="e.g. Brother in Class 5" />
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-field">
+          <label>Additional Notes</label>
+          <textarea rows="2" class="input-secondary" [(ngModel)]="model.notes" name="notes" placeholder="Any other information..."></textarea>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Status</label>
+          <select class="select-primary" [(ngModel)]="model.status" name="status">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="btn-pill-ghost" (click)="onCancel()">Cancel</button>
+    <button type="submit" class="btn-pill-primary">
+      {{ isEdit ? 'Update Student' : 'Save Student' }}
+    </button>
+  </div>
+</form>

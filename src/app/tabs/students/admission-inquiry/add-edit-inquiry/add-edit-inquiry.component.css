@@ -1,0 +1,7 @@
+:host {
+  display: block;
+}
+textarea.input-secondary {
+  min-height: 80px;
+  resize: vertical;
+}

@@ -1,0 +1,87 @@
+<div class="form-back-bar">
+  <button type="button" class="form-back-btn" (click)="onCancel()" title="Back to list">
+    <fa-icon [icon]="faArrowLeft"></fa-icon>
+  </button>
+  <div>
+    <h2 class="page-title">{{ isEdit ? 'Edit Session' : 'Add New Session' }}</h2>
+    <p class="page-subtitle">
+      {{ isEdit ? 'Update session details below.' : 'Define a new academic session with start and end dates.' }}
+    </p>
+  </div>
+</div>
+
+<form class="page-card" (ngSubmit)="onSave()" #sessionForm="ngForm" novalidate>
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Session Information</h3>
+      <p class="form-card-subtitle">Provide the session name and its duration.</p>
+    </div>
+    <span class="form-card-meta">Fields marked with <sup style="color:#e74c3c">*</sup> are required.</span>
+  </div>
+
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Session Name<sup>*</sup></label>
+          <input
+            type="text"
+            class="input-secondary"
+            [(ngModel)]="model.name"
+            name="name"
+            placeholder="e.g. 2026 - 2027"
+          />
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Status</label>
+          <select class="select-primary" [(ngModel)]="model.status" name="status">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Start Date<sup>*</sup></label>
+          <input
+            type="date"
+            class="input-secondary"
+            [(ngModel)]="model.startDate"
+            name="startDate"
+          />
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>End Date<sup>*</sup></label>
+          <input
+            type="date"
+            class="input-secondary"
+            [(ngModel)]="model.endDate"
+            name="endDate"
+          />
+        </div>
+      </div>
+
+      <div class="col-12">
+        <label class="check-line">
+          <input type="checkbox" [(ngModel)]="model.isCurrent" name="isCurrent" />
+          <span>Mark this as the current session</span>
+        </label>
+        <div class="field-hint">Only one session can be marked as current at a time.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="btn-pill-ghost" (click)="onCancel()">Cancel</button>
+    <button type="submit" class="btn-pill-primary">
+      {{ isEdit ? 'Update Session' : 'Save Session' }}
+    </button>
+  </div>
+</form>

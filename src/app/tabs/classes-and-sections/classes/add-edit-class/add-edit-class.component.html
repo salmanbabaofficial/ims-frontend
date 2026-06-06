@@ -1,0 +1,103 @@
+<div class="form-back-bar">
+  <button type="button" class="form-back-btn" (click)="onCancel()" title="Back to list">
+    <fa-icon [icon]="faArrowLeft"></fa-icon>
+  </button>
+  <div>
+    <h2 class="page-title">{{ isEdit ? 'Edit Class' : 'Add New Class' }}</h2>
+    <p class="page-subtitle">
+      {{ isEdit ? 'Update class details below.' : 'Fill in the details to create a new class.' }}
+    </p>
+  </div>
+</div>
+
+<form class="page-card" (ngSubmit)="onSave()" #classForm="ngForm" novalidate>
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Class Information</h3>
+      <p class="form-card-subtitle">Basic identification details for this class.</p>
+    </div>
+    <span class="form-card-meta">Fields marked with <sup style="color:#e74c3c">*</sup> are required.</span>
+  </div>
+
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Class Name<sup>*</sup></label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.name" name="name" placeholder="e.g. Class 1" />
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Short Code</label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.code" name="code" placeholder="e.g. CL1" />
+          <div class="field-hint">Short code used in reports & roll number prefixes.</div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Class Level<sup>*</sup></label>
+          <select class="select-primary" [(ngModel)]="model.level" name="level">
+            <option value="" disabled>Select level</option>
+            @for (level of levels; track level) {
+              <option [value]="level">{{ level }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Class Teacher (Default)</label>
+          <select class="select-primary" [(ngModel)]="model.classTeacher" name="classTeacher">
+            @for (t of teachers; track t) {
+              <option [value]="t">{{ t }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Display Order</label>
+          <input type="number" class="input-secondary" [(ngModel)]="model.displayOrder" name="displayOrder" placeholder="e.g. 1" />
+          <div class="field-hint">Lower values appear first in lists.</div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Total Capacity</label>
+          <input type="number" min="0" class="input-secondary" [(ngModel)]="model.capacity" name="capacity" placeholder="e.g. 100" />
+          <div class="field-hint">Across all sections of this class.</div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="form-field">
+          <label>Description</label>
+          <textarea rows="2" class="input-secondary" [(ngModel)]="model.description" name="description" placeholder="Optional notes about this class..."></textarea>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Status</label>
+          <select class="select-primary" [(ngModel)]="model.status" name="status">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="btn-pill-ghost" (click)="onCancel()">Cancel</button>
+    <button type="submit" class="btn-pill-primary">
+      {{ isEdit ? 'Update Class' : 'Save Class' }}
+    </button>
+  </div>
+</form>

@@ -1,0 +1,72 @@
+:host { display: block; }
+.filter-card { margin-bottom: 16px; }
+.slips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
+}
+.slip-card {
+  background: #fff;
+  border: 2px dashed var(--theme-color);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+}
+.slip-card:hover {
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+.slip-head {
+  background: var(--theme-color);
+  color: #fff;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.slip-head strong { font-size: 13px; }
+.slip-head small { font-size: 11px; opacity: 0.9; }
+.slip-body {
+  padding: 18px 16px;
+  text-align: center;
+  flex: 1;
+}
+.slip-avatar {
+  width: 70px; height: 70px; border-radius: 50%;
+  background: var(--light-primary); color: var(--theme-color);
+  font-weight: 700; font-size: 26px;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-bottom: 10px;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 2px var(--theme-color);
+}
+.slip-body h3 {
+  font-size: 15px;
+  margin: 6px 0 12px;
+  color: var(--text-primary);
+}
+.slip-meta {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px dashed #e7ecf3;
+  padding-top: 10px;
+  text-align: left;
+}
+.slip-meta li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 3px 0;
+}
+.slip-meta li span { color: var(--secondary); }
+.slip-meta li strong { color: var(--text-primary); }
+.slip-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  padding: 10px 14px;
+  border-top: 1px solid #eef1f6;
+  background: #fafbfd;
+}

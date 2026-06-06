@@ -1,1 +1,134 @@
-<router-outlet></router-outlet>
+<section class="promote-demote-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Promote & Demote Students</h2>
+      <p class="page-subtitle">Move students to the next session based on their result.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faArrowUp"></fa-icon>
+        Promote {{ selectedCount }} Students
+      </button>
+    </div>
+  </header>
+
+  <div class="warn-card">
+    <fa-icon [icon]="faWarn"></fa-icon>
+    <div>
+      <strong>Caution!</strong>
+      <p>This action permanently moves students from one session to another. Make sure exam results are finalised before promoting.</p>
+    </div>
+  </div>
+
+  <div class="page-card filter-card">
+    <div class="row g-3">
+      <div class="col-12 col-md-3">
+        <div class="form-field">
+          <label>From Session</label>
+          <select class="select-primary" [(ngModel)]="fromSession">
+            @for (s of sessionOptions; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="form-field">
+          <label>To Session</label>
+          <select class="select-primary" [(ngModel)]="toSession">
+            @for (s of sessionOptions; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="form-field">
+          <label>Class</label>
+          <select class="select-primary" [(ngModel)]="selectedClass">
+            @for (c of classOptions; track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="form-field">
+          <label>Section</label>
+          <select class="select-primary" [(ngModel)]="selectedSection">
+            @for (s of sectionOptions; track s) {
+              <option [value]="s">{{ s }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-label">Total Students</span>
+      <strong class="stat-value">{{ rows().length }}</strong>
+    </div>
+    <div class="stat-card success">
+      <span class="stat-label">Promoting</span>
+      <strong class="stat-value">{{ promoteCount }}</strong>
+    </div>
+    <div class="stat-card danger">
+      <span class="stat-label">Detaining</span>
+      <strong class="stat-value">{{ detainCount }}</strong>
+    </div>
+  </div>
+
+  <div class="data-table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-id">
+            <input type="checkbox" [checked]="selectedCount === rows().length" (change)="toggleAll(($any($event.target)).checked)" />
+          </th>
+          <th>Roll No</th>
+          <th>Student</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Result</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of rows(); track r.id) {
+          <tr>
+            <td class="col-id">
+              <input type="checkbox" [checked]="r.selected" (change)="toggleOne(r.id, ($any($event.target)).checked)" />
+            </td>
+            <td>{{ r.rollNo }}</td>
+            <td>
+              <div class="avatar-name">
+                <span class="avatar">{{ r.initial }}</span>
+                <strong>{{ r.name }}</strong>
+              </div>
+            </td>
+            <td>{{ r.fromClass }} - {{ r.fromSection }}</td>
+            <td>
+              <select class="select-primary inline-select" [(ngModel)]="r.toClass" name="tc{{ r.id }}">
+                @for (c of classOptions; track c) {
+                  <option [value]="c">{{ c }}</option>
+                }
+              </select>
+            </td>
+            <td>
+              <span class="badge-status" [class.active]="r.result === 'Pass'" [class.inactive]="r.result === 'Fail'">{{ r.result }}</span>
+            </td>
+            <td>
+              <select class="select-primary inline-select" [(ngModel)]="r.action" name="act{{ r.id }}">
+                <option value="promote">Promote</option>
+                <option value="detain">Detain</option>
+                <option value="demote">Demote</option>
+              </select>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

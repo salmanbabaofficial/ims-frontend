@@ -1,0 +1,139 @@
+:host {
+  display: block;
+}
+.cert-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 18px;
+}
+@media (max-width: 992px) {
+  .cert-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.block-title {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.block-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.filter-select {
+  min-width: 160px;
+}
+.template-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.template-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #eef1f6;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  align-items: center;
+}
+.template-item:hover {
+  background: #fafbfd;
+}
+.template-item.active {
+  border-color: var(--theme-color);
+  background: var(--light-primary);
+}
+.template-thumb {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.template-item strong {
+  display: block;
+  font-size: 13.5px;
+  color: var(--text-primary);
+}
+.template-item small {
+  display: block;
+  font-size: 11.5px;
+  color: var(--secondary);
+  margin-top: 2px;
+}
+.staff-pick-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+.staff-pick {
+  cursor: pointer;
+  position: relative;
+}
+.staff-pick input[type='checkbox'] {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--theme-color);
+}
+.staff-pick-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 12px 12px 34px;
+  border: 1px solid #eef1f6;
+  border-radius: 10px;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+.staff-pick-card:hover {
+  border-color: var(--theme-color);
+}
+.staff-pick input:checked + .staff-pick-card {
+  background: var(--light-primary);
+  border-color: var(--theme-color);
+}
+.staff-pick-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.staff-pick-info strong {
+  font-size: 13.5px;
+  color: var(--text-primary);
+}
+.staff-pick-info small {
+  font-size: 11.5px;
+  color: var(--secondary);
+  margin-top: 2px;
+}
+.staff-pick-actions {
+  display: flex;
+  gap: 4px;
+}
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--light-primary);
+  color: var(--theme-color);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}

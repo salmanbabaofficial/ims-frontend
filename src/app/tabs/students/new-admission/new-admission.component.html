@@ -1,1 +1,104 @@
-<p>new-admission works!</p>
+<section class="new-admission-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">New Admission</h2>
+      <p class="page-subtitle">Recently admitted students in the current session.</p>
+    </div>
+    <div class="page-header-actions">
+      <div
+        class="searchbox"
+        [class.is-open]="searchOpen()"
+        (clickOutside)="searchOpen.set(false)"
+      >
+        <input
+          #searchInput
+          type="text"
+          class="searchbox-input"
+          [(ngModel)]="searchTerm"
+          placeholder="Search admissions..."
+        />
+        <button
+          type="button"
+          class="searchbox-icon"
+          (click)="toggleSearch()"
+          aria-label="Toggle search"
+        >
+          <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+        </button>
+      </div>
+      <button type="button" class="btn-pill-ghost">
+        <fa-icon [icon]="faPrint"></fa-icon>
+        Print
+      </button>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <select class="select-primary class-filter" [(ngModel)]="selectedClass">
+        <option value="all">All Classes</option>
+        @for (c of classOptions; track c) {
+          <option [value]="c">{{ c }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <div class="data-table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-id">#</th>
+          <th>Admission No</th>
+          <th>Student</th>
+          <th>Father Name</th>
+          <th>Class / Section</th>
+          <th>Phone</th>
+          <th>Admission Date</th>
+          <th class="col-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (s of rows; track s.id; let i = $index) {
+          <tr>
+            <td class="col-id">{{ i + 1 }}</td>
+            <td><strong>{{ s.admissionNo }}</strong></td>
+            <td>
+              <div class="avatar-name">
+                <span class="avatar">{{ s.initial }}</span>
+                <span class="avatar-name-text">
+                  <strong>{{ s.name }}</strong>
+                  <small>{{ s.className }} - {{ s.section }}</small>
+                </span>
+              </div>
+            </td>
+            <td>{{ s.fatherName }}</td>
+            <td>{{ s.className }} - {{ s.section }}</td>
+            <td>{{ s.phone }}</td>
+            <td>{{ s.admissionDate }}</td>
+            <td class="col-actions">
+              <div class="row-actions">
+                <button type="button" class="icon-btn" title="View"><fa-icon [icon]="faEye"></fa-icon></button>
+                <button type="button" class="icon-btn" title="Edit"><fa-icon [icon]="faPenToSquare"></fa-icon></button>
+                <button type="button" class="icon-btn" title="Print"><fa-icon [icon]="faPrint"></fa-icon></button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="8" class="empty-state">There are no recent admissions.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-footer">
+    <span>Showing {{ rows.length }} of {{ rows.length }} entries</span>
+    <ul class="pagination">
+      <li class="page-item disabled"><button type="button" class="page-link">‹</button></li>
+      <li class="page-item active"><button type="button" class="page-link">1</button></li>
+      <li class="page-item disabled"><button type="button" class="page-link">›</button></li>
+    </ul>
+  </div>
+</section>

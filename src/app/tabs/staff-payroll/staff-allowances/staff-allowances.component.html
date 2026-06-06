@@ -1,1 +1,69 @@
-<p>staff-allowances works!</p>
+<section class="staff-allowances-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Staff Allowances</h2>
+      <p class="page-subtitle">Configure per-staff allowance amounts.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faSave"></fa-icon>
+        Save Changes
+      </button>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <select class="select-primary class-filter" [(ngModel)]="selectedDepartment">
+        <option value="all">All Departments</option>
+        @for (d of departments; track d) {
+          <option [value]="d">{{ d }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <div class="data-table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-id">#</th>
+          <th>Staff</th>
+          <th>Designation</th>
+          <th class="right">House Rent</th>
+          <th class="right">Transport</th>
+          <th class="right">Medical</th>
+          <th class="right">Other</th>
+          <th class="right">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of rows(); track r.id; let i = $index) {
+          <tr>
+            <td class="col-id">{{ i + 1 }}</td>
+            <td>
+              <div class="avatar-name">
+                <span class="avatar">{{ r.initial }}</span>
+                <strong>{{ r.staffName }}</strong>
+              </div>
+            </td>
+            <td>{{ r.designation }}</td>
+            <td class="right">
+              <input type="number" class="input-secondary num-input" [(ngModel)]="r.houseRent" name="hr{{ r.id }}" />
+            </td>
+            <td class="right">
+              <input type="number" class="input-secondary num-input" [(ngModel)]="r.transport" name="tr{{ r.id }}" />
+            </td>
+            <td class="right">
+              <input type="number" class="input-secondary num-input" [(ngModel)]="r.medical" name="md{{ r.id }}" />
+            </td>
+            <td class="right">
+              <input type="number" class="input-secondary num-input" [(ngModel)]="r.other" name="ot{{ r.id }}" />
+            </td>
+            <td class="right"><strong class="income-text">Rs. {{ totalFor(r) }}</strong></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

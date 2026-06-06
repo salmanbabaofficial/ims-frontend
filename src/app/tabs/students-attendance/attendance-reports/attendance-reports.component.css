@@ -1,0 +1,86 @@
+:host {
+  display: block;
+}
+.filter-card {
+  margin-bottom: 16px;
+}
+.align-items-end {
+  align-items: end;
+}
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.stat-card {
+  background: #fff;
+  border: 1px solid #eef1f6;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stat-label {
+  font-size: 12.5px;
+  color: var(--secondary);
+}
+.stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.stat-card.success .stat-value {
+  color: #16a34a;
+}
+.stat-card.danger .stat-value {
+  color: #dc2626;
+}
+.stat-card.primary .stat-value {
+  color: var(--theme-color);
+}
+.avatar-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--light-primary);
+  color: var(--theme-color);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12.5px;
+}
+.num {
+  text-align: center;
+  font-weight: 600;
+}
+.pct-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 160px;
+}
+.pct-bar {
+  flex: 1;
+  height: 8px;
+  background: #f0f3f8;
+  border-radius: 50px;
+  overflow: hidden;
+}
+.pct-bar span {
+  display: block;
+  height: 100%;
+  background: var(--theme-color);
+  border-radius: 50px;
+}
+.pct-cell strong {
+  font-size: 12.5px;
+  min-width: 36px;
+}

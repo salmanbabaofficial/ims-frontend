@@ -1,0 +1,143 @@
+<div class="form-back-bar">
+  <button type="button" class="form-back-btn" (click)="onCancel()" title="Back to list">
+    <fa-icon [icon]="faArrowLeft"></fa-icon>
+  </button>
+  <div>
+    <h2 class="page-title">{{ isEdit ? 'Edit User' : 'Add New User' }}</h2>
+    <p class="page-subtitle">
+      {{ isEdit ? 'Update user details and access role below.' : 'Create a login account and assign a role.' }}
+    </p>
+  </div>
+</div>
+
+<form class="page-card" (ngSubmit)="onSave()" novalidate>
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Account Details</h3>
+      <p class="form-card-subtitle">Provide full name, contact info and access role.</p>
+    </div>
+    <span class="form-card-meta">Fields marked with <sup style="color:#e74c3c">*</sup> are required.</span>
+  </div>
+
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Full Name<sup>*</sup></label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.name" name="name" placeholder="e.g. Ali Hassan" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Email<sup>*</sup></label>
+          <input type="email" class="input-secondary" [(ngModel)]="model.email" name="email" placeholder="user@example.com" />
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Phone</label>
+          <input type="tel" class="input-secondary" [(ngModel)]="model.phone" name="phone" placeholder="0300-1234567" />
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Username<sup>*</sup></label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.username" name="username" placeholder="ali.hassan" />
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Role<sup>*</sup></label>
+          <select class="select-primary" [(ngModel)]="model.role" name="role">
+            @for (r of roleOptions; track r) {
+              <option [value]="r">{{ r }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Status</label>
+          <select class="select-primary" [(ngModel)]="model.status" name="status">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-divider"></div>
+
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">{{ isEdit ? 'Reset Password' : 'Set Password' }}</h3>
+      <p class="form-card-subtitle">
+        {{ isEdit ? 'Leave blank to keep the current password.' : 'Choose a strong password and confirm it.' }}
+      </p>
+    </div>
+  </div>
+
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Password@if (!isEdit) {<sup>*</sup>}</label>
+          <div class="pwd-wrap">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              class="input-secondary"
+              [(ngModel)]="model.password"
+              name="password"
+              placeholder="••••••••"
+            />
+            <button type="button" class="pwd-toggle" (click)="showPassword = !showPassword" tabindex="-1">
+              <fa-icon [icon]="showPassword ? faEyeSlash : faEye"></fa-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Confirm Password@if (!isEdit) {<sup>*</sup>}</label>
+          <div class="pwd-wrap">
+            <input
+              [type]="showConfirm ? 'text' : 'password'"
+              class="input-secondary"
+              [(ngModel)]="model.confirmPassword"
+              name="confirmPassword"
+              placeholder="••••••••"
+            />
+            <button type="button" class="pwd-toggle" (click)="showConfirm = !showConfirm" tabindex="-1">
+              <fa-icon [icon]="showConfirm ? faEyeSlash : faEye"></fa-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <label class="check-line">
+          <input type="checkbox" [(ngModel)]="model.sendCredentials" name="sendCredentials" />
+          <span>Email login credentials to the user</span>
+        </label>
+        <div class="field-hint">User will receive a welcome email with the username and password.</div>
+      </div>
+
+      <div class="col-12">
+        <div class="form-field">
+          <label>Notes</label>
+          <textarea rows="3" class="input-secondary" [(ngModel)]="model.notes" name="notes" placeholder="Optional internal notes..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="btn-pill-ghost" (click)="onCancel()">Cancel</button>
+    <button type="submit" class="btn-pill-primary">
+      {{ isEdit ? 'Update User' : 'Save User' }}
+    </button>
+  </div>
+</form>

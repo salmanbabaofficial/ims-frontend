@@ -1,1 +1,72 @@
-<p>custom-fines works!</p>
+<section class="custom-fines-page">
+  @if (mode() === 'list') {
+    <header class="page-header">
+      <div>
+        <h2 class="page-title">Custom Fines</h2>
+        <p class="page-subtitle">Track fines imposed on individual students.</p>
+      </div>
+      <div class="page-header-actions">
+        <div class="searchbox" [class.is-open]="searchOpen()" (clickOutside)="searchOpen.set(false)">
+          <input #searchInput type="text" class="searchbox-input" [(ngModel)]="searchTerm" placeholder="Search fines..." />
+          <button type="button" class="searchbox-icon" (click)="toggleSearch()" aria-label="Toggle search">
+            <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+          </button>
+        </div>
+        <button type="button" class="btn-pill-primary" (click)="openAdd()">
+          <fa-icon [icon]="faPlus"></fa-icon>
+          Impose New Fine
+        </button>
+      </div>
+    </header>
+
+    <div class="data-table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="col-id">#</th>
+            <th>Student</th>
+            <th>Class</th>
+            <th>Fine Type</th>
+            <th class="right">Amount</th>
+            <th>Imposed On</th>
+            <th>Status</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of rows; track r.id; let i = $index) {
+            <tr>
+              <td class="col-id">{{ i + 1 }}</td>
+              <td>
+                <div class="avatar-name">
+                  <span class="avatar">{{ r.initial }}</span>
+                  <strong>{{ r.studentName }}</strong>
+                </div>
+              </td>
+              <td>{{ r.className }}</td>
+              <td>{{ r.fineType }}</td>
+              <td class="right"><strong>Rs. {{ r.amount }}</strong></td>
+              <td>{{ r.imposedOn }}</td>
+              <td>
+                <span class="badge-status" [class.active]="r.status === 'paid'" [class.inactive]="r.status === 'unpaid'">
+                  {{ r.status }}
+                </span>
+              </td>
+              <td class="col-actions">
+                <div class="row-actions">
+                  <button type="button" class="icon-btn" title="View"><fa-icon [icon]="faEye"></fa-icon></button>
+                  <button type="button" class="icon-btn" title="Edit" (click)="openEdit(r)"><fa-icon [icon]="faPenToSquare"></fa-icon></button>
+                  <button type="button" class="icon-btn danger" title="Delete"><fa-icon [icon]="faTrash"></fa-icon></button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="8" class="empty-state">No custom fines yet.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <app-add-edit-custom-fine [editing]="editing()" (cancelled)="backToList()" (saved)="backToList()" />
+  }
+</section>

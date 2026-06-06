@@ -1,1 +1,62 @@
-<p>custom-expense-types works!</p>
+<section class="expense-types-page">
+  @if (mode() === 'list') {
+    <header class="page-header">
+      <div>
+        <h2 class="page-title">Custom Expense Types</h2>
+        <p class="page-subtitle">Categories used to classify expenses.</p>
+      </div>
+      <div class="page-header-actions">
+        <div class="searchbox" [class.is-open]="searchOpen()" (clickOutside)="searchOpen.set(false)">
+          <input #searchInput type="text" class="searchbox-input" [(ngModel)]="searchTerm" placeholder="Search expense types..." />
+          <button type="button" class="searchbox-icon" (click)="toggleSearch()" aria-label="Toggle search">
+            <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+          </button>
+        </div>
+        <button type="button" class="btn-pill-primary" (click)="openAdd()">
+          <fa-icon [icon]="faPlus"></fa-icon>
+          Add Expense Type
+        </button>
+      </div>
+    </header>
+
+    <div class="data-table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="col-id">#</th>
+            <th>Expense Type</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of rows; track r.id; let i = $index) {
+            <tr>
+              <td class="col-id">{{ i + 1 }}</td>
+              <td><strong>{{ r.name }}</strong></td>
+              <td>{{ r.category }}</td>
+              <td>{{ r.description }}</td>
+              <td>
+                <span class="badge-status" [class.active]="r.status === 'active'" [class.inactive]="r.status === 'inactive'">
+                  {{ r.status }}
+                </span>
+              </td>
+              <td class="col-actions">
+                <div class="row-actions">
+                  <button type="button" class="icon-btn" title="Edit" (click)="openEdit(r)"><fa-icon [icon]="faPenToSquare"></fa-icon></button>
+                  <button type="button" class="icon-btn danger" title="Delete"><fa-icon [icon]="faTrash"></fa-icon></button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="6" class="empty-state">There are no expense types.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <app-add-edit-expense-type [editing]="editing()" (cancelled)="backToList()" (saved)="backToList()" />
+  }
+</section>

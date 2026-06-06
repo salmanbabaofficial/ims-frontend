@@ -1,1 +1,99 @@
-<p>fee-reports works!</p>
+<section class="fee-reports-page">
+  <header class="page-header">
+    <div>
+      <h2 class="page-title">Fee Reports</h2>
+      <p class="page-subtitle">Insights on fee collection across months and classes.</p>
+    </div>
+    <div class="page-header-actions">
+      <button type="button" class="btn-pill-ghost">
+        <fa-icon [icon]="faFileExport"></fa-icon>
+        Export
+      </button>
+      <button type="button" class="btn-pill-primary">
+        <fa-icon [icon]="faPrint"></fa-icon>
+        Print
+      </button>
+    </div>
+  </header>
+
+  <div class="page-card filter-card">
+    <div class="row g-3">
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Start Date</label>
+          <input type="date" class="input-secondary" [(ngModel)]="startDate" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>End Date</label>
+          <input type="date" class="input-secondary" [(ngModel)]="endDate" />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-field">
+          <label>Class</label>
+          <select class="select-primary" [(ngModel)]="selectedClass">
+            <option value="all">All Classes</option>
+            @for (c of classOptions; track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card success">
+      <span class="stat-label">Total Collected</span>
+      <strong class="stat-value">Rs. {{ totalCollected }}</strong>
+    </div>
+    <div class="stat-card danger">
+      <span class="stat-label">Total Pending</span>
+      <strong class="stat-value">Rs. {{ totalPending }}</strong>
+    </div>
+    <div class="stat-card primary">
+      <span class="stat-label">Collection Rate</span>
+      <strong class="stat-value">92%</strong>
+    </div>
+  </div>
+
+  <div class="page-card">
+    <h3 class="block-title">Monthly Collection % (current year)</h3>
+    <div class="bar-chart">
+      @for (b of monthly; track b.label) {
+        <div class="bar-col">
+          <div class="bar-track"><span class="bar-fill" [style.height.%]="b.value"></span></div>
+          <span class="bar-label">{{ b.label }}</span>
+          <small>{{ b.value }}%</small>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="data-table-wrap mt">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th class="num">Challans Issued</th>
+          <th class="num">Collected (Rs.)</th>
+          <th class="num">Pending (Rs.)</th>
+          <th class="num">Defaulters</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of rows; track r.id) {
+          <tr>
+            <td><strong>{{ r.month }}</strong></td>
+            <td class="num">{{ r.challansIssued }}</td>
+            <td class="num">{{ r.collected }}</td>
+            <td class="num">{{ r.pending }}</td>
+            <td class="num">{{ r.defaulters }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
