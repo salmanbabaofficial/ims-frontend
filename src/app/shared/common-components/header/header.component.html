@@ -1,0 +1,19 @@
+<header class="app-header">
+  <div class="container-fluid app-header-inner">
+    <div
+      class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-2 justify-content-between"
+    >
+      <span class="app-header-title text-truncate min-w-0 flex-grow-1">{{ appTitle() }}</span>
+      <div class="d-flex align-items-center gap-2 flex-shrink-0 justify-content-sm-end">
+        <button type="button" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1">
+          <fa-icon [icon]="faBell"></fa-icon>
+          <span class="d-none d-md-inline">Alerts</span>
+        </button>
+        <button type="button" class="btn btn-sm btn-primary d-inline-flex align-items-center gap-1">
+          <fa-icon [icon]="faUser"></fa-icon>
+          <span class="d-none d-md-inline">Account</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>

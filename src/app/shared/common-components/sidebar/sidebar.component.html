@@ -1,0 +1,67 @@
+<aside id="sidebar">
+  <div class="sidebar-brand">
+    <a class="sidebar-brand-logo" routerLink="/dashboard">IMS</a>
+    <div class="sidebar-brand-rule" aria-hidden="true"></div>
+  </div>
+
+  <div class="sidebar-nav-pinned">
+    <ul class="sidebar-nav-list">
+      @for (tab of sidebarNavPinned; track tab.id) {
+        <li>
+          <a [routerLink]="tab.route" routerLinkActive="active">
+            <span><fa-icon [icon]="tab.icon"></fa-icon></span>
+            <em>{{ tab.name }}</em>
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
+
+  <div class="sidebarnav">
+    <ul class="sidebar-nav-list">
+      @for (tab of sidebarNavScrollable; track tab.id) {
+        <li>
+          @if (!tab.children?.length) {
+            <a [routerLink]="tab.route" routerLinkActive="active">
+              <span><fa-icon [icon]="tab.icon"></fa-icon></span>
+              <em>{{ tab.name }}</em>
+            </a>
+          }
+          @if (tab.children?.length) {
+            <button
+              type="button"
+              class="sidebar-parent-trigger"
+              [class.active]="isParentRowActive(tab)"
+              [class.sidebar-parent-trigger--open]="isBranchOpen(tab)"
+              [attr.aria-expanded]="isBranchOpen(tab)"
+              (click)="toggleBranch(tab)"
+            >
+              <span><fa-icon [icon]="tab.icon"></fa-icon></span>
+              <em>{{ tab.name }}</em>
+              <b><fa-icon [icon]="faChevronDown"></fa-icon></b>
+            </button>
+
+            <div class="submenuwrap" [class.is-open]="isBranchOpen(tab)">
+              <div class="submenu">
+                <ul>
+                  @for (child of tab.children; track child.id) {
+                    <li>
+                      <a
+                        class="sidebar-sublink"
+                        [routerLink]="child.route"
+                        routerLinkActive="active"
+                      >
+                        <span class="sidebar-sublink-spacer" aria-hidden="true"></span>
+                        <em>{{ child.name }}</em>
+                      </a>
+                    </li>
+                  }
+                </ul>
+              </div>
+            </div>
+          }
+        </li>
+      }
+    </ul>
+  </div>
+</aside>

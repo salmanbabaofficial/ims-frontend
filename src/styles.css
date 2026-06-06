@@ -1,0 +1,569 @@
+/* Global styles aligned with HRMS theme */
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import url("https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400;500;600;700&family=Open+Sans:wght@400;600;700&display=swap");
+
+:root {
+  --primary: #000000;
+  --secondary: #3d3d3d;
+  --light-primary: #ffffff;
+  --light-secondary: #fafafa;
+  --dark-primary: #222222;
+  --dark-secondary: #262626;
+  --theme-color: #ed9e42;
+  --body-bg: #ffffff;
+  --muted: #6c757d;
+  --heading-color: #000000;
+  --login-bg: #f5f5f5;
+  --link-color: #ed9e42;
+  --border-color: #f5f5f5;
+  --input-bg: #ffffff;
+  --input-border: #ededed;
+  --shadow-color: rgba(0, 0, 0, 0.08);
+  --focus-color: #ed9e42;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--body-bg);
+  color: var(--primary);
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  color: var(--heading-color);
+  font-family: "Maven Pro", sans-serif;
+}
+
+a {
+  color: var(--link-color);
+}
+
+.btn-primary,
+.btn-secondary,
+.login-btn {
+  padding: 11px 22px 13px;
+  border: 1px solid transparent;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: "Open Sans", sans-serif;
+  box-shadow: 0 4px 4px 0 var(--shadow-color);
+  min-width: 150px;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-primary {
+  background-color: var(--theme-color);
+  color: var(--light-primary);
+}
+
+.btn-primary:hover {
+  border-color: var(--theme-color);
+  color: var(--theme-color);
+  background: none;
+}
+
+.btn-secondary {
+  background-color: var(--primary);
+  color: var(--light-primary);
+}
+
+.btn-secondary:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: none;
+}
+
+.login-btn {
+  background-color: var(--theme-color);
+  color: var(--light-primary);
+  border-radius: 10px;
+  font-size: 18px;
+}
+
+.login-btn:hover {
+  border-color: var(--theme-color);
+  color: var(--theme-color);
+  background: none;
+}
+
+.input-primary {
+  width: 100%;
+  display: block;
+  background: var(--light-primary);
+  padding: 35px 45px 18px 20px;
+  color: var(--secondary);
+  border: 1px solid var(--light-primary);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.input-secondary {
+  width: 100%;
+  display: block;
+  background: var(--light-primary);
+  padding: 13px 10px 12px 15px;
+  color: var(--secondary);
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.input-primary:focus-visible,
+.input-secondary:focus-visible {
+  outline: none;
+}
+
+.select-primary {
+  width: 100%;
+  display: block;
+  background: var(--light-primary);
+  padding: 12px 10px;
+  color: var(--secondary);
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.select-primary:focus-visible {
+  outline: none;
+}
+
+.basicforms-wrap {
+  border-top: 1px solid var(--border-color);
+}
+
+.basicforms-wrap .inputwrap {
+  padding: 1px;
+}
+
+.basicforms-wrap .inputwrap label {
+  background: var(--light-primary);
+  padding: 5px;
+  position: relative;
+  left: 10px;
+  top: 13px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--secondary);
+  z-index: 9;
+}
+
+.basicforms-wrap .inputwrap label sup {
+  color: red;
+}
+
+.basicforms-wrap .formsfooter {
+  border-top: 1px solid var(--border-color);
+  margin-top: 20px;
+  padding: 20px 0;
+  text-align: right;
+}
+
+.basicforms-wrap .formsfooter button {
+  margin-left: 10px;
+}
+
+.tablewrap {
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  overflow-y: auto;
+  max-height: calc(100vh - 300px);
+}
+
+.tablewrap .table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+}
+
+.tablewrap .table td,
+.tablewrap .table th {
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--primary);
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+.tablewrap .table thead th {
+  background: var(--light-secondary);
+  padding: 10px 15px;
+  position: sticky;
+  z-index: 1;
+  top: 0;
+}
+
+.tablewrap .table thead th:last-child {
+  text-align: center;
+}
+
+.tablewrap .table tbody td,
+.tablewrap .table tbody th {
+  padding: 15px;
+  background: none;
+}
+
+.tablewrap .table tbody td {
+  font-weight: 400;
+}
+
+.tablewrap .table tbody td span {
+  display: block;
+  width: 30px;
+  height: 30px;
+  border-radius: 50px;
+  border: 1px solid var(--border-color);
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
+  margin: 0 auto;
+}
+
+.tablewrap .table tbody tr:last-child td,
+.tablewrap .table tbody tr:last-child th {
+  border-bottom: none;
+}
+
+.filter-pagin-wrap {
+  margin: 20px 1px;
+}
+
+.filter-pagin-wrap .filtertable span {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 10px;
+  color: var(--secondary);
+}
+
+.filter-pagin-wrap .filtertable span em {
+  font-style: normal;
+}
+
+.filter-pagin-wrap .filtertable select {
+  display: block;
+  margin: 0 5px;
+  background: var(--light-secondary);
+  border: 1px solid var(--border-color);
+  font-size: 11px;
+  color: var(--secondary);
+  padding: 6px 3px;
+  border-radius: 3px;
+}
+
+.filter-pagin-wrap .filtertable select:focus {
+  outline: none;
+}
+
+.filter-pagin-wrap .pagination .page-item {
+  margin: 0 3px;
+}
+
+.filter-pagin-wrap .pagination .page-item.active .page-link {
+  background-color: var(--theme-color);
+  color: var(--light-primary);
+  border: none;
+  box-shadow: none;
+}
+
+.filter-pagin-wrap .pagination .page-item .page-link {
+  border-radius: 3px;
+  font-size: 11px;
+  color: var(--secondary);
+  width: 32px;
+  height: 32px;
+  text-align: center;
+  line-height: 22px;
+  box-shadow: none;
+  padding: 5px;
+}
+
+/* --- Sidebar (HRMS-inspired; always expanded, column in app shell) --- */
+
+#sidebar {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: visible;
+  background: var(--dark-primary);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0;
+  z-index: 2;
+}
+
+#sidebar .sidebar-brand {
+  flex-shrink: 0;
+  padding: 10px 12px 0;
+  text-align: center;
+}
+
+#sidebar .sidebar-brand-logo {
+  display: inline-block;
+  font-family: "Maven Pro", sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  color: var(--theme-color);
+  text-decoration: none;
+  line-height: 1.2;
+}
+
+#sidebar .sidebar-brand-logo:hover {
+  color: var(--light-primary);
+}
+
+#sidebar .sidebar-brand-rule {
+  height: 1px;
+  margin-top: 8px;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+#sidebar .sidebar-nav-pinned {
+  flex-shrink: 0;
+  padding-top: 8px;
+}
+
+#sidebar .sidebarnav {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding-top: 6px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(237, 158, 66, 0.45) transparent;
+}
+
+#sidebar .sidebarnav::-webkit-scrollbar {
+  width: 6px;
+}
+
+#sidebar .sidebarnav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#sidebar .sidebarnav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 6px;
+}
+
+#sidebar .sidebarnav::-webkit-scrollbar-thumb:hover {
+  background: rgba(237, 158, 66, 0.55);
+}
+
+#sidebar ul.sidebar-nav-list {
+  padding: 0;
+  margin: 0;
+}
+
+#sidebar .sidebarnav > ul.sidebar-nav-list {
+  flex: 0 0 auto;
+  min-height: 0;
+}
+
+#sidebar ul.sidebar-nav-list > li {
+  list-style: none;
+  margin-bottom: 6px;
+  position: relative;
+}
+
+#sidebar ul.sidebar-nav-list > li > a,
+#sidebar ul.sidebar-nav-list > li > .sidebar-parent-trigger,
+#sidebar ul.sidebar-nav-list > li .submenuwrap .submenu ul li > a.sidebar-sublink {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  margin: 0 4px;
+  padding: 4px 8px;
+  position: relative;
+  z-index: 2;
+  text-decoration: none;
+  min-height: 34px;
+  border-radius: 8px;
+  background: transparent;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+#sidebar ul.sidebar-nav-list > li > .sidebar-parent-trigger {
+  width: calc(100% - 8px);
+  box-sizing: border-box;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+
+#sidebar ul.sidebar-nav-list > li .submenuwrap .submenu ul li > a.sidebar-sublink {
+  width: calc(100% - 8px);
+  box-sizing: border-box;
+}
+
+#sidebar ul.sidebar-nav-list > li > .sidebar-parent-trigger:focus-visible {
+  outline: 2px solid var(--theme-color);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+#sidebar ul.sidebar-nav-list > li > a span,
+#sidebar ul.sidebar-nav-list > li > .sidebar-parent-trigger span,
+#sidebar ul.sidebar-nav-list > li .submenuwrap .submenu ul li > a.sidebar-sublink > .sidebar-sublink-spacer {
+  background: transparent;
+  width: 28px;
+  min-height: 28px;
+  height: auto;
+  text-align: center;
+  border-radius: 0;
+  padding: 0 4px 0 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+#sidebar ul.sidebar-nav-list > li > a span fa-icon,
+#sidebar ul.sidebar-nav-list > li > .sidebar-parent-trigger span fa-icon {
+  font-size: 14px;
+  color: #e6e6e6;
+}
+
+#sidebar ul.sidebar-nav-list > li > a.active,
+#sidebar ul.sidebar-nav-list > li > .sidebar-parent-trigger.active,
+#sidebar ul.sidebar-nav-list > li .submenuwrap .submenu ul li > a.sidebar-sublink.active {
+  background: var(--theme-color);
+}
+
+#sidebar ul.sidebar-nav-list > li > a.active span fa-icon,
+#sidebar ul.sidebar-nav-list > li > .sidebar-parent-trigger.active span fa-icon {
+  color: var(--light-primary);
+}
+
+#sidebar ul.sidebar-nav-list > li > .sidebar-parent-trigger.active b fa-icon {
+  color: var(--light-primary);
+}
+
+#sidebar ul.sidebar-nav-list > li > .sidebar-parent-trigger b fa-icon {
+  font-size: 11px;
+}
+
+#sidebar ul.sidebar-nav-list > li > a.active:hover,
+#sidebar ul.sidebar-nav-list > li > .sidebar-parent-trigger.active:hover,
+#sidebar ul.sidebar-nav-list > li .submenuwrap .submenu ul li > a.sidebar-sublink.active:hover {
+  background: #e09338;
+}
+
+#sidebar ul.sidebar-nav-list > li > a:hover,
+#sidebar ul.sidebar-nav-list > li > .sidebar-parent-trigger:hover,
+#sidebar ul.sidebar-nav-list > li .submenuwrap .submenu ul li > a.sidebar-sublink:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+#sidebar ul.sidebar-nav-list > li > a:hover span fa-icon,
+#sidebar ul.sidebar-nav-list > li > .sidebar-parent-trigger:hover span fa-icon {
+  color: var(--light-primary);
+}
+
+#sidebar ul.sidebar-nav-list > li em {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--light-primary);
+  font-size: 12px;
+  display: inline-flex;
+  opacity: 1;
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#sidebar ul.sidebar-nav-list > li b {
+  color: var(--light-primary);
+  display: inline-flex;
+  opacity: 1;
+  flex-shrink: 0;
+  margin-left: auto;
+  padding-right: 2px;
+  transition: transform 0.18s ease;
+}
+
+#sidebar ul.sidebar-nav-list > li .sidebar-parent-trigger--open b {
+  transform: rotate(180deg);
+}
+
+#sidebar ul.sidebar-nav-list > li .submenuwrap {
+  display: none;
+  position: static;
+  margin: 2px 0 0;
+  padding: 0;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+}
+
+#sidebar ul.sidebar-nav-list > li .submenuwrap.is-open {
+  display: block;
+}
+
+#sidebar ul.sidebar-nav-list > li .submenuwrap .submenu {
+  background: transparent;
+  width: auto;
+  max-height: none;
+  overflow: visible;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+}
+
+#sidebar ul.sidebar-nav-list > li .submenuwrap .submenu ul {
+  padding: 0;
+  margin: 0;
+}
+
+#sidebar ul.sidebar-nav-list > li .submenuwrap .submenu ul li {
+  list-style: none;
+  margin-bottom: 4px;
+}
+
+#sidebar ul.sidebar-nav-list > li .submenuwrap .submenu ul li:last-child {
+  margin-bottom: 0;
+}
