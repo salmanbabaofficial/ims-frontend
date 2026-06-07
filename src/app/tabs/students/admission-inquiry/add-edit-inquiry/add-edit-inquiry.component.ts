@@ -44,6 +44,7 @@ export class AddEditInquiryComponent implements OnInit {
   readonly faArrowLeft = faArrowLeft;
 
   readonly editing = input<Partial<InquiryFormValue> | null>(null);
+  readonly viewOnly = input<boolean>(false);
   readonly cancelled = output<void>();
   readonly saved = output<InquiryFormValue>();
 
@@ -85,7 +86,23 @@ export class AddEditInquiryComponent implements OnInit {
   }
 
   get isEdit(): boolean {
-    return !!this.editing();
+    return !!this.editing() && !this.viewOnly();
+  }
+
+  get isView(): boolean {
+    return this.viewOnly();
+  }
+
+  get pageTitle(): string {
+    if (this.isView) return 'View Inquiry';
+    if (this.isEdit) return 'Edit Inquiry';
+    return 'Add New Inquiry';
+  }
+
+  get pageSubtitle(): string {
+    if (this.isView) return 'Read-only view of inquiry details.';
+    if (this.isEdit) return 'Update inquiry details below.';
+    return 'Record a new admission inquiry from a prospective parent.';
   }
 
   onCancel(): void {

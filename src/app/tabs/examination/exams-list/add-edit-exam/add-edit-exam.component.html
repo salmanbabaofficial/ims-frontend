@@ -1,0 +1,92 @@
+<div class="form-back-bar">
+  <button type="button" class="form-back-btn" (click)="onCancel()" title="Back to list">
+    <fa-icon [icon]="faArrowLeft"></fa-icon>
+  </button>
+  <div>
+    <h2 class="page-title">{{ pageTitle }}</h2>
+    <p class="page-subtitle">{{ pageSubtitle }}</p>
+  </div>
+</div>
+
+<form class="page-card" (ngSubmit)="onSave()" #examForm="ngForm" novalidate>
+  <fieldset [disabled]="isView" style="border: 0; padding: 0; margin: 0;">
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Exam Information</h3>
+      <p class="form-card-subtitle">Provide the exam name, group, class and schedule.</p>
+    </div>
+    <span class="form-card-meta">Fields marked with <sup style="color:#e74c3c">*</sup> are required.</span>
+  </div>
+
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Exam Name<sup>*</sup></label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.name" name="name" placeholder="e.g. First Term — Class 1" />
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Exam Group<sup>*</sup></label>
+          <select class="select-primary" [(ngModel)]="model.group" name="group">
+            <option value="">Select Group</option>
+            @for (g of groupOptions(); track g) {
+              <option [value]="g">{{ g }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Class<sup>*</sup></label>
+          <select class="select-primary" [(ngModel)]="model.className" name="className">
+            <option value="">Select Class</option>
+            @for (c of classOptions(); track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Status</label>
+          <select class="select-primary" [(ngModel)]="model.status" name="status">
+            <option value="upcoming">Upcoming</option>
+            <option value="ongoing">Ongoing</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Start Date<sup>*</sup></label>
+          <input type="date" class="input-secondary" [(ngModel)]="model.startDate" name="startDate" />
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>End Date<sup>*</sup></label>
+          <input type="date" class="input-secondary" [(ngModel)]="model.endDate" name="endDate" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </fieldset>
+  <div class="form-actions">
+    <button type="button" class="btn-pill-ghost" (click)="onCancel()">
+      {{ isView ? 'Close' : 'Cancel' }}
+    </button>
+    @if (!isView) {
+      <button type="submit" class="btn-pill-primary">
+        {{ isEdit ? 'Update Exam' : 'Save Exam' }}
+      </button>
+    }
+  </div>
+</form>

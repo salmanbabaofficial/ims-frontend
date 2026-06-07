@@ -3,14 +3,13 @@
     <fa-icon [icon]="faArrowLeft"></fa-icon>
   </button>
   <div>
-    <h2 class="page-title">{{ isEdit ? 'Edit Assignment' : 'Add New Assignment' }}</h2>
-    <p class="page-subtitle">
-      {{ isEdit ? 'Update assignment details below.' : 'Create a new assignment for the selected class & subject.' }}
-    </p>
+    <h2 class="page-title">{{ pageTitle }}</h2>
+    <p class="page-subtitle">{{ pageSubtitle }}</p>
   </div>
 </div>
 
 <form class="page-card" (ngSubmit)="onSave()" novalidate>
+  <fieldset [disabled]="isView" style="border: 0; padding: 0; margin: 0;">
   <div class="form-card-header">
     <div>
       <h3 class="form-card-title">Assignment Details</h3>
@@ -100,10 +99,15 @@
     </div>
   </div>
 
+  </fieldset>
   <div class="form-actions">
-    <button type="button" class="btn-pill-ghost" (click)="onCancel()">Cancel</button>
-    <button type="submit" class="btn-pill-primary">
-      {{ isEdit ? 'Update Assignment' : 'Save Assignment' }}
+    <button type="button" class="btn-pill-ghost" (click)="onCancel()">
+      {{ isView ? 'Close' : 'Cancel' }}
     </button>
+    @if (!isView) {
+      <button type="submit" class="btn-pill-primary">
+        {{ isEdit ? 'Update Assignment' : 'Save Assignment' }}
+      </button>
+    }
   </div>
 </form>

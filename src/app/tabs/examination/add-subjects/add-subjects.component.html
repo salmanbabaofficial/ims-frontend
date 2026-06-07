@@ -1,134 +1,161 @@
 <section class="add-subjects-page">
-  <header class="page-header">
-    <div>
-      <h2 class="page-title">Add Subjects</h2>
-      <p class="page-subtitle">Manage subjects taught across classes.</p>
-    </div>
-    <div class="page-header-actions">
-      <div class="searchbox" [class.is-open]="searchOpen()" (clickOutside)="searchOpen.set(false)">
-        <input #searchInput type="text" class="searchbox-input" [(ngModel)]="searchTerm" placeholder="Search subjects..." />
-        <button type="button" class="searchbox-icon" (click)="toggleSearch()" aria-label="Toggle search">
-          <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+  @if (mode() === 'list') {
+    <header class="page-header">
+      <div>
+        <h2 class="page-title">Add Subjects</h2>
+        <p class="page-subtitle">Manage subjects taught across classes.</p>
+      </div>
+      <div class="page-header-actions">
+        <div
+          class="searchbox"
+          [class.is-open]="searchOpen()"
+          (clickOutside)="searchOpen.set(false)"
+        >
+          <input
+            #searchInput
+            type="text"
+            class="searchbox-input"
+            [ngModel]="searchTerm()"
+            (ngModelChange)="onSearchChange($event)"
+            name="subjectsSearch"
+            placeholder="Search subjects..."
+          />
+          <button
+            type="button"
+            class="searchbox-icon"
+            (click)="toggleSearch()"
+            aria-label="Toggle search"
+          >
+            <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+          </button>
+        </div>
+        <button type="button" class="btn-pill-primary" (click)="openAdd()">
+          <fa-icon [icon]="faPlus"></fa-icon>
+          Add Subject
         </button>
       </div>
-      <button type="button" class="btn-pill-primary" (click)="showForm.set(true)">
-        <fa-icon [icon]="faPlus"></fa-icon>
-        Add Subject
-      </button>
-    </div>
-  </header>
+    </header>
 
-  @if (showForm()) {
-    <div class="page-card">
-      <div class="form-card-header">
-        <div>
-          <h3 class="form-card-title">New Subject</h3>
-        </div>
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <select
+          class="select-primary class-filter"
+          [ngModel]="selectedClass()"
+          (ngModelChange)="onClassFilterChange($event)"
+          name="classFilter"
+        >
+          <option value="all">All Classes</option>
+          @for (c of classOptions; track c) {
+            <option [value]="c">{{ c }}</option>
+          }
+        </select>
       </div>
-      <div class="form-card-body">
-        <div class="row g-3">
-          <div class="col-12 col-md-3">
-            <div class="form-field">
-              <label>Subject Code</label>
-              <input type="text" class="input-secondary" [(ngModel)]="newSubject.code" />
-            </div>
-          </div>
-          <div class="col-12 col-md-3">
-            <div class="form-field">
-              <label>Subject Name</label>
-              <input type="text" class="input-secondary" [(ngModel)]="newSubject.name" />
-            </div>
-          </div>
-          <div class="col-12 col-md-3">
-            <div class="form-field">
-              <label>Class</label>
-              <select class="select-primary" [(ngModel)]="newSubject.className">
-                <option value="">Select Class</option>
-                @for (c of classOptions; track c) {
-                  <option [value]="c">{{ c }}</option>
+    </div>
+
+    <div class="data-table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="col-id">#</th>
+            <th>Code</th>
+            <th>Subject</th>
+            <th>Class</th>
+            <th>Total</th>
+            <th>Passing</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of pagedRows(); track r.id; let i = $index) {
+            <tr>
+              <td class="col-id">{{ (currentPage() - 1) * pageSize + i + 1 }}</td>
+              <td><strong>{{ r.code }}</strong></td>
+              <td>{{ r.name }}</td>
+              <td>{{ r.className }}</td>
+              <td>{{ r.totalMarks }}</td>
+              <td>{{ r.passingMarks }}</td>
+              <td><span class="freq-pill">{{ r.isOptional ? 'Optional' : 'Compulsory' }}</span></td>
+              <td>
+                <span
+                  class="badge-status"
+                  [class.active]="r.status === 'active'"
+                  [class.inactive]="r.status === 'inactive'"
+                >{{ r.status }}</span>
+              </td>
+              <td class="col-actions">
+                <div class="row-actions">
+                  <button type="button" class="icon-btn" title="View" (click)="openView(r)">
+                    <fa-icon [icon]="faEye"></fa-icon>
+                  </button>
+                  <button type="button" class="icon-btn" title="Edit" (click)="openEdit(r)">
+                    <fa-icon [icon]="faPenToSquare"></fa-icon>
+                  </button>
+                  <button type="button" class="icon-btn danger" title="Delete" (click)="askDelete(r)">
+                    <fa-icon [icon]="faTrash"></fa-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="9" class="empty-state">
+                @if (searchTerm() || selectedClass() !== 'all') {
+                  No subjects match the current filters.
+                } @else {
+                  There are no subjects yet.
                 }
-              </select>
-            </div>
-          </div>
-          <div class="col-6 col-md-2">
-            <div class="form-field">
-              <label>Total Marks</label>
-              <input type="number" class="input-secondary" [(ngModel)]="newSubject.totalMarks" />
-            </div>
-          </div>
-          <div class="col-6 col-md-1">
-            <div class="form-field">
-              <label>Passing</label>
-              <input type="number" class="input-secondary" [(ngModel)]="newSubject.passingMarks" />
-            </div>
-          </div>
-          <div class="col-12">
-            <label class="check-line">
-              <input type="checkbox" [(ngModel)]="newSubject.isOptional" />
-              <span>Mark as optional subject</span>
-            </label>
-          </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer">
+      <span>Showing {{ pagedRows().length }} of {{ filteredRows().length }} entries</span>
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="currentPage() === 1">
+          <button type="button" class="page-link" (click)="prevPage()">‹</button>
+        </li>
+        @for (p of pageNumbers(); track p) {
+          <li class="page-item" [class.active]="p === currentPage()">
+            <button type="button" class="page-link" (click)="goToPage(p)">{{ p }}</button>
+          </li>
+        }
+        <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+          <button type="button" class="page-link" (click)="nextPage()">›</button>
+        </li>
+      </ul>
+    </div>
+  } @else {
+    <app-add-edit-subject
+      [editing]="editing()"
+      [classOptions]="classOptions"
+      [viewOnly]="formMode() === 'view'"
+      (cancelled)="backToList()"
+      (saved)="onSave($event)"
+    />
+  }
+
+  @if (deleteTarget(); as target) {
+    <div class="confirm-overlay" (click)="cancelDelete()">
+      <div class="confirm-dialog" (click)="$event.stopPropagation()">
+        <div class="confirm-icon">
+          <fa-icon [icon]="faTrash"></fa-icon>
         </div>
-      </div>
-      <div class="form-actions">
-        <button type="button" class="btn-pill-ghost" (click)="showForm.set(false)">Cancel</button>
-        <button type="button" class="btn-pill-primary" (click)="showForm.set(false)">Save Subject</button>
+        <h3 class="confirm-title">Delete this subject?</h3>
+        <p class="confirm-message">
+          You are about to delete <strong>{{ target.name }}</strong> ({{ target.code }}). This action cannot be undone.
+        </p>
+        <div class="confirm-actions">
+          <button type="button" class="btn-pill-ghost" (click)="cancelDelete()">Cancel</button>
+          <button type="button" class="btn-pill-danger" (click)="confirmDelete()">
+            Yes, Delete
+          </button>
+        </div>
       </div>
     </div>
   }
-
-  <div class="toolbar mt">
-    <div class="toolbar-left">
-      <select class="select-primary class-filter" [(ngModel)]="selectedClass">
-        <option value="all">All Classes</option>
-        @for (c of classOptions; track c) {
-          <option [value]="c">{{ c }}</option>
-        }
-      </select>
-    </div>
-  </div>
-
-  <div class="data-table-wrap">
-    <table class="table">
-      <thead>
-        <tr>
-          <th class="col-id">#</th>
-          <th>Code</th>
-          <th>Subject</th>
-          <th>Class</th>
-          <th>Total</th>
-          <th>Passing</th>
-          <th>Type</th>
-          <th>Status</th>
-          <th class="col-actions">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (r of rows; track r.id; let i = $index) {
-          <tr>
-            <td class="col-id">{{ i + 1 }}</td>
-            <td><strong>{{ r.code }}</strong></td>
-            <td>{{ r.name }}</td>
-            <td>{{ r.className }}</td>
-            <td>{{ r.totalMarks }}</td>
-            <td>{{ r.passingMarks }}</td>
-            <td><span class="freq-pill">{{ r.isOptional ? 'Optional' : 'Compulsory' }}</span></td>
-            <td>
-              <span class="badge-status" [class.active]="r.status === 'active'" [class.inactive]="r.status === 'inactive'">
-                {{ r.status }}
-              </span>
-            </td>
-            <td class="col-actions">
-              <div class="row-actions">
-                <button type="button" class="icon-btn" title="Edit"><fa-icon [icon]="faPenToSquare"></fa-icon></button>
-                <button type="button" class="icon-btn danger" title="Delete"><fa-icon [icon]="faTrash"></fa-icon></button>
-              </div>
-            </td>
-          </tr>
-        } @empty {
-          <tr><td colspan="9" class="empty-state">No subjects yet.</td></tr>
-        }
-      </tbody>
-    </table>
-  </div>
 </section>

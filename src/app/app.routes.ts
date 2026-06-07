@@ -1,18 +1,25 @@
 import { Routes } from '@angular/router';
 
+import { authGuard } from './core/guards/auth.guard';
+import { guestGuard } from './core/guards/guest.guard';
+
 export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./auth/role-select/role-select.component').then((m) => m.RoleSelectComponent),
     pathMatch: 'full',
+    canActivate: [guestGuard],
   },
   {
     path: 'login',
     loadComponent: () => import('./auth/login/login.component').then((m) => m.LoginComponent),
+    canActivate: [guestGuard],
   },
   {
     path: '',
     loadComponent: () => import('./shared/common-components/shell/shell.component').then((m) => m.ShellComponent),
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
     children: [
       {
         path: 'video-tutorials-latest',

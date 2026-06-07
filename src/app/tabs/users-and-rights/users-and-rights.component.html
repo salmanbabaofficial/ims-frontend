@@ -7,9 +7,26 @@
       </div>
       <div class="page-header-actions">
         @if (activeTab() === 'users') {
-          <div class="searchbox" [class.is-open]="searchOpen()" (clickOutside)="searchOpen.set(false)">
-            <input #searchInput type="text" class="searchbox-input" [(ngModel)]="searchTerm" placeholder="Search users..." />
-            <button type="button" class="searchbox-icon" (click)="toggleSearch()" aria-label="Toggle search">
+          <div
+            class="searchbox"
+            [class.is-open]="searchOpen()"
+            (clickOutside)="searchOpen.set(false)"
+          >
+            <input
+              #searchInput
+              type="text"
+              class="searchbox-input"
+              [ngModel]="searchTerm()"
+              (ngModelChange)="onSearchChange($event)"
+              name="usersSearch"
+              placeholder="Search users..."
+            />
+            <button
+              type="button"
+              class="searchbox-icon"
+              (click)="toggleSearch()"
+              aria-label="Toggle search"
+            >
               <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
             </button>
           </div>
@@ -33,6 +50,32 @@
     </div>
 
     @if (activeTab() === 'users') {
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <select
+            class="select-primary class-filter"
+            [ngModel]="selectedRole()"
+            (ngModelChange)="onRoleFilterChange($event)"
+            name="roleFilter"
+          >
+            <option value="all">All Roles</option>
+            @for (r of roleOptions; track r) {
+              <option [value]="r">{{ r }}</option>
+            }
+          </select>
+          <select
+            class="select-primary class-filter"
+            [ngModel]="selectedStatus()"
+            (ngModelChange)="onStatusFilterChange($event)"
+            name="statusFilter"
+          >
+            <option value="all">All Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+
       <div class="data-table-wrap">
         <table class="table">
           <thead>
@@ -47,9 +90,9 @@
             </tr>
           </thead>
           <tbody>
-            @for (u of users; track u.id; let i = $index) {
+            @for (u of pagedUsers(); track u.id; let i = $index) {
               <tr>
-                <td class="col-id">{{ i + 1 }}</td>
+                <td class="col-id">{{ (currentPage() - 1) * pageSize + i + 1 }}</td>
                 <td>
                   <div class="avatar-name">
                     <span class="avatar">{{ u.initial }}</span>
@@ -66,21 +109,54 @@
                 </td>
                 <td class="col-actions">
                   <div class="row-actions">
-                    <button type="button" class="icon-btn" title="Reset Password"><fa-icon [icon]="faKey"></fa-icon></button>
-                    <button type="button" class="icon-btn" title="Edit" (click)="openEdit(u)"><fa-icon [icon]="faEdit"></fa-icon></button>
-                    <button type="button" class="icon-btn danger" title="Delete"><fa-icon [icon]="faTrash"></fa-icon></button>
+                    <button type="button" class="icon-btn" title="View" (click)="openView(u)">
+                      <fa-icon [icon]="faEye"></fa-icon>
+                    </button>
+                    <button type="button" class="icon-btn" title="Edit" (click)="openEdit(u)">
+                      <fa-icon [icon]="faEdit"></fa-icon>
+                    </button>
+                    <button type="button" class="icon-btn danger" title="Delete" (click)="askDelete(u)">
+                      <fa-icon [icon]="faTrash"></fa-icon>
+                    </button>
                   </div>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="7" class="empty-state">
+                  @if (searchTerm() || selectedRole() !== 'all' || selectedStatus() !== 'all') {
+                    No users match the current filters.
+                  } @else {
+                    There are no users.
+                  }
                 </td>
               </tr>
             }
           </tbody>
         </table>
       </div>
+
+      <div class="table-footer">
+        <span>Showing {{ pagedUsers().length }} of {{ filteredUsers().length }} entries</span>
+        <ul class="pagination">
+          <li class="page-item" [class.disabled]="currentPage() === 1">
+            <button type="button" class="page-link" (click)="prevPage()">‹</button>
+          </li>
+          @for (p of pageNumbers(); track p) {
+            <li class="page-item" [class.active]="p === currentPage()">
+              <button type="button" class="page-link" (click)="goToPage(p)">{{ p }}</button>
+            </li>
+          }
+          <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+            <button type="button" class="page-link" (click)="nextPage()">›</button>
+          </li>
+        </ul>
+      </div>
     } @else {
       <div class="page-card filter-card">
         <div class="form-field">
           <label>Select Role</label>
-          <select class="select-primary" [ngModel]="selectedRole()" (ngModelChange)="selectedRole.set($event)">
+          <select class="select-primary" [ngModel]="rightsRole()" (ngModelChange)="rightsRole.set($event)" name="rightsRoleSelect">
             <option value="Admin">Admin</option>
             <option value="Teacher">Teacher</option>
             <option value="Accountant">Accountant</option>
@@ -143,8 +219,29 @@
   } @else {
     <app-add-edit-user
       [editing]="editing()"
+      [viewOnly]="formMode() === 'view'"
       (cancelled)="backToList()"
-      (saved)="backToList()"
+      (saved)="onSave($event)"
     />
+  }
+
+  @if (deleteTarget(); as target) {
+    <div class="confirm-overlay" (click)="cancelDelete()">
+      <div class="confirm-dialog" (click)="$event.stopPropagation()">
+        <div class="confirm-icon">
+          <fa-icon [icon]="faTrash"></fa-icon>
+        </div>
+        <h3 class="confirm-title">Delete this user?</h3>
+        <p class="confirm-message">
+          You are about to delete user <strong>{{ target.name }}</strong> ({{ target.username }}). This action cannot be undone.
+        </p>
+        <div class="confirm-actions">
+          <button type="button" class="btn-pill-ghost" (click)="cancelDelete()">Cancel</button>
+          <button type="button" class="btn-pill-danger" (click)="confirmDelete()">
+            Yes, Delete
+          </button>
+        </div>
+      </div>
+    </div>
   }
 </section>

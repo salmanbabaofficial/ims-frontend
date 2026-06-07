@@ -3,14 +3,13 @@
     <fa-icon [icon]="faArrowLeft"></fa-icon>
   </button>
   <div>
-    <h2 class="page-title">{{ isEdit ? 'Edit Session' : 'Add New Session' }}</h2>
-    <p class="page-subtitle">
-      {{ isEdit ? 'Update session details below.' : 'Define a new academic session with start and end dates.' }}
-    </p>
+    <h2 class="page-title">{{ pageTitle }}</h2>
+    <p class="page-subtitle">{{ pageSubtitle }}</p>
   </div>
 </div>
 
 <form class="page-card" (ngSubmit)="onSave()" #sessionForm="ngForm" novalidate>
+  <fieldset [disabled]="isView" style="border: 0; padding: 0; margin: 0;">
   <div class="form-card-header">
     <div>
       <h3 class="form-card-title">Session Information</h3>
@@ -78,10 +77,15 @@
     </div>
   </div>
 
+  </fieldset>
   <div class="form-actions">
-    <button type="button" class="btn-pill-ghost" (click)="onCancel()">Cancel</button>
-    <button type="submit" class="btn-pill-primary">
-      {{ isEdit ? 'Update Session' : 'Save Session' }}
+    <button type="button" class="btn-pill-ghost" (click)="onCancel()">
+      {{ isView ? 'Close' : 'Cancel' }}
     </button>
+    @if (!isView) {
+      <button type="submit" class="btn-pill-primary">
+        {{ isEdit ? 'Update Session' : 'Save Session' }}
+      </button>
+    }
   </div>
 </form>

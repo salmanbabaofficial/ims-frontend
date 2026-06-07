@@ -15,7 +15,9 @@
             #searchInput
             type="text"
             class="searchbox-input"
-            [(ngModel)]="searchTerm"
+            [ngModel]="searchTerm()"
+            (ngModelChange)="onSearchChange($event)"
+            name="studentsSearch"
             placeholder="Search students..."
           />
           <button
@@ -40,19 +42,34 @@
 
     <div class="toolbar">
       <div class="toolbar-left">
-        <select class="select-primary class-filter" [(ngModel)]="selectedClass">
+        <select
+          class="select-primary class-filter"
+          [ngModel]="selectedClass()"
+          (ngModelChange)="onClassFilterChange($event)"
+          name="classFilter"
+        >
           <option value="all">All Classes</option>
           @for (c of classOptions; track c) {
             <option [value]="c">{{ c }}</option>
           }
         </select>
-        <select class="select-primary class-filter" [(ngModel)]="selectedSection">
+        <select
+          class="select-primary class-filter"
+          [ngModel]="selectedSection()"
+          (ngModelChange)="onSectionFilterChange($event)"
+          name="sectionFilter"
+        >
           <option value="all">All Sections</option>
           @for (s of sectionOptions; track s) {
             <option [value]="s">{{ s }}</option>
           }
         </select>
-        <select class="select-primary class-filter" [(ngModel)]="selectedStatus">
+        <select
+          class="select-primary class-filter"
+          [ngModel]="selectedStatus()"
+          (ngModelChange)="onStatusFilterChange($event)"
+          name="statusFilter"
+        >
           <option value="all">All Status</option>
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
@@ -77,9 +94,9 @@
           </tr>
         </thead>
         <tbody>
-          @for (s of students; track s.id; let i = $index) {
+          @for (s of pagedStudents(); track s.id; let i = $index) {
             <tr>
-              <td class="col-id">{{ i + 1 }}</td>
+              <td class="col-id">{{ (currentPage() - 1) * pageSize + i + 1 }}</td>
               <td>
                 <div class="avatar-name">
                   <span class="avatar">{{ s.initial }}</span>
@@ -111,15 +128,27 @@
               </td>
               <td class="col-actions">
                 <div class="row-actions">
-                  <button type="button" class="icon-btn" title="View"><fa-icon [icon]="faEye"></fa-icon></button>
-                  <button type="button" class="icon-btn" title="Edit" (click)="openEdit(s)"><fa-icon [icon]="faPenToSquare"></fa-icon></button>
-                  <button type="button" class="icon-btn danger" title="Delete"><fa-icon [icon]="faTrash"></fa-icon></button>
+                  <button type="button" class="icon-btn" title="View" (click)="openView(s)">
+                    <fa-icon [icon]="faEye"></fa-icon>
+                  </button>
+                  <button type="button" class="icon-btn" title="Edit" (click)="openEdit(s)">
+                    <fa-icon [icon]="faPenToSquare"></fa-icon>
+                  </button>
+                  <button type="button" class="icon-btn danger" title="Delete" (click)="askDelete(s)">
+                    <fa-icon [icon]="faTrash"></fa-icon>
+                  </button>
                 </div>
               </td>
             </tr>
           } @empty {
             <tr>
-              <td colspan="10" class="empty-state">There are no students.</td>
+              <td colspan="10" class="empty-state">
+                @if (searchTerm() || selectedClass() !== 'all' || selectedSection() !== 'all' || selectedStatus() !== 'all') {
+                  No students match the current filters.
+                } @else {
+                  There are no students.
+                }
+              </td>
             </tr>
           }
         </tbody>
@@ -127,18 +156,47 @@
     </div>
 
     <div class="table-footer">
-      <span>Showing {{ students.length }} of {{ students.length }} entries</span>
+      <span>Showing {{ pagedStudents().length }} of {{ filteredStudents().length }} entries</span>
       <ul class="pagination">
-        <li class="page-item disabled"><button type="button" class="page-link">‹</button></li>
-        <li class="page-item active"><button type="button" class="page-link">1</button></li>
-        <li class="page-item disabled"><button type="button" class="page-link">›</button></li>
+        <li class="page-item" [class.disabled]="currentPage() === 1">
+          <button type="button" class="page-link" (click)="prevPage()">‹</button>
+        </li>
+        @for (p of pageNumbers(); track p) {
+          <li class="page-item" [class.active]="p === currentPage()">
+            <button type="button" class="page-link" (click)="goToPage(p)">{{ p }}</button>
+          </li>
+        }
+        <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+          <button type="button" class="page-link" (click)="nextPage()">›</button>
+        </li>
       </ul>
     </div>
   } @else {
     <app-add-edit-student
       [editing]="editing()"
+      [viewOnly]="formMode() === 'view'"
       (cancelled)="backToList()"
-      (saved)="backToList()"
+      (saved)="onSave($event)"
     />
+  }
+
+  @if (deleteTarget(); as target) {
+    <div class="confirm-overlay" (click)="cancelDelete()">
+      <div class="confirm-dialog" (click)="$event.stopPropagation()">
+        <div class="confirm-icon">
+          <fa-icon [icon]="faTrash"></fa-icon>
+        </div>
+        <h3 class="confirm-title">Delete this student?</h3>
+        <p class="confirm-message">
+          You are about to delete <strong>{{ target.name }}</strong> ({{ target.admissionNo }}). This action cannot be undone.
+        </p>
+        <div class="confirm-actions">
+          <button type="button" class="btn-pill-ghost" (click)="cancelDelete()">Cancel</button>
+          <button type="button" class="btn-pill-danger" (click)="confirmDelete()">
+            Yes, Delete
+          </button>
+        </div>
+      </div>
+    </div>
   }
 </section>

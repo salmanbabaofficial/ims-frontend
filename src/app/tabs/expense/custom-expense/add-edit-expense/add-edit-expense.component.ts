@@ -29,6 +29,7 @@ export interface ExpenseFormValue {
 export class AddEditExpenseComponent implements OnInit {
   readonly faArrowLeft = faArrowLeft;
   readonly editing = input<Partial<ExpenseFormValue> | null>(null);
+  readonly viewOnly = input<boolean>(false);
   readonly cancelled = output<void>();
   readonly saved = output<ExpenseFormValue>();
 
@@ -56,7 +57,21 @@ export class AddEditExpenseComponent implements OnInit {
     const current = this.editing();
     if (current) this.model = { ...this.model, ...current };
   }
-  get isEdit(): boolean { return !!this.editing(); }
+  get isEdit(): boolean { return !!this.editing() && !this.viewOnly(); }
+  get isView(): boolean { return this.viewOnly(); }
+
+  get pageTitle(): string {
+    if (this.isView) return 'View Expense';
+    if (this.isEdit) return 'Edit Expense';
+    return 'Add Expense';
+  }
+
+  get pageSubtitle(): string {
+    if (this.isView) return 'Read-only view of expense details.';
+    if (this.isEdit) return 'Update the expense entry below.';
+    return 'Record a new expense entry.';
+  }
+
   onCancel(): void { this.cancelled.emit(); }
   onSave(): void { this.saved.emit({ ...this.model }); }
 

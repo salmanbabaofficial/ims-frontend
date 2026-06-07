@@ -26,6 +26,7 @@ export class AddEditAssignmentComponent implements OnInit {
   readonly faPaperclip = faPaperclip;
 
   readonly editing = input<AssignmentFormValue | null>(null);
+  readonly viewOnly = input<boolean>(false);
   readonly cancelled = output<void>();
   readonly saved = output<AssignmentFormValue>();
 
@@ -52,7 +53,23 @@ export class AddEditAssignmentComponent implements OnInit {
   }
 
   get isEdit(): boolean {
-    return !!this.editing();
+    return !!this.editing() && !this.viewOnly();
+  }
+
+  get isView(): boolean {
+    return this.viewOnly();
+  }
+
+  get pageTitle(): string {
+    if (this.isView) return 'View Assignment';
+    if (this.isEdit) return 'Edit Assignment';
+    return 'Add New Assignment';
+  }
+
+  get pageSubtitle(): string {
+    if (this.isView) return 'Read-only view of assignment details.';
+    if (this.isEdit) return 'Update assignment details below.';
+    return 'Create a new assignment for the selected class & subject.';
   }
 
   onCancel(): void {

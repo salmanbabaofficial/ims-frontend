@@ -3,14 +3,13 @@
     <fa-icon [icon]="faArrowLeft"></fa-icon>
   </button>
   <div>
-    <h2 class="page-title">{{ isEdit ? 'Edit Fee Type' : 'Add New Fee Type' }}</h2>
-    <p class="page-subtitle">
-      {{ isEdit ? 'Update fee type details below.' : 'Define a new fee category for the institute.' }}
-    </p>
+    <h2 class="page-title">{{ pageTitle }}</h2>
+    <p class="page-subtitle">{{ pageSubtitle }}</p>
   </div>
 </div>
 
 <form class="page-card" (ngSubmit)="onSave()" #feeTypeForm="ngForm" novalidate>
+  <fieldset [disabled]="isView" style="border: 0; padding: 0; margin: 0;">
   <div class="form-card-header">
     <div>
       <h3 class="form-card-title">Fee Type Information</h3>
@@ -98,10 +97,15 @@
     </div>
   </div>
 
+  </fieldset>
   <div class="form-actions">
-    <button type="button" class="btn-pill-ghost" (click)="onCancel()">Cancel</button>
-    <button type="submit" class="btn-pill-primary">
-      {{ isEdit ? 'Update Fee Type' : 'Save Fee Type' }}
+    <button type="button" class="btn-pill-ghost" (click)="onCancel()">
+      {{ isView ? 'Close' : 'Cancel' }}
     </button>
+    @if (!isView) {
+      <button type="submit" class="btn-pill-primary">
+        {{ isEdit ? 'Update Fee Type' : 'Save Fee Type' }}
+      </button>
+    }
   </div>
 </form>

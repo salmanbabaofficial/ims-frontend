@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+.check-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.check-line input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--theme-color);
+}

@@ -26,6 +26,7 @@ export interface CustomFineFormValue {
 export class AddEditCustomFineComponent implements OnInit {
   readonly faArrowLeft = faArrowLeft;
   readonly editing = input<Partial<CustomFineFormValue> | null>(null);
+  readonly viewOnly = input<boolean>(false);
   readonly cancelled = output<void>();
   readonly saved = output<CustomFineFormValue>();
 
@@ -58,7 +59,21 @@ export class AddEditCustomFineComponent implements OnInit {
     }
   }
 
-  get isEdit(): boolean { return !!this.editing(); }
+  get isEdit(): boolean { return !!this.editing() && !this.viewOnly(); }
+  get isView(): boolean { return this.viewOnly(); }
+
+  get pageTitle(): string {
+    if (this.isView) return 'View Fine';
+    if (this.isEdit) return 'Edit Fine';
+    return 'Impose New Fine';
+  }
+
+  get pageSubtitle(): string {
+    if (this.isView) return 'Read-only view of fine details.';
+    if (this.isEdit) return 'Update the fine details below.';
+    return 'Assign a fine to a specific student.';
+  }
+
   onCancel(): void { this.cancelled.emit(); }
   onSave(): void { this.saved.emit({ ...this.model }); }
 }

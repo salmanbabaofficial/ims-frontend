@@ -15,7 +15,9 @@
             #searchInput
             type="text"
             class="searchbox-input"
-            [(ngModel)]="searchTerm"
+            [ngModel]="searchTerm()"
+            (ngModelChange)="onSearchChange($event)"
+            name="staffSearch"
             placeholder="Search staff..."
           />
           <button
@@ -36,13 +38,23 @@
 
     <div class="toolbar">
       <div class="toolbar-left">
-        <select class="select-primary class-filter" [(ngModel)]="selectedDepartment">
+        <select
+          class="select-primary class-filter"
+          [ngModel]="selectedDepartment()"
+          (ngModelChange)="onDepartmentFilterChange($event)"
+          name="departmentFilter"
+        >
           <option value="all">All Departments</option>
           @for (d of departments; track d) {
             <option [value]="d">{{ d }}</option>
           }
         </select>
-        <select class="select-primary class-filter" [(ngModel)]="selectedStatus">
+        <select
+          class="select-primary class-filter"
+          [ngModel]="selectedStatus()"
+          (ngModelChange)="onStatusFilterChange($event)"
+          name="statusFilter"
+        >
           <option value="all">All Status</option>
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
@@ -66,9 +78,9 @@
           </tr>
         </thead>
         <tbody>
-          @for (s of staff; track s.id; let i = $index) {
+          @for (s of pagedStaff(); track s.id; let i = $index) {
             <tr>
-              <td class="col-id">{{ i + 1 }}</td>
+              <td class="col-id">{{ (currentPage() - 1) * pageSize + i + 1 }}</td>
               <td>
                 <div class="avatar-name">
                   <span class="avatar">{{ s.initial }}</span>
@@ -92,15 +104,27 @@
               </td>
               <td class="col-actions">
                 <div class="row-actions">
-                  <button type="button" class="icon-btn" title="View"><fa-icon [icon]="faEye"></fa-icon></button>
-                  <button type="button" class="icon-btn" title="Edit" (click)="openEdit(s)"><fa-icon [icon]="faPenToSquare"></fa-icon></button>
-                  <button type="button" class="icon-btn danger" title="Delete"><fa-icon [icon]="faTrash"></fa-icon></button>
+                  <button type="button" class="icon-btn" title="View" (click)="openView(s)">
+                    <fa-icon [icon]="faEye"></fa-icon>
+                  </button>
+                  <button type="button" class="icon-btn" title="Edit" (click)="openEdit(s)">
+                    <fa-icon [icon]="faPenToSquare"></fa-icon>
+                  </button>
+                  <button type="button" class="icon-btn danger" title="Delete" (click)="askDelete(s)">
+                    <fa-icon [icon]="faTrash"></fa-icon>
+                  </button>
                 </div>
               </td>
             </tr>
           } @empty {
             <tr>
-              <td colspan="9" class="empty-state">There are no staff members.</td>
+              <td colspan="9" class="empty-state">
+                @if (searchTerm() || selectedDepartment() !== 'all' || selectedStatus() !== 'all') {
+                  No staff members match the current filters.
+                } @else {
+                  There are no staff members.
+                }
+              </td>
             </tr>
           }
         </tbody>
@@ -108,18 +132,47 @@
     </div>
 
     <div class="table-footer">
-      <span>Showing {{ staff.length }} of {{ staff.length }} entries</span>
+      <span>Showing {{ pagedStaff().length }} of {{ filteredStaff().length }} entries</span>
       <ul class="pagination">
-        <li class="page-item disabled"><button type="button" class="page-link">‹</button></li>
-        <li class="page-item active"><button type="button" class="page-link">1</button></li>
-        <li class="page-item disabled"><button type="button" class="page-link">›</button></li>
+        <li class="page-item" [class.disabled]="currentPage() === 1">
+          <button type="button" class="page-link" (click)="prevPage()">‹</button>
+        </li>
+        @for (p of pageNumbers(); track p) {
+          <li class="page-item" [class.active]="p === currentPage()">
+            <button type="button" class="page-link" (click)="goToPage(p)">{{ p }}</button>
+          </li>
+        }
+        <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+          <button type="button" class="page-link" (click)="nextPage()">›</button>
+        </li>
       </ul>
     </div>
   } @else {
     <app-add-edit-staff
       [editing]="editing()"
+      [viewOnly]="formMode() === 'view'"
       (cancelled)="backToList()"
-      (saved)="backToList()"
+      (saved)="onSave($event)"
     />
+  }
+
+  @if (deleteTarget(); as target) {
+    <div class="confirm-overlay" (click)="cancelDelete()">
+      <div class="confirm-dialog" (click)="$event.stopPropagation()">
+        <div class="confirm-icon">
+          <fa-icon [icon]="faTrash"></fa-icon>
+        </div>
+        <h3 class="confirm-title">Delete this staff member?</h3>
+        <p class="confirm-message">
+          You are about to delete <strong>{{ target.name }}</strong> ({{ target.staffId }}). This action cannot be undone.
+        </p>
+        <div class="confirm-actions">
+          <button type="button" class="btn-pill-ghost" (click)="cancelDelete()">Cancel</button>
+          <button type="button" class="btn-pill-danger" (click)="confirmDelete()">
+            Yes, Delete
+          </button>
+        </div>
+      </div>
+    </div>
   }
 </section>

@@ -57,6 +57,7 @@ export class AddEditStaffComponent implements OnInit {
   readonly faCamera = faCamera;
 
   readonly editing = input<Partial<StaffFormValue> | null>(null);
+  readonly viewOnly = input<boolean>(false);
   readonly cancelled = output<void>();
   readonly saved = output<StaffFormValue>();
 
@@ -117,7 +118,23 @@ export class AddEditStaffComponent implements OnInit {
   }
 
   get isEdit(): boolean {
-    return !!this.editing();
+    return !!this.editing() && !this.viewOnly();
+  }
+
+  get isView(): boolean {
+    return this.viewOnly();
+  }
+
+  get pageTitle(): string {
+    if (this.isView) return 'View Staff';
+    if (this.isEdit) return 'Edit Staff';
+    return 'Add New Staff';
+  }
+
+  get pageSubtitle(): string {
+    if (this.isView) return 'Read-only view of staff member details.';
+    if (this.isEdit) return 'Update staff member details below.';
+    return 'Fill in the details to add a new staff member.';
   }
 
   onCancel(): void {

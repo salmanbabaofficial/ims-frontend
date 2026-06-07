@@ -15,7 +15,8 @@ import {
   type IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 
-type UserRole = 'admin' | 'teacher' | 'student' | 'parent';
+import { AuthService } from '../../core/services/auth.service';
+import { UserRole } from '../interfaces/auth.interface';
 
 interface RoleMeta {
   id: UserRole;
@@ -40,6 +41,7 @@ export class LoginComponent implements OnInit {
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
 
   readonly roleMetaMap: Record<UserRole, RoleMeta> = {
     admin: { id: 'admin', title: 'Administrator', subtitle: 'Full system access', icon: faShieldHalved, accent: 'admin' },
@@ -85,6 +87,16 @@ export class LoginComponent implements OnInit {
     this.loading.set(true);
     setTimeout(() => {
       this.loading.set(false);
+      this.authService.saveSession({
+        user: {
+          id: '1',
+          name: this.meta.title,
+          email: this.email,
+          role: this.role(),
+        },
+        accessToken: 'demo-token',
+        refreshToken: 'demo-refresh',
+      });
       this.router.navigate(['/dashboard']);
     }, 600);
   }

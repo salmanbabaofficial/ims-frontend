@@ -1,0 +1,60 @@
+<div class="form-back-bar">
+  <button type="button" class="form-back-btn" (click)="onCancel()" title="Back to list">
+    <fa-icon [icon]="faArrowLeft"></fa-icon>
+  </button>
+  <div>
+    <h2 class="page-title">{{ pageTitle }}</h2>
+    <p class="page-subtitle">{{ pageSubtitle }}</p>
+  </div>
+</div>
+
+<form class="page-card" (ngSubmit)="onSave()" #examGroupForm="ngForm" novalidate>
+  <fieldset [disabled]="isView" style="border: 0; padding: 0; margin: 0;">
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Exam Group Information</h3>
+      <p class="form-card-subtitle">Provide a name and description for the group.</p>
+    </div>
+    <span class="form-card-meta">Fields marked with <sup style="color:#e74c3c">*</sup> are required.</span>
+  </div>
+
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Group Name<sup>*</sup></label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.name" name="name" placeholder="e.g. First Term 2026" />
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Status</label>
+          <select class="select-primary" [(ngModel)]="model.status" name="status">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="form-field">
+          <label>Description</label>
+          <textarea rows="2" class="input-secondary" [(ngModel)]="model.description" name="description" placeholder="Optional notes about this exam group..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </fieldset>
+  <div class="form-actions">
+    <button type="button" class="btn-pill-ghost" (click)="onCancel()">
+      {{ isView ? 'Close' : 'Cancel' }}
+    </button>
+    @if (!isView) {
+      <button type="submit" class="btn-pill-primary">
+        {{ isEdit ? 'Update Group' : 'Save Group' }}
+      </button>
+    }
+  </div>
+</form>

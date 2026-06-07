@@ -29,6 +29,7 @@ export interface IncomeFormValue {
 export class AddEditIncomeComponent implements OnInit {
   readonly faArrowLeft = faArrowLeft;
   readonly editing = input<Partial<IncomeFormValue> | null>(null);
+  readonly viewOnly = input<boolean>(false);
   readonly cancelled = output<void>();
   readonly saved = output<IncomeFormValue>();
 
@@ -56,7 +57,21 @@ export class AddEditIncomeComponent implements OnInit {
     const current = this.editing();
     if (current) this.model = { ...this.model, ...current };
   }
-  get isEdit(): boolean { return !!this.editing(); }
+  get isEdit(): boolean { return !!this.editing() && !this.viewOnly(); }
+  get isView(): boolean { return this.viewOnly(); }
+
+  get pageTitle(): string {
+    if (this.isView) return 'View Income';
+    if (this.isEdit) return 'Edit Income';
+    return 'Add Income';
+  }
+
+  get pageSubtitle(): string {
+    if (this.isView) return 'Read-only view of income details.';
+    if (this.isEdit) return 'Update the income entry below.';
+    return 'Record an incoming amount.';
+  }
+
   onCancel(): void { this.cancelled.emit(); }
   onSave(): void { this.saved.emit({ ...this.model }); }
 

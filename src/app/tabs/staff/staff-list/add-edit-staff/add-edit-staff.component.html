@@ -3,14 +3,13 @@
     <fa-icon [icon]="faArrowLeft"></fa-icon>
   </button>
   <div>
-    <h2 class="page-title">{{ isEdit ? 'Edit Staff' : 'Add New Staff' }}</h2>
-    <p class="page-subtitle">
-      {{ isEdit ? 'Update staff member details below.' : 'Fill in the details to add a new staff member.' }}
-    </p>
+    <h2 class="page-title">{{ pageTitle }}</h2>
+    <p class="page-subtitle">{{ pageSubtitle }}</p>
   </div>
 </div>
 
 <form class="page-card" (ngSubmit)="onSave()" #staffForm="ngForm" novalidate>
+  <fieldset [disabled]="isView" style="border: 0; padding: 0; margin: 0;">
   <div class="form-card-header">
     <div>
       <h3 class="form-card-title">Personal Information</h3>
@@ -339,10 +338,15 @@
     </div>
   </div>
 
+  </fieldset>
   <div class="form-actions">
-    <button type="button" class="btn-pill-ghost" (click)="onCancel()">Cancel</button>
-    <button type="submit" class="btn-pill-primary">
-      {{ isEdit ? 'Update Staff' : 'Save Staff' }}
+    <button type="button" class="btn-pill-ghost" (click)="onCancel()">
+      {{ isView ? 'Close' : 'Cancel' }}
     </button>
+    @if (!isView) {
+      <button type="submit" class="btn-pill-primary">
+        {{ isEdit ? 'Update Staff' : 'Save Staff' }}
+      </button>
+    }
   </div>
 </form>

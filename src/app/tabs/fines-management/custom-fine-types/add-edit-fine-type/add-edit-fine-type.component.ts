@@ -20,6 +20,7 @@ export interface FineTypeFormValue {
 export class AddEditFineTypeComponent implements OnInit {
   readonly faArrowLeft = faArrowLeft;
   readonly editing = input<FineTypeFormValue | null>(null);
+  readonly viewOnly = input<boolean>(false);
   readonly cancelled = output<void>();
   readonly saved = output<FineTypeFormValue>();
 
@@ -30,9 +31,21 @@ export class AddEditFineTypeComponent implements OnInit {
     if (current) this.model = { ...current };
   }
 
-  get isEdit(): boolean {
-    return !!this.editing();
+  get isEdit(): boolean { return !!this.editing() && !this.viewOnly(); }
+  get isView(): boolean { return this.viewOnly(); }
+
+  get pageTitle(): string {
+    if (this.isView) return 'View Fine Type';
+    if (this.isEdit) return 'Edit Fine Type';
+    return 'Add Fine Type';
   }
+
+  get pageSubtitle(): string {
+    if (this.isView) return 'Read-only view of fine type details.';
+    if (this.isEdit) return 'Update the fine category details below.';
+    return 'Define a fine category and its default amount.';
+  }
+
   onCancel(): void { this.cancelled.emit(); }
   onSave(): void { this.saved.emit({ ...this.model }); }
 }

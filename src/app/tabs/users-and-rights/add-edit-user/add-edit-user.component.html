@@ -3,14 +3,13 @@
     <fa-icon [icon]="faArrowLeft"></fa-icon>
   </button>
   <div>
-    <h2 class="page-title">{{ isEdit ? 'Edit User' : 'Add New User' }}</h2>
-    <p class="page-subtitle">
-      {{ isEdit ? 'Update user details and access role below.' : 'Create a login account and assign a role.' }}
-    </p>
+    <h2 class="page-title">{{ pageTitle }}</h2>
+    <p class="page-subtitle">{{ pageSubtitle }}</p>
   </div>
 </div>
 
 <form class="page-card" (ngSubmit)="onSave()" novalidate>
+  <fieldset [disabled]="isView" style="border: 0; padding: 0; margin: 0;">
   <div class="form-card-header">
     <div>
       <h3 class="form-card-title">Account Details</h3>
@@ -134,10 +133,15 @@
     </div>
   </div>
 
+  </fieldset>
   <div class="form-actions">
-    <button type="button" class="btn-pill-ghost" (click)="onCancel()">Cancel</button>
-    <button type="submit" class="btn-pill-primary">
-      {{ isEdit ? 'Update User' : 'Save User' }}
+    <button type="button" class="btn-pill-ghost" (click)="onCancel()">
+      {{ isView ? 'Close' : 'Cancel' }}
     </button>
+    @if (!isView) {
+      <button type="submit" class="btn-pill-primary">
+        {{ isEdit ? 'Update User' : 'Save User' }}
+      </button>
+    }
   </div>
 </form>

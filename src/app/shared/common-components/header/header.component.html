@@ -13,10 +13,10 @@
           <fa-icon [icon]="faUser"></fa-icon>
           <span class="d-none d-md-inline">Account</span>
         </button>
-        <a routerLink="/" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1" title="Sign out">
+        <button type="button" (click)="onLogout()" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1" title="Sign out">
           <fa-icon [icon]="faSignOut"></fa-icon>
           <span class="d-none d-md-inline">Logout</span>
-        </a>
+        </button>
       </div>
     </div>
   </div>

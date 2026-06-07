@@ -17,7 +17,9 @@
             #searchInput
             type="text"
             class="searchbox-input"
-            [(ngModel)]="searchTerm"
+            [ngModel]="searchTerm()"
+            (ngModelChange)="onSearchChange($event)"
+            name="sessionsSearch"
             placeholder="Search sessions..."
           />
           <button
@@ -52,9 +54,9 @@
           </tr>
         </thead>
         <tbody>
-          @for (s of sessions; track s.id; let i = $index) {
+          @for (s of pagedSessions(); track s.id; let i = $index) {
             <tr>
-              <td class="col-id">{{ i + 1 }}</td>
+              <td class="col-id">{{ (currentPage() - 1) * pageSize + i + 1 }}</td>
               <td><strong>{{ s.name }}</strong></td>
               <td>{{ s.startDate }}</td>
               <td>{{ s.endDate }}</td>
@@ -76,13 +78,13 @@
               </td>
               <td class="col-actions">
                 <div class="row-actions">
-                  <button type="button" class="icon-btn" title="View">
+                  <button type="button" class="icon-btn" title="View" (click)="openView(s)">
                     <fa-icon [icon]="faEye"></fa-icon>
                   </button>
                   <button type="button" class="icon-btn" title="Edit" (click)="openEdit(s)">
                     <fa-icon [icon]="faPenToSquare"></fa-icon>
                   </button>
-                  <button type="button" class="icon-btn danger" title="Delete">
+                  <button type="button" class="icon-btn danger" title="Delete" (click)="askDelete(s)">
                     <fa-icon [icon]="faTrash"></fa-icon>
                   </button>
                 </div>
@@ -90,7 +92,13 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="9" class="empty-state">There are no sessions.</td>
+              <td colspan="9" class="empty-state">
+                @if (searchTerm()) {
+                  No sessions match "{{ searchTerm() }}".
+                } @else {
+                  There are no sessions.
+                }
+              </td>
             </tr>
           }
         </tbody>
@@ -98,18 +106,47 @@
     </div>
 
     <div class="table-footer">
-      <span>Showing {{ sessions.length }} of {{ sessions.length }} entries</span>
+      <span>Showing {{ pagedSessions().length }} of {{ filteredSessions().length }} entries</span>
       <ul class="pagination">
-        <li class="page-item disabled"><button type="button" class="page-link">‹</button></li>
-        <li class="page-item active"><button type="button" class="page-link">1</button></li>
-        <li class="page-item disabled"><button type="button" class="page-link">›</button></li>
+        <li class="page-item" [class.disabled]="currentPage() === 1">
+          <button type="button" class="page-link" (click)="prevPage()">‹</button>
+        </li>
+        @for (p of pageNumbers(); track p) {
+          <li class="page-item" [class.active]="p === currentPage()">
+            <button type="button" class="page-link" (click)="goToPage(p)">{{ p }}</button>
+          </li>
+        }
+        <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+          <button type="button" class="page-link" (click)="nextPage()">›</button>
+        </li>
       </ul>
     </div>
   } @else {
     <app-add-edit-session
       [editing]="editing()"
+      [viewOnly]="formMode() === 'view'"
       (cancelled)="backToList()"
-      (saved)="backToList()"
+      (saved)="onSave($event)"
     />
+  }
+
+  @if (deleteTarget(); as target) {
+    <div class="confirm-overlay" (click)="cancelDelete()">
+      <div class="confirm-dialog" (click)="$event.stopPropagation()">
+        <div class="confirm-icon">
+          <fa-icon [icon]="faTrash"></fa-icon>
+        </div>
+        <h3 class="confirm-title">Delete this session?</h3>
+        <p class="confirm-message">
+          You are about to delete session <strong>{{ target.name }}</strong>. This action cannot be undone.
+        </p>
+        <div class="confirm-actions">
+          <button type="button" class="btn-pill-ghost" (click)="cancelDelete()">Cancel</button>
+          <button type="button" class="btn-pill-danger" (click)="confirmDelete()">
+            Yes, Delete
+          </button>
+        </div>
+      </div>
+    </div>
   }
 </section>

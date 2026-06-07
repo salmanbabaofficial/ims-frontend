@@ -25,6 +25,7 @@ export class AddEditClassComponent implements OnInit {
   readonly faArrowLeft = faArrowLeft;
 
   readonly editing = input<Partial<ClassFormValue> | null>(null);
+  readonly viewOnly = input<boolean>(false);
   readonly cancelled = output<void>();
   readonly saved = output<ClassFormValue>();
 
@@ -50,7 +51,23 @@ export class AddEditClassComponent implements OnInit {
   }
 
   get isEdit(): boolean {
-    return !!this.editing();
+    return !!this.editing() && !this.viewOnly();
+  }
+
+  get isView(): boolean {
+    return this.viewOnly();
+  }
+
+  get pageTitle(): string {
+    if (this.isView) return 'View Class';
+    if (this.isEdit) return 'Edit Class';
+    return 'Add New Class';
+  }
+
+  get pageSubtitle(): string {
+    if (this.isView) return 'Read-only view of class details.';
+    if (this.isEdit) return 'Update class details below.';
+    return 'Fill in the details to create a new class.';
   }
 
   onCancel(): void {

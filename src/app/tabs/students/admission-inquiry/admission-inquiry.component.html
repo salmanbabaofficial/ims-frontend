@@ -15,7 +15,9 @@
             #searchInput
             type="text"
             class="searchbox-input"
-            [(ngModel)]="searchTerm"
+            [ngModel]="searchTerm()"
+            (ngModelChange)="onSearchChange($event)"
+            name="inquiriesSearch"
             placeholder="Search inquiries..."
           />
           <button
@@ -36,10 +38,16 @@
 
     <div class="toolbar">
       <div class="toolbar-left">
-        <select class="select-primary class-filter" [(ngModel)]="selectedStatus">
+        <select
+          class="select-primary class-filter"
+          [ngModel]="selectedStatus()"
+          (ngModelChange)="onStatusFilterChange($event)"
+          name="statusFilter"
+        >
           <option value="all">All Status</option>
           <option value="new">New</option>
           <option value="contacted">Contacted</option>
+          <option value="visited">Visited</option>
           <option value="admitted">Admitted</option>
           <option value="rejected">Rejected</option>
         </select>
@@ -62,9 +70,9 @@
           </tr>
         </thead>
         <tbody>
-          @for (q of inquiries; track q.id; let i = $index) {
+          @for (q of pagedInquiries(); track q.id; let i = $index) {
             <tr>
-              <td class="col-id">{{ i + 1 }}</td>
+              <td class="col-id">{{ (currentPage() - 1) * pageSize + i + 1 }}</td>
               <td><strong>{{ q.studentName }}</strong></td>
               <td>{{ q.parentName }}</td>
               <td>{{ q.phone }}</td>
@@ -81,15 +89,27 @@
               </td>
               <td class="col-actions">
                 <div class="row-actions">
-                  <button type="button" class="icon-btn" title="View"><fa-icon [icon]="faEye"></fa-icon></button>
-                  <button type="button" class="icon-btn" title="Edit" (click)="openEdit(q)"><fa-icon [icon]="faPenToSquare"></fa-icon></button>
-                  <button type="button" class="icon-btn danger" title="Delete"><fa-icon [icon]="faTrash"></fa-icon></button>
+                  <button type="button" class="icon-btn" title="View" (click)="openView(q)">
+                    <fa-icon [icon]="faEye"></fa-icon>
+                  </button>
+                  <button type="button" class="icon-btn" title="Edit" (click)="openEdit(q)">
+                    <fa-icon [icon]="faPenToSquare"></fa-icon>
+                  </button>
+                  <button type="button" class="icon-btn danger" title="Delete" (click)="askDelete(q)">
+                    <fa-icon [icon]="faTrash"></fa-icon>
+                  </button>
                 </div>
               </td>
             </tr>
           } @empty {
             <tr>
-              <td colspan="9" class="empty-state">There are no inquiries.</td>
+              <td colspan="9" class="empty-state">
+                @if (searchTerm() || selectedStatus() !== 'all') {
+                  No inquiries match the current filters.
+                } @else {
+                  There are no inquiries.
+                }
+              </td>
             </tr>
           }
         </tbody>
@@ -97,18 +117,47 @@
     </div>
 
     <div class="table-footer">
-      <span>Showing {{ inquiries.length }} of {{ inquiries.length }} entries</span>
+      <span>Showing {{ pagedInquiries().length }} of {{ filteredInquiries().length }} entries</span>
       <ul class="pagination">
-        <li class="page-item disabled"><button type="button" class="page-link">‹</button></li>
-        <li class="page-item active"><button type="button" class="page-link">1</button></li>
-        <li class="page-item disabled"><button type="button" class="page-link">›</button></li>
+        <li class="page-item" [class.disabled]="currentPage() === 1">
+          <button type="button" class="page-link" (click)="prevPage()">‹</button>
+        </li>
+        @for (p of pageNumbers(); track p) {
+          <li class="page-item" [class.active]="p === currentPage()">
+            <button type="button" class="page-link" (click)="goToPage(p)">{{ p }}</button>
+          </li>
+        }
+        <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+          <button type="button" class="page-link" (click)="nextPage()">›</button>
+        </li>
       </ul>
     </div>
   } @else {
     <app-add-edit-inquiry
       [editing]="editing()"
+      [viewOnly]="formMode() === 'view'"
       (cancelled)="backToList()"
-      (saved)="backToList()"
+      (saved)="onSave($event)"
     />
+  }
+
+  @if (deleteTarget(); as target) {
+    <div class="confirm-overlay" (click)="cancelDelete()">
+      <div class="confirm-dialog" (click)="$event.stopPropagation()">
+        <div class="confirm-icon">
+          <fa-icon [icon]="faTrash"></fa-icon>
+        </div>
+        <h3 class="confirm-title">Delete this inquiry?</h3>
+        <p class="confirm-message">
+          You are about to delete the inquiry for <strong>{{ target.studentName }}</strong>. This action cannot be undone.
+        </p>
+        <div class="confirm-actions">
+          <button type="button" class="btn-pill-ghost" (click)="cancelDelete()">Cancel</button>
+          <button type="button" class="btn-pill-danger" (click)="confirmDelete()">
+            Yes, Delete
+          </button>
+        </div>
+      </div>
+    </div>
   }
 </section>

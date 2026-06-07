@@ -26,6 +26,7 @@ export class AddEditSectionComponent implements OnInit {
   readonly editing = input<Partial<SectionFormValue> | null>(null);
   readonly classOptions = input<string[]>([]);
   readonly teacherOptions = input<string[]>([]);
+  readonly viewOnly = input<boolean>(false);
   readonly cancelled = output<void>();
   readonly saved = output<SectionFormValue>();
 
@@ -47,7 +48,23 @@ export class AddEditSectionComponent implements OnInit {
   }
 
   get isEdit(): boolean {
-    return !!this.editing();
+    return !!this.editing() && !this.viewOnly();
+  }
+
+  get isView(): boolean {
+    return this.viewOnly();
+  }
+
+  get pageTitle(): string {
+    if (this.isView) return 'View Section';
+    if (this.isEdit) return 'Edit Section';
+    return 'Add New Section';
+  }
+
+  get pageSubtitle(): string {
+    if (this.isView) return 'Read-only view of section details.';
+    if (this.isEdit) return 'Update section details below.';
+    return 'Fill in the details to create a new section.';
   }
 
   onCancel(): void {

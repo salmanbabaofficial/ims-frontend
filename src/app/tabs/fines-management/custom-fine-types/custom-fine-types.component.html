@@ -7,7 +7,15 @@
       </div>
       <div class="page-header-actions">
         <div class="searchbox" [class.is-open]="searchOpen()" (clickOutside)="searchOpen.set(false)">
-          <input #searchInput type="text" class="searchbox-input" [(ngModel)]="searchTerm" placeholder="Search fine types..." />
+          <input
+            #searchInput
+            type="text"
+            class="searchbox-input"
+            [ngModel]="searchTerm()"
+            (ngModelChange)="onSearchChange($event)"
+            name="fineTypesSearch"
+            placeholder="Search fine types..."
+          />
           <button type="button" class="searchbox-icon" (click)="toggleSearch()" aria-label="Toggle search">
             <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
           </button>
@@ -32,9 +40,9 @@
           </tr>
         </thead>
         <tbody>
-          @for (r of rows; track r.id; let i = $index) {
+          @for (r of pagedRows(); track r.id; let i = $index) {
             <tr>
-              <td class="col-id">{{ i + 1 }}</td>
+              <td class="col-id">{{ (currentPage() - 1) * pageSize + i + 1 }}</td>
               <td><strong>{{ r.name }}</strong></td>
               <td><strong>Rs. {{ r.defaultAmount }}</strong></td>
               <td>{{ r.description }}</td>
@@ -45,18 +53,75 @@
               </td>
               <td class="col-actions">
                 <div class="row-actions">
-                  <button type="button" class="icon-btn" title="Edit" (click)="openEdit(r)"><fa-icon [icon]="faPenToSquare"></fa-icon></button>
-                  <button type="button" class="icon-btn danger" title="Delete"><fa-icon [icon]="faTrash"></fa-icon></button>
+                  <button type="button" class="icon-btn" title="View" (click)="openView(r)">
+                    <fa-icon [icon]="faEye"></fa-icon>
+                  </button>
+                  <button type="button" class="icon-btn" title="Edit" (click)="openEdit(r)">
+                    <fa-icon [icon]="faPenToSquare"></fa-icon>
+                  </button>
+                  <button type="button" class="icon-btn danger" title="Delete" (click)="askDelete(r)">
+                    <fa-icon [icon]="faTrash"></fa-icon>
+                  </button>
                 </div>
               </td>
             </tr>
           } @empty {
-            <tr><td colspan="6" class="empty-state">There are no fine types.</td></tr>
+            <tr>
+              <td colspan="6" class="empty-state">
+                @if (searchTerm()) {
+                  No fine types match "{{ searchTerm() }}".
+                } @else {
+                  There are no fine types.
+                }
+              </td>
+            </tr>
           }
         </tbody>
       </table>
     </div>
+
+    <div class="table-footer">
+      <span>Showing {{ pagedRows().length }} of {{ filteredRows().length }} entries</span>
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="currentPage() === 1">
+          <button type="button" class="page-link" (click)="prevPage()">‹</button>
+        </li>
+        @for (p of pageNumbers(); track p) {
+          <li class="page-item" [class.active]="p === currentPage()">
+            <button type="button" class="page-link" (click)="goToPage(p)">{{ p }}</button>
+          </li>
+        }
+        <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+          <button type="button" class="page-link" (click)="nextPage()">›</button>
+        </li>
+      </ul>
+    </div>
   } @else {
-    <app-add-edit-fine-type [editing]="editing()" (cancelled)="backToList()" (saved)="backToList()" />
+    <app-add-edit-fine-type
+      [editing]="editing()"
+      [viewOnly]="formMode() === 'view'"
+      (cancelled)="backToList()"
+      (saved)="onSave($event)"
+    />
+  }
+
+  @if (deleteTarget(); as target) {
+    <div class="confirm-overlay" (click)="cancelDelete()">
+      <div class="confirm-dialog" (click)="$event.stopPropagation()">
+        <div class="confirm-icon">
+          <fa-icon [icon]="faTrash"></fa-icon>
+        </div>
+        <h3 class="confirm-title">Delete this fine type?</h3>
+        <p class="confirm-message">
+          You are about to delete fine type <strong>{{ target.name }}</strong>. This action cannot be undone.
+        </p>
+        <div class="confirm-actions">
+          <button type="button" class="btn-pill-ghost" (click)="cancelDelete()">Cancel</button>
+          <button type="button" class="btn-pill-danger" (click)="confirmDelete()">
+            Yes, Delete
+          </button>
+        </div>
+      </div>
+    </div>
   }
 </section>

@@ -1,97 +1,138 @@
 <section class="exams-groups-page">
-  <header class="page-header">
-    <div>
-      <h2 class="page-title">Exams Groups</h2>
-      <p class="page-subtitle">Organize related exams into logical groups (terms, finals).</p>
-    </div>
-    <div class="page-header-actions">
-      <div class="searchbox" [class.is-open]="searchOpen()" (clickOutside)="searchOpen.set(false)">
-        <input #searchInput type="text" class="searchbox-input" [(ngModel)]="searchTerm" placeholder="Search groups..." />
-        <button type="button" class="searchbox-icon" (click)="toggleSearch()" aria-label="Toggle search">
-          <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+  @if (mode() === 'list') {
+    <header class="page-header">
+      <div>
+        <h2 class="page-title">Exams Groups</h2>
+        <p class="page-subtitle">Organize related exams into logical groups (terms, finals).</p>
+      </div>
+      <div class="page-header-actions">
+        <div
+          class="searchbox"
+          [class.is-open]="searchOpen()"
+          (clickOutside)="searchOpen.set(false)"
+        >
+          <input
+            #searchInput
+            type="text"
+            class="searchbox-input"
+            [ngModel]="searchTerm()"
+            (ngModelChange)="onSearchChange($event)"
+            name="examGroupsSearch"
+            placeholder="Search groups..."
+          />
+          <button
+            type="button"
+            class="searchbox-icon"
+            (click)="toggleSearch()"
+            aria-label="Toggle search"
+          >
+            <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+          </button>
+        </div>
+        <button type="button" class="btn-pill-primary" (click)="openAdd()">
+          <fa-icon [icon]="faPlus"></fa-icon>
+          Add Group
         </button>
       </div>
-      <button type="button" class="btn-pill-primary" (click)="showForm.set(true)">
-        <fa-icon [icon]="faPlus"></fa-icon>
-        Add Group
-      </button>
-    </div>
-  </header>
+    </header>
 
-  @if (showForm()) {
-    <div class="page-card">
-      <div class="form-card-header">
-        <div>
-          <h3 class="form-card-title">New Exam Group</h3>
+    <div class="data-table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="col-id">#</th>
+            <th>Group Name</th>
+            <th>Description</th>
+            <th>Exams</th>
+            <th>Status</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of pagedRows(); track r.id; let i = $index) {
+            <tr>
+              <td class="col-id">{{ (currentPage() - 1) * pageSize + i + 1 }}</td>
+              <td><strong>{{ r.name }}</strong></td>
+              <td>{{ r.description || '—' }}</td>
+              <td>{{ r.examCount }}</td>
+              <td>
+                <span
+                  class="badge-status"
+                  [class.active]="r.status === 'active'"
+                  [class.inactive]="r.status === 'inactive'"
+                >{{ r.status }}</span>
+              </td>
+              <td class="col-actions">
+                <div class="row-actions">
+                  <button type="button" class="icon-btn" title="View" (click)="openView(r)">
+                    <fa-icon [icon]="faEye"></fa-icon>
+                  </button>
+                  <button type="button" class="icon-btn" title="Edit" (click)="openEdit(r)">
+                    <fa-icon [icon]="faPenToSquare"></fa-icon>
+                  </button>
+                  <button type="button" class="icon-btn danger" title="Delete" (click)="askDelete(r)">
+                    <fa-icon [icon]="faTrash"></fa-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty-state">
+                @if (searchTerm()) {
+                  No groups match "{{ searchTerm() }}".
+                } @else {
+                  There are no exam groups.
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer">
+      <span>Showing {{ pagedRows().length }} of {{ filteredRows().length }} entries</span>
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="currentPage() === 1">
+          <button type="button" class="page-link" (click)="prevPage()">‹</button>
+        </li>
+        @for (p of pageNumbers(); track p) {
+          <li class="page-item" [class.active]="p === currentPage()">
+            <button type="button" class="page-link" (click)="goToPage(p)">{{ p }}</button>
+          </li>
+        }
+        <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+          <button type="button" class="page-link" (click)="nextPage()">›</button>
+        </li>
+      </ul>
+    </div>
+  } @else {
+    <app-add-edit-exam-group
+      [editing]="editing()"
+      [viewOnly]="formMode() === 'view'"
+      (cancelled)="backToList()"
+      (saved)="onSave($event)"
+    />
+  }
+
+  @if (deleteTarget(); as target) {
+    <div class="confirm-overlay" (click)="cancelDelete()">
+      <div class="confirm-dialog" (click)="$event.stopPropagation()">
+        <div class="confirm-icon">
+          <fa-icon [icon]="faTrash"></fa-icon>
         </div>
-      </div>
-      <div class="form-card-body">
-        <div class="row g-3">
-          <div class="col-12 col-md-6">
-            <div class="form-field">
-              <label>Group Name</label>
-              <input type="text" class="input-secondary" [(ngModel)]="newGroup.name" />
-            </div>
-          </div>
-          <div class="col-12 col-md-6">
-            <div class="form-field">
-              <label>Status</label>
-              <select class="select-primary" [(ngModel)]="newGroup.status">
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-12">
-            <div class="form-field">
-              <label>Description</label>
-              <textarea rows="2" class="input-secondary" [(ngModel)]="newGroup.description"></textarea>
-            </div>
-          </div>
+        <h3 class="confirm-title">Delete this exam group?</h3>
+        <p class="confirm-message">
+          You are about to delete <strong>{{ target.name }}</strong>. This action cannot be undone.
+        </p>
+        <div class="confirm-actions">
+          <button type="button" class="btn-pill-ghost" (click)="cancelDelete()">Cancel</button>
+          <button type="button" class="btn-pill-danger" (click)="confirmDelete()">
+            Yes, Delete
+          </button>
         </div>
-      </div>
-      <div class="form-actions">
-        <button type="button" class="btn-pill-ghost" (click)="showForm.set(false)">Cancel</button>
-        <button type="button" class="btn-pill-primary" (click)="showForm.set(false)">Save Group</button>
       </div>
     </div>
   }
-
-  <div class="data-table-wrap mt">
-    <table class="table">
-      <thead>
-        <tr>
-          <th class="col-id">#</th>
-          <th>Group Name</th>
-          <th>Description</th>
-          <th>Exams</th>
-          <th>Status</th>
-          <th class="col-actions">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (r of rows; track r.id; let i = $index) {
-          <tr>
-            <td class="col-id">{{ i + 1 }}</td>
-            <td><strong>{{ r.name }}</strong></td>
-            <td>{{ r.description }}</td>
-            <td>{{ r.examCount }}</td>
-            <td>
-              <span class="badge-status" [class.active]="r.status === 'active'" [class.inactive]="r.status === 'inactive'">
-                {{ r.status }}
-              </span>
-            </td>
-            <td class="col-actions">
-              <div class="row-actions">
-                <button type="button" class="icon-btn" title="Edit"><fa-icon [icon]="faPenToSquare"></fa-icon></button>
-                <button type="button" class="icon-btn danger" title="Delete"><fa-icon [icon]="faTrash"></fa-icon></button>
-              </div>
-            </td>
-          </tr>
-        } @empty {
-          <tr><td colspan="6" class="empty-state">No exam groups yet.</td></tr>
-        }
-      </tbody>
-    </table>
-  </div>
 </section>

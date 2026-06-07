@@ -27,6 +27,7 @@ export class AddEditFeeTypeComponent implements OnInit {
   readonly faArrowLeft = faArrowLeft;
 
   readonly editing = input<Partial<FeeTypeFormValue> | null>(null);
+  readonly viewOnly = input<boolean>(false);
   readonly cancelled = output<void>();
   readonly saved = output<FeeTypeFormValue>();
 
@@ -53,7 +54,23 @@ export class AddEditFeeTypeComponent implements OnInit {
   }
 
   get isEdit(): boolean {
-    return !!this.editing();
+    return !!this.editing() && !this.viewOnly();
+  }
+
+  get isView(): boolean {
+    return this.viewOnly();
+  }
+
+  get pageTitle(): string {
+    if (this.isView) return 'View Fee Type';
+    if (this.isEdit) return 'Edit Fee Type';
+    return 'Add New Fee Type';
+  }
+
+  get pageSubtitle(): string {
+    if (this.isView) return 'Read-only view of fee type details.';
+    if (this.isEdit) return 'Update fee type details below.';
+    return 'Define a new fee category for the institute.';
   }
 
   onCancel(): void {

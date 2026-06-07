@@ -22,6 +22,7 @@ export class AddEditSessionComponent implements OnInit {
   readonly faArrowLeft = faArrowLeft;
 
   readonly editing = input<SessionFormValue | null>(null);
+  readonly viewOnly = input<boolean>(false);
   readonly cancelled = output<void>();
   readonly saved = output<SessionFormValue>();
 
@@ -41,7 +42,23 @@ export class AddEditSessionComponent implements OnInit {
   }
 
   get isEdit(): boolean {
-    return !!this.editing();
+    return !!this.editing() && !this.viewOnly();
+  }
+
+  get isView(): boolean {
+    return this.viewOnly();
+  }
+
+  get pageTitle(): string {
+    if (this.isView) return 'View Session';
+    if (this.isEdit) return 'Edit Session';
+    return 'Add New Session';
+  }
+
+  get pageSubtitle(): string {
+    if (this.isView) return 'Read-only view of session details.';
+    if (this.isEdit) return 'Update session details below.';
+    return 'Define a new academic session with start and end dates.';
   }
 
   onCancel(): void {

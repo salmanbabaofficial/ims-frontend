@@ -1,0 +1,94 @@
+<div class="form-back-bar">
+  <button type="button" class="form-back-btn" (click)="onCancel()" title="Back to list">
+    <fa-icon [icon]="faArrowLeft"></fa-icon>
+  </button>
+  <div>
+    <h2 class="page-title">{{ pageTitle }}</h2>
+    <p class="page-subtitle">{{ pageSubtitle }}</p>
+  </div>
+</div>
+
+<form class="page-card" (ngSubmit)="onSave()" #subjectForm="ngForm" novalidate>
+  <fieldset [disabled]="isView" style="border: 0; padding: 0; margin: 0;">
+  <div class="form-card-header">
+    <div>
+      <h3 class="form-card-title">Subject Information</h3>
+      <p class="form-card-subtitle">Configure the subject and its marking scheme.</p>
+    </div>
+    <span class="form-card-meta">Fields marked with <sup style="color:#e74c3c">*</sup> are required.</span>
+  </div>
+
+  <div class="form-card-body">
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Subject Code<sup>*</sup></label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.code" name="code" placeholder="e.g. ENG-01" />
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Subject Name<sup>*</sup></label>
+          <input type="text" class="input-secondary" [(ngModel)]="model.name" name="name" placeholder="e.g. English" />
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Class<sup>*</sup></label>
+          <select class="select-primary" [(ngModel)]="model.className" name="className">
+            <option value="">Select Class</option>
+            @for (c of classOptions(); track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Status</label>
+          <select class="select-primary" [(ngModel)]="model.status" name="status">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Total Marks<sup>*</sup></label>
+          <input type="number" min="0" class="input-secondary" [(ngModel)]="model.totalMarks" name="totalMarks" placeholder="e.g. 100" />
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="form-field">
+          <label>Passing Marks<sup>*</sup></label>
+          <input type="number" min="0" class="input-secondary" [(ngModel)]="model.passingMarks" name="passingMarks" placeholder="e.g. 40" />
+        </div>
+      </div>
+
+      <div class="col-12">
+        <label class="check-line">
+          <input type="checkbox" [(ngModel)]="model.isOptional" name="isOptional" />
+          <span>Mark as optional subject</span>
+        </label>
+        <div class="field-hint">Optional subjects are not mandatory for all students.</div>
+      </div>
+    </div>
+  </div>
+
+  </fieldset>
+  <div class="form-actions">
+    <button type="button" class="btn-pill-ghost" (click)="onCancel()">
+      {{ isView ? 'Close' : 'Cancel' }}
+    </button>
+    @if (!isView) {
+      <button type="submit" class="btn-pill-primary">
+        {{ isEdit ? 'Update Subject' : 'Save Subject' }}
+      </button>
+    }
+  </div>
+</form>

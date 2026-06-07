@@ -1,132 +1,160 @@
 <section class="exams-list-page">
-  <header class="page-header">
-    <div>
-      <h2 class="page-title">Exams List</h2>
-      <p class="page-subtitle">All exams scheduled across classes.</p>
-    </div>
-    <div class="page-header-actions">
-      <div class="searchbox" [class.is-open]="searchOpen()" (clickOutside)="searchOpen.set(false)">
-        <input #searchInput type="text" class="searchbox-input" [(ngModel)]="searchTerm" placeholder="Search exams..." />
-        <button type="button" class="searchbox-icon" (click)="toggleSearch()" aria-label="Toggle search">
-          <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+  @if (mode() === 'list') {
+    <header class="page-header">
+      <div>
+        <h2 class="page-title">Exams List</h2>
+        <p class="page-subtitle">All exams scheduled across classes.</p>
+      </div>
+      <div class="page-header-actions">
+        <div
+          class="searchbox"
+          [class.is-open]="searchOpen()"
+          (clickOutside)="searchOpen.set(false)"
+        >
+          <input
+            #searchInput
+            type="text"
+            class="searchbox-input"
+            [ngModel]="searchTerm()"
+            (ngModelChange)="onSearchChange($event)"
+            name="examsSearch"
+            placeholder="Search exams..."
+          />
+          <button
+            type="button"
+            class="searchbox-icon"
+            (click)="toggleSearch()"
+            aria-label="Toggle search"
+          >
+            <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+          </button>
+        </div>
+        <button type="button" class="btn-pill-primary" (click)="openAdd()">
+          <fa-icon [icon]="faPlus"></fa-icon>
+          Add Exam
         </button>
       </div>
-      <button type="button" class="btn-pill-primary" (click)="showForm.set(true)">
-        <fa-icon [icon]="faPlus"></fa-icon>
-        Add Exam
-      </button>
-    </div>
-  </header>
+    </header>
 
-  @if (showForm()) {
-    <div class="page-card">
-      <div class="form-card-header">
-        <div><h3 class="form-card-title">New Exam</h3></div>
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <select
+          class="select-primary class-filter"
+          [ngModel]="selectedGroup()"
+          (ngModelChange)="onGroupFilterChange($event)"
+          name="groupFilter"
+        >
+          <option value="all">All Groups</option>
+          @for (g of groupOptions; track g) {
+            <option [value]="g">{{ g }}</option>
+          }
+        </select>
       </div>
-      <div class="form-card-body">
-        <div class="row g-3">
-          <div class="col-12 col-md-4">
-            <div class="form-field">
-              <label>Exam Name</label>
-              <input type="text" class="input-secondary" [(ngModel)]="newExam.name" />
-            </div>
-          </div>
-          <div class="col-12 col-md-4">
-            <div class="form-field">
-              <label>Exam Group</label>
-              <select class="select-primary" [(ngModel)]="newExam.group">
-                <option value="">Select Group</option>
-                @for (g of groupOptions; track g) {
-                  <option [value]="g">{{ g }}</option>
+    </div>
+
+    <div class="data-table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="col-id">#</th>
+            <th>Exam Name</th>
+            <th>Group</th>
+            <th>Class</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Status</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of pagedRows(); track r.id; let i = $index) {
+            <tr>
+              <td class="col-id">{{ (currentPage() - 1) * pageSize + i + 1 }}</td>
+              <td><strong>{{ r.name }}</strong></td>
+              <td>{{ r.group }}</td>
+              <td>{{ r.className }}</td>
+              <td>{{ r.startDate }}</td>
+              <td>{{ r.endDate }}</td>
+              <td>
+                <span class="badge-status"
+                  [class.active]="statusBadge(r.status) === 'active'"
+                  [class.inactive]="statusBadge(r.status) === 'inactive'"
+                  [class.pending]="statusBadge(r.status) === 'pending'"
+                >{{ r.status }}</span>
+              </td>
+              <td class="col-actions">
+                <div class="row-actions">
+                  <button type="button" class="icon-btn" title="View" (click)="openView(r)">
+                    <fa-icon [icon]="faEye"></fa-icon>
+                  </button>
+                  <button type="button" class="icon-btn" title="Edit" (click)="openEdit(r)">
+                    <fa-icon [icon]="faPenToSquare"></fa-icon>
+                  </button>
+                  <button type="button" class="icon-btn danger" title="Delete" (click)="askDelete(r)">
+                    <fa-icon [icon]="faTrash"></fa-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="8" class="empty-state">
+                @if (searchTerm() || selectedGroup() !== 'all') {
+                  No exams match the current filters.
+                } @else {
+                  There are no exams scheduled.
                 }
-              </select>
-            </div>
-          </div>
-          <div class="col-12 col-md-4">
-            <div class="form-field">
-              <label>Class</label>
-              <select class="select-primary" [(ngModel)]="newExam.className">
-                <option value="">Select Class</option>
-                @for (c of classOptions; track c) {
-                  <option [value]="c">{{ c }}</option>
-                }
-              </select>
-            </div>
-          </div>
-          <div class="col-12 col-md-6">
-            <div class="form-field">
-              <label>Start Date</label>
-              <input type="date" class="input-secondary" [(ngModel)]="newExam.startDate" />
-            </div>
-          </div>
-          <div class="col-12 col-md-6">
-            <div class="form-field">
-              <label>End Date</label>
-              <input type="date" class="input-secondary" [(ngModel)]="newExam.endDate" />
-            </div>
-          </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer">
+      <span>Showing {{ pagedRows().length }} of {{ filteredRows().length }} entries</span>
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="currentPage() === 1">
+          <button type="button" class="page-link" (click)="prevPage()">‹</button>
+        </li>
+        @for (p of pageNumbers(); track p) {
+          <li class="page-item" [class.active]="p === currentPage()">
+            <button type="button" class="page-link" (click)="goToPage(p)">{{ p }}</button>
+          </li>
+        }
+        <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+          <button type="button" class="page-link" (click)="nextPage()">›</button>
+        </li>
+      </ul>
+    </div>
+  } @else {
+    <app-add-edit-exam
+      [editing]="editing()"
+      [groupOptions]="groupOptions"
+      [classOptions]="classOptions"
+      [viewOnly]="formMode() === 'view'"
+      (cancelled)="backToList()"
+      (saved)="onSave($event)"
+    />
+  }
+
+  @if (deleteTarget(); as target) {
+    <div class="confirm-overlay" (click)="cancelDelete()">
+      <div class="confirm-dialog" (click)="$event.stopPropagation()">
+        <div class="confirm-icon">
+          <fa-icon [icon]="faTrash"></fa-icon>
         </div>
-      </div>
-      <div class="form-actions">
-        <button type="button" class="btn-pill-ghost" (click)="showForm.set(false)">Cancel</button>
-        <button type="button" class="btn-pill-primary" (click)="showForm.set(false)">Save Exam</button>
+        <h3 class="confirm-title">Delete this exam?</h3>
+        <p class="confirm-message">
+          You are about to delete <strong>{{ target.name }}</strong>. This action cannot be undone.
+        </p>
+        <div class="confirm-actions">
+          <button type="button" class="btn-pill-ghost" (click)="cancelDelete()">Cancel</button>
+          <button type="button" class="btn-pill-danger" (click)="confirmDelete()">
+            Yes, Delete
+          </button>
+        </div>
       </div>
     </div>
   }
-
-  <div class="toolbar mt">
-    <div class="toolbar-left">
-      <select class="select-primary class-filter" [(ngModel)]="selectedGroup">
-        <option value="all">All Groups</option>
-        @for (g of groupOptions; track g) {
-          <option [value]="g">{{ g }}</option>
-        }
-      </select>
-    </div>
-  </div>
-
-  <div class="data-table-wrap">
-    <table class="table">
-      <thead>
-        <tr>
-          <th class="col-id">#</th>
-          <th>Exam Name</th>
-          <th>Group</th>
-          <th>Class</th>
-          <th>Start</th>
-          <th>End</th>
-          <th>Status</th>
-          <th class="col-actions">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (r of rows; track r.id; let i = $index) {
-          <tr>
-            <td class="col-id">{{ i + 1 }}</td>
-            <td><strong>{{ r.name }}</strong></td>
-            <td>{{ r.group }}</td>
-            <td>{{ r.className }}</td>
-            <td>{{ r.startDate }}</td>
-            <td>{{ r.endDate }}</td>
-            <td>
-              <span class="badge-status"
-                [class.active]="statusBadge(r.status) === 'active'"
-                [class.inactive]="statusBadge(r.status) === 'inactive'"
-                [class.pending]="statusBadge(r.status) === 'pending'"
-              >{{ r.status }}</span>
-            </td>
-            <td class="col-actions">
-              <div class="row-actions">
-                <button type="button" class="icon-btn" title="View"><fa-icon [icon]="faEye"></fa-icon></button>
-                <button type="button" class="icon-btn" title="Edit"><fa-icon [icon]="faPenToSquare"></fa-icon></button>
-                <button type="button" class="icon-btn danger" title="Delete"><fa-icon [icon]="faTrash"></fa-icon></button>
-              </div>
-            </td>
-          </tr>
-        } @empty {
-          <tr><td colspan="8" class="empty-state">No exams scheduled.</td></tr>
-        }
-      </tbody>
-    </table>
-  </div>
 </section>

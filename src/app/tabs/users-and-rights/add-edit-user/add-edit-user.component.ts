@@ -31,6 +31,7 @@ export class AddEditUserComponent implements OnInit {
   readonly faEyeSlash = faEyeSlash;
 
   readonly editing = input<UserFormValue | null>(null);
+  readonly viewOnly = input<boolean>(false);
   readonly cancelled = output<void>();
   readonly saved = output<UserFormValue>();
 
@@ -60,7 +61,23 @@ export class AddEditUserComponent implements OnInit {
   }
 
   get isEdit(): boolean {
-    return !!this.editing();
+    return !!this.editing() && !this.viewOnly();
+  }
+
+  get isView(): boolean {
+    return this.viewOnly();
+  }
+
+  get pageTitle(): string {
+    if (this.isView) return 'View User';
+    if (this.isEdit) return 'Edit User';
+    return 'Add New User';
+  }
+
+  get pageSubtitle(): string {
+    if (this.isView) return 'Read-only view of user account details.';
+    if (this.isEdit) return 'Update user details and access role below.';
+    return 'Create a login account and assign a role.';
   }
 
   onCancel(): void {
